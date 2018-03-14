@@ -1,5 +1,11 @@
-import React from 'react'
-import styled, { hydrate, keyframes, css, injectGlobal } from 'react-emotion'
+import React from 'react';
+import styled, {
+  hydrate,
+  keyframes,
+  css,
+} from 'react-emotion';
+
+import Messages from '../components/messages';
 
 // Adds server generated styles to emotion cache.
 // '__NEXT_DATA__.ids' is set in '_document.js'
@@ -7,16 +13,6 @@ if (typeof window !== 'undefined') {
   hydrate(window.__NEXT_DATA__.ids)
 }
 
-injectGlobal`
-  html, body {
-    padding: 3rem 1rem;
-    margin: 0;
-    background: papayawhip;
-    min-height: 100%;
-    font-family: Helvetica, Arial, sans-serif;
-    font-size: 24px;
-  }
-`
 
 const basicStyles = css`
   background-color: white;
@@ -74,6 +70,7 @@ export default () => {
         With <code>:hover</code>.
       </Combined>
       <Animated animation={bounce}>Let's bounce.</Animated>
+      <Messages />
     </div>
   )
 }
