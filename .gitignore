@@ -1,4 +1,5 @@
 node_modules/
+.next/
 pubnub.config.js
 
 yarn-error.log
