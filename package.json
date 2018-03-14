@@ -1,0 +1,27 @@
+{
+  "name": "along",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "concurrently \"npm run build\" \"node server.js\"",
+    "build": "next build",
+    "next": "next start",
+    "start": "NODE_ENV=production concurrently \"npm run build\" \"node server.js\""
+  },
+  "dependencies": {
+    "babel-plugin-emotion": "^8.0.4",
+    "body-parser": "^1.18.2",
+    "emotion": "^8.0.5",
+    "emotion-server": "^8.0.5",
+    "express": "^4.16.3",
+    "next": "^5.0.0",
+    "pubnub": "^4.20.2",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-emotion": "^8.0.5"
+  },
+  "devDependencies": {
+    "concurrently": "^3.5.1"
+  },
+  "license": "ISC",
+  "author": "Mauricio Palma <mauricio.palma@sinnerschrader.com>"
+}

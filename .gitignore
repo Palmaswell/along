@@ -1,0 +1,4 @@
+node_modules/
+pubnub.config.js
+
+yarn-error.log
