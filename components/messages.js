@@ -1,26 +1,30 @@
 import React from 'react';
 import PubNub from 'pubnub';
+import config from '../config.client.json';
 import superagent from 'superagent';
-import pubNubConfig from '../pubnub.config';
 
-export default class Messages extends React.Component {
+const clientColors = ['FF0B69', '1DACCC', '1195B2', 'FFEB25', 'ccbc1d'];
+
+export default class extends React.Component {
   static async getInitialProps({ req }) {
     if (req) {
       return req.state;
     }
-    const { messages } = await superagent.get(`http://localhost:3000/message`).then(res => res.body);
 
+    const { messages } = await superagent.get('http://localhost:3000/message').
+      then(res => res.body);
     return { messages };
   }
 
   constructor() {
     super();
-    this.state = { input: ''};
+    this.state = { input: '' };
+    this.client = clientColors[Math.floor(Math.random() * clientColors.length)];
   }
 
   componentDidMount() {
     this.pubnub = new PubNub({
-      subscribeKey: pubNubConfig.subscribeKey
+      subscribeKey: config.subscribeKey
     });
 
     this.pubnub.subscribe({
@@ -60,7 +64,8 @@ export default class Messages extends React.Component {
 
   render() {
     const messages = this.state.messages || this.props.messages;
-    console.log(this.state, '🌈');
+    console.log(messages, '🌈!');
+    console.log(this.pubnub, '$$$$')
     return (
       <div>
         <h1>

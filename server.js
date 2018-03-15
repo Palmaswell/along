@@ -1,18 +1,22 @@
 const body = require('body-parser');
 const express = require('express');
 const next = require('next');
-const PubNub = require('pubnub');
 
-const dev = process.env.NODE_ENV !== 'production';
+
 const app = next({ dev: true });
 const handle = app.getRequestHandler();
 
-const { port, publishKey, subscribeKey } = require('./pubnub.config');
+const PubNub = require('pubnub');
+
+const { port, publishKey, subscribeKey } = require('./config');
 const pubnub = new PubNub({ publishKey, subscribeKey });
 
 async function start() {
   await app.prepare();
+
   const server = express();
+
+
   const messages = [];
 
   server.use(body.json());
@@ -30,7 +34,6 @@ async function start() {
       client: req.params.client,
       content: req.body.message
     };
-
     messages.push(message);
     pubnub.publish({
       channel: 'messages',
@@ -43,9 +46,10 @@ async function start() {
     return handle(req, res);
   });
 
-  server.listen(port);
 
-  console.log(`> Ready on http://localhost:${port}`);
+
+  server.listen(port);
+  console.log(`Listening on ${port}`);
 }
 
 start().catch(error => console.error(error.stack));
