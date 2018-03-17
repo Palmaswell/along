@@ -1,6 +1,7 @@
 const express = require('express');
 const http = require('http')
 const redis = require('redis');
+const Rx = require('rxjs');
 const WebSocket = require('ws');
 
 const config = require('./config');

@@ -2,11 +2,13 @@
   "name": "along",
   "version": "1.0.0",
   "scripts": {
-    "dev": "concurrently \"npm run build\" \"node redis-server.js\" \"node server.js\"",
+    "dev": "concurrently \"npm run build\" \"node redis-server.js\" \"node next-server.js\"",
     "build": "next build",
     "next": "next start",
+    "rx": "node rx-server.js",
     "redis": "node redis-server.js",
-    "start": "NODE_ENV=production concurrently \"npm run build\" \"node server.js\""
+    "server": "node next-server.js",
+    "start": "NODE_ENV=production concurrently \"npm run build\" \"node next-server.js\""
   },
   "dependencies": {
     "babel-plugin-emotion": "^8.0.4",
@@ -21,6 +23,7 @@
     "react-dom": "^16.2.0",
     "react-emotion": "^8.0.5",
     "redis": "^2.8.0",
+    "rxjs": "^5.5.7",
     "superagent": "^3.8.2",
     "ws": "^5.0.0"
   },
