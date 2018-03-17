@@ -11,16 +11,21 @@ const pub = redis.createClient();
 const connection = Rx.Observable.create(observer => {
   const wss = new WebSocket.Server({ server });
   wss.on('connection', ws => {
-      observer.error(console.log('error'));
-      observer.next(ws);
+      ws.on('message', message => {
+        observer.next({ws, message});
+      })
   });
 });
 
-const broadcastMessages = (message, broker) => {
+connection.subscribe(connection => {
+  const message = JSON.parse(connection.message);
+  console.log(connection.ws.on);
+  console.log(message.action);
   switch(message.action) {
     case 'SUBSCRIBE':
+      const broker = redis.createClient();
       broker.on('message', (channel, message) => {
-        ws.send(JSON.stringify({
+        connection.ws.send(JSON.stringify({
           action: 'SUBSCRIBEMSG',
           channel,
           message
@@ -34,31 +39,8 @@ const broadcastMessages = (message, broker) => {
         pub.publish(channel, message.message);
       });
       break;
-  }
-}
-
-const messages = Rx.Observable.create(observer => {
-  connection.subscribe(ws => {
-    ws.on('message', message => {
-      observer.error(console.log('error'));
-      observer.next(JSON.parse(message))
-    })
-  })
-});
-
-const broadcast = Rx.Observable.merge(connection, messages);
-
-broadcast.subscribe((test, error) => {
-  if(error) {
-    console.log(error)
-  }
-  console.log(test, '&****')
+  };
 })
-
-// messages.subscribe(message => {
-//   console.log('this is the test', message);
-//   // broadcastMessages(message, redis.createClient())
-// })
 
 server.listen(3001, () => {
   console.log(`
