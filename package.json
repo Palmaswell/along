@@ -4,7 +4,7 @@
   "scripts": {
     "build": "next build",
     "dev": "concurrently \"npm run server:next\" \"npm run server:rx\"",
-    "deploy": "now -e REDIS_PORT=\"@redis-port\" -e REDIS_HOST=\"@redis-host\" -e REDIS_PASS=\"@redis-pass\"",
+    "deploy": "now",
     "server:next": "node next.js",
     "server:rx": "node rx-server.js",
     "start": "NODE_ENV=production concurrently \"npm run server:rx\" \"npm run build\" \"npm run server:next\""

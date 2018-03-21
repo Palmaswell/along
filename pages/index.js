@@ -1,5 +1,6 @@
 import React from 'react';
 import { hydrate, injectGlobal } from 'react-emotion';
+import Router from 'next/router';
 
 // Adds server generated styles to emotion cache.
 // '__NEXT_DATA__.ids' is set in '_document.js'
@@ -21,6 +22,10 @@ const clientColors = ['FF0B69', '1DACCC', '1195B2', 'FFEB25', 'ccbc1d'];
 
 
 export default class extends React.Component {
+  static async getInitialProps({ renderPage }) {
+    console.log(renderPage, 'the path')
+    return { renderPage }
+  }
 
   constructor() {
     super();

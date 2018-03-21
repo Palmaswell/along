@@ -1,21 +1,26 @@
-const { createServer } = require('http');
+const http = require('http');
 const dotenv = require('dotenv').config();
+const express = require('express');
 const { parse } = require('url');
 const next = require('next');
 
 const dev = process.env.NODE_ENV !== 'production';
-const app = next({ dev });
-const handle = app.getRequestHandler();
+const nextApp = next({ dev });
+const handle = nextApp.getRequestHandler();
 
 const { NEXT_PORT } = process.env;
 
-app.prepare().then(() => {
-  createServer((req, res) => {
+nextApp.prepare().then(() => {
+  const app = express();
+  const server = http.createServer(app);
+
+  app.get('*', (req, res) => {
     const parsedUrl = parse(req.url, true);
     const { pathname, query } = parsedUrl;
     handle(req, res, parsedUrl);
 
-  }).listen(NEXT_PORT, '0.0.0.0', err => {
+  })
+  server.listen(NEXT_PORT, '0.0.0.0', err => {
     if (err) {
       throw err;
     }
