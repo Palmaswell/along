@@ -4,9 +4,6 @@ const redis = require('redis');
 const Rx = require('rxjs');
 const WebSocket = require('ws');
 
-const config = require('./config');
-const port = config.port + 1;
-
 const app = express();
 const server = http.createServer(app);
 const pub = redis.createClient();

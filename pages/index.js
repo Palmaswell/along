@@ -1,14 +1,5 @@
-const PubNub = require('pubnub');
-const React = require('react');
-const superagent = require('superagent');
-
-
-import styled, {
-  hydrate,
-  injectGlobal
-} from 'react-emotion';
-
-const config = require('../config.client.json');
+import React from 'react';
+import { hydrate, injectGlobal } from 'react-emotion';
 
 // Adds server generated styles to emotion cache.
 // '__NEXT_DATA__.ids' is set in '_document.js'
@@ -30,15 +21,6 @@ const clientColors = ['FF0B69', '1DACCC', '1195B2', 'FFEB25', 'ccbc1d'];
 
 
 export default class extends React.Component {
-  static async getInitialProps({ req }) {
-    if (req) {
-      return req.state;
-    }
-
-    const { messages } = await superagent.get('http://localhost:3000/message').
-      then(res => res.body);
-    return { messages };
-  }
 
   constructor() {
     super();
@@ -47,9 +29,8 @@ export default class extends React.Component {
   }
 
   componentDidMount() {
-    // const wso = (function(){return this}).WebSocket;
 
-    const ws =  new WebSocket (`ws://localhost:${3001}`);
+    const ws =  new WebSocket (`${document.body.getAttribute('data-ws')}`);
     ws.addEventListener('message', e => {
       const redisMsg = JSON.parse(e.data);
       switch (redisMsg.action) {
@@ -62,30 +43,14 @@ export default class extends React.Component {
     ws.addEventListener('open', e => {
       ws.send(JSON.stringify({
         action: 'SUBSCRIBE',
-        channels: ['hamster']
+        channels: ['Hamster']
       }));
     })
     this.ws = ws;
-
-    this.pubnub = new PubNub({
-      subscribeKey: config.subscribeKey
-    });
-
-    this.pubnub.subscribe({
-      channels: ['messages']
-    });
-
-    this.pubnub.addListener({
-      message: ({ message }) => {
-        this.setState(Object.assign({}, this.state, {
-          messages: (this.state.messages || this.props.messages).concat([message])
-        }));
-      }
-    });
   }
 
   componentWillUnmount() {
-    this.pubnub.unsubscribe();
+    // this.pubnub.unsubscribe();
   }
 
   setInput() {
@@ -95,15 +60,6 @@ export default class extends React.Component {
         input: ev.target.value
       }));
     };
-  }
-
-  submitMessage() {
-    return ev => {
-      superagent.post(`/message/${this.client}`, { message: this.state.input }).
-        then(() => {
-          this.setState(Object.assign({}, this.state, { input: '' }));
-        })
-    }
   }
 
   render() {
@@ -131,13 +87,18 @@ export default class extends React.Component {
           }
         </div>
         <div className="message-input">
+          <select id="7411">
+              <option>Hamster</option>
+              <option>Mouse</option>
+          </select>
           <textarea  onChange={
             (e) => {
+              const options = document.getElementById('7411');
               console.log(e.target.value, '@@@');
               return (
                 this.ws.send(JSON.stringify({
                   action: 'PUBLISH',
-                  channels: ['hamster'],
+                  channels: [options.value],
                   message: e.target.value
                 }))
               )
