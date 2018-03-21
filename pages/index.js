@@ -23,10 +23,10 @@ injectGlobal`
 export default class extends React.Component {
   static getInitialProps({ req }) {
     let hostName;
-    if (! req.headers.host.match(/(:3000)/)) {
+    if (!req.headers.host.match(/(:1313)/)) {
       return;
     }
-    hostName = req.headers.host.replace(/(:3000)/, '');
+    hostName = req.headers.host.replace(/(:1313)/, '');
     console.log(hostName)
     return {
       hostName
