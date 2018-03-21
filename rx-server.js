@@ -15,13 +15,13 @@ const {
   REDIS_PORT,
   REDIS_PASS } = process.env;
 
-const subs = redis.createClient(
+const redisSub = redis.createClient(
   REDIS_PORT,
   REDIS_HOST,
   {no_ready_check: true}
 );
 
-subs.auth(config.REDIS_PASS, function (err) {
+redisSub.auth(config.REDIS_PASS, function (err) {
   if (err) {
     throw err;
   };
@@ -52,9 +52,12 @@ const connection = Rx.Observable.create(observer => {
     ws.on('close', closeMsg);
   });
 });
+
 const CHANNELS = new Map();
-function addChannels(channels, ws) {
+
+const addChannels = (channels, ws) => {
   channels.forEach(channel => {
+
     let wsConnections = CHANNELS.get(channel);
     if(!wsConnections) {
       wsConnections = new Set();
@@ -64,15 +67,15 @@ function addChannels(channels, ws) {
   });
   return Array.from(CHANNELS.keys());
 }
-function deleteWSFromChannel(ws) {
+
+const deleteWSFromChannel = (ws) => {
   CHANNELS.forEach((wsConnections, channel) => {
     wsConnections.delete(ws);
-  })
+  });
 }
 
-subs.on('message', (channel, message) => {
-  console.log('got msg from redis', message);
-  //Todo
+redisSub.on('message', (channel, message) => {
+  console.log(`> Redis message 📩: ${message}`);
   const wsConnections = CHANNELS.get(channel);
   if(wsConnections) {
     wsConnections.forEach(ws => {
@@ -88,27 +91,31 @@ subs.on('message', (channel, message) => {
 
 connection.subscribe(connection => {
   try {
-
     const message = JSON.parse(connection.message);
     switch(message.action) {
       case 'SUBSCRIBE':
-        subs.subscribe(addChannels(message.channels, connection.ws).join(' '));
-        console.log(`> Subsbribed to: [${message.channels}]`);
+        redisSub.subscribe(
+          addChannels(message.channels, connection.ws).join(' ')
+        );
+        console.log(`> SUBSCRIBE to: [${message.channels}]`);
         break;
       case 'PUBLISH':
-        subs.subscribe(addChannels(message.channels, connection.ws).join(' '));
+        redisSub.subscribe(
+          addChannels(message.channels, connection.ws).join(' ')
+        );
         message.channels.forEach(channel => {
           redisPub.publish(channel, message.message);
         });
         console.log(`> PUBLISH to: [${message.channels}]`);
-        console.log(`> PUBLISH MSG to: [${message.message}]`);
+        console.log(`> PUBLISH 📩: ${message.message}`);
         break;
       case 'WS_CLOSE':
         deleteWSFromChannel(connection.ws);
         break;
     };
-  } catch (e) {
-    console.error(e, connection)
+  }
+  catch (err) {
+    console.error(`👻 x ${connection}: ${err}`)
   }
 })
 
