@@ -4,10 +4,10 @@
   "scripts": {
     "build": "next build",
     "dev": "concurrently \"npm run server:next\" \"npm run server:rx\"",
-    "deploy": "now",
+    "deploy": "now -e EXPRESS_PORT=\"3001\" -e NEXT_PORT=\"300O\" -e REDIS_HOST=@redis-host -e REDIS_PASS=@redis-pass -e REDIS_PORT=@redis-port",
     "server:next": "node next.js",
     "server:rx": "node rx-server.js",
-    "start": "NODE_ENV=production concurrently \"npm run server:rx\" \"npm run build\" \"npm run server:next\""
+    "start": "NODE_ENV=production concurrently \"npm run server:rx\" \"npm run server:next\""
   },
   "dependencies": {
     "babel-plugin-emotion": "^8.0.4",
