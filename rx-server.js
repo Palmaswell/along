@@ -6,7 +6,6 @@ const Rx = require('rxjs');
 const WebSocket = require('ws');
 
 const app = express();
-const config = require('./redis.config');
 const server = http.createServer(app);
 
 const {
@@ -21,7 +20,7 @@ const redisSub = redis.createClient(
   {no_ready_check: true}
 );
 
-redisSub.auth(config.REDIS_PASS, function (err) {
+redisSub.auth(REDIS_PASS, function (err) {
   if (err) {
     throw err;
   };
@@ -119,7 +118,10 @@ connection.subscribe(connection => {
   }
 })
 
-server.listen(EXPRESS_PORT, '0.0.0.0', () => {
+server.listen(EXPRESS_PORT, '0.0.0.0', err => {
+  if (err) {
+    throw err;
+  }
   console.log(`
   > ⚗️ Reactive - Websocket - Redis server is running
   > ✌️ Server started on port: ${server.address().port}

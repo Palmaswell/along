@@ -1,5 +1,6 @@
 {
   "env": {
+    "NEXT_PORT": "3000",
     "REDIS_HOST": "@redis-host",
     "REDIS_PASS": "@redis-pass",
     "REDIS_PORT": "@redis-port"
