@@ -5,7 +5,10 @@ export default class MyDocument extends Document {
   static getInitialProps ({ renderPage }) {
     const page = renderPage();
     const styles = extractCritical(page.html);
-    return { ...page, ...styles };
+    return {
+      ...page,
+      ...styles
+     };
   }
 
   constructor (props) {
@@ -23,7 +26,7 @@ export default class MyDocument extends Document {
           <title>Along</title>
           <style dangerouslySetInnerHTML={{ __html: this.props.css }} />
         </Head>
-        <body data-ws="ws://192.168.0.148:3001">
+        <body>
           <Main />
           <NextScript />
         </body>

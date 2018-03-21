@@ -1,6 +1,7 @@
 import React from 'react';
 import { hydrate, injectGlobal } from 'react-emotion';
 import Router from 'next/router';
+import WSContainer from '../containers/ws-container';
 
 // Adds server generated styles to emotion cache.
 // '__NEXT_DATA__.ids' is set in '_document.js'
@@ -18,24 +19,28 @@ injectGlobal`
     font-size: 24px;
   }
 `
-const clientColors = ['FF0B69', '1DACCC', '1195B2', 'FFEB25', 'ccbc1d'];
-
 
 export default class extends React.Component {
-  static async getInitialProps({ renderPage }) {
-    console.log(renderPage, 'the path')
-    return { renderPage }
+  static getInitialProps({ req }) {
+    let hostName;
+    if (! req.headers.host.match(/(:3000)/)) {
+      return;
+    }
+    hostName = req.headers.host.replace(/(:3000)/, '');
+    console.log(hostName)
+    return {
+      hostName
+    }
   }
 
   constructor() {
     super();
     this.state = { messages: []};
-    this.client = clientColors[Math.floor(Math.random() * clientColors.length)];
   }
 
   componentDidMount() {
 
-    const ws =  new WebSocket (`${document.body.getAttribute('data-ws')}`);
+    const ws =  new WebSocket (`ws://${this.props.hostName}:3001`);
     ws.addEventListener('message', e => {
       const redisMsg = JSON.parse(e.data);
       switch (redisMsg.action) {
@@ -69,11 +74,10 @@ export default class extends React.Component {
 
   render() {
     const messages = this.state.messages || this.props.messages;
-    console.log(messages, 'sfdfd');
     return (
       <div id="container">
         <h1>
-          Nanochat
+          Nanochat <WSContainer host={this.props.hostName} />
         </h1>
         <div id="messages">
           {

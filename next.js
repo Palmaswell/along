@@ -1,14 +1,15 @@
-const http = require('http');
 const dotenv = require('dotenv').config();
 const express = require('express');
-const { parse } = require('url');
+const http = require('http');
 const next = require('next');
+
+const { parse } = require('url');
+const { NEXT_PORT } = process.env;
 
 const dev = process.env.NODE_ENV !== 'production';
 const nextApp = next({ dev });
 const handle = nextApp.getRequestHandler();
 
-const { NEXT_PORT } = process.env;
 
 nextApp.prepare().then(() => {
   const app = express();
