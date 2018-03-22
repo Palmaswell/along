@@ -21,13 +21,13 @@ nextApp.prepare().then(() => {
     handle(req, res, parsedUrl);
 
   })
-  server.listen(NEXT_PORT, err => {
+  server.listen(NEXT_PORT, '0.0.0.0', err => {
     if (err) {
       throw err;
     }
     console.log(`
-      > ▲ Next Js server is running
-      > ▲ Server started on port: ${ NEXT_PORT }
+    > ▲ Next Js server is running
+    > ▲ Server started on port: ${ NEXT_PORT }
     `);
   })
 })
