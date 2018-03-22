@@ -56,7 +56,6 @@ const CHANNELS = new Map();
 
 const addChannels = (channels, ws) => {
   channels.forEach(channel => {
-
     let wsConnections = CHANNELS.get(channel);
     if(!wsConnections) {
       wsConnections = new Set();
@@ -85,7 +84,6 @@ redisSub.on('message', (channel, message) => {
       }));
     });
   }
-
 });
 
 connection.subscribe(connection => {

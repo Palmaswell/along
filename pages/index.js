@@ -1,7 +1,7 @@
 import React from 'react';
 import { hydrate, injectGlobal } from 'react-emotion';
 import Router from 'next/router';
-import WSContainer from '../containers/connection-container';
+import Test, {WSProvider} from '../components/connection-provider';
 
 // Adds server generated styles to emotion cache.
 // '__NEXT_DATA__.ids' is set in '_document.js'
@@ -45,7 +45,7 @@ export default class extends React.Component {
           this.state.messages.push(redisMsg);
           this.setState(this.state);
       }
-      console.log(e);
+      console.log(e, 'old......');
     });
     ws.addEventListener('open', e => {
       ws.send(JSON.stringify({
@@ -74,24 +74,8 @@ export default class extends React.Component {
     return (
       <div id="container">
         <h1>
-          Nanochat <WSContainer hostName={this.props.hostName} />
+          <WSProvider hostName={this.props.hostName} />
         </h1>
-        <div id="messages">
-          {
-            messages.map(message => {
-              return (
-                <div className="message">
-                  <span style={{color: `#${message.client}`}}>
-                    {message.client}
-                  </span>
-                  <span className="content">
-                    {message.content}
-                  </span>
-                </div>
-              );
-            })
-          }
-        </div>
         <div className="message-input">
           <select id="7411">
               <option>Hamster</option>
