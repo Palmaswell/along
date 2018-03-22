@@ -21,7 +21,7 @@ nextApp.prepare().then(() => {
     handle(req, res, parsedUrl);
 
   })
-  server.listen(NEXT_PORT, '0.0.0.0', err => {
+  server.listen(NEXT_PORT, err => {
     if (err) {
       throw err;
     }
