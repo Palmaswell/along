@@ -1,7 +1,7 @@
 {
   "env": {
     "EXPRESS_PORT": "3001",
-    "NEXT_PORT": "1313",
+    "NEXT_PORT": "1337",
     "REDIS_HOST": "@redis-host",
     "REDIS_PASS": "@redis-pass",
     "REDIS_PORT": "@redis-port"

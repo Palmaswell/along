@@ -1,7 +1,7 @@
 import React from 'react';
 import { hydrate, injectGlobal } from 'react-emotion';
 import Router from 'next/router';
-import WSContainer from '../containers/ws-container';
+import WSContainer from '../containers/connection-container';
 
 // Adds server generated styles to emotion cache.
 // '__NEXT_DATA__.ids' is set in '_document.js'
@@ -22,14 +22,11 @@ injectGlobal`
 
 export default class extends React.Component {
   static getInitialProps({ req }) {
-    let hostName;
-    if (!req.headers.host.match(/(:1313)/)) {
-      return;
+    if (!req.headers.host.match(/(:1337)/)) {
+      return {};
     }
-    hostName = req.headers.host.replace(/(:1313)/, '');
-    console.log(hostName)
     return {
-      hostName
+      hostName: req.headers.host.replace(/(:1337)/, '')
     }
   }
 
@@ -77,7 +74,7 @@ export default class extends React.Component {
     return (
       <div id="container">
         <h1>
-          Nanochat <WSContainer host={this.props.hostName} />
+          Nanochat <WSContainer hostName={this.props.hostName} />
         </h1>
         <div id="messages">
           {

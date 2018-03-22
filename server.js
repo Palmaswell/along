@@ -27,7 +27,7 @@ nextApp.prepare().then(() => {
     }
     console.log(`
     > ▲ Next Js server is running
-    > ▲ Server started on port: ${ NEXT_PORT }
+    > ▲ Server started on port:  ${server.address().port}
     `);
   })
 })
