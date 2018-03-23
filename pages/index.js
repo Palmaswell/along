@@ -44,6 +44,7 @@ export default class extends React.Component {
         case 'SUBSCRIBEMSG':
           this.state.messages.push(redisMsg);
           this.setState(this.state);
+          console.log('index', this.state, '(YUYUYU')
       }
       console.log(e, 'old......');
     });
@@ -95,7 +96,6 @@ export default class extends React.Component {
             }
           }>
           </textarea>
-          <button>Submit</button>
           <ul>
             {this.state.messages.map((message, index) => (
               <li key={index}>{message.channel}: {message.message}</li>

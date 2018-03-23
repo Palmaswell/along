@@ -7,6 +7,7 @@
     "deploy": "now -e EXPRESS_PORT=\"3001\" -e NEXT_PORT=\"1313\" -e REDIS_HOST=@redis-host -e REDIS_PASS=@redis-pass -e REDIS_PORT=@redis-port",
     "server:next": "node server.js",
     "server:rx": "node rx-server.js",
+    "server:off": "node rx-server.1.js",
     "start": "NODE_ENV=production concurrently \"npm run server:rx\" \"npm run server:next\""
   },
   "dependencies": {
