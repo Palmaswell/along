@@ -44,7 +44,7 @@ export default class extends React.Component {
         case 'SUBSCRIBEMSG':
           this.state.messages.push(redisMsg);
           this.setState(this.state);
-          console.log('index', this.state, '(YUYUYU')
+          // console.log('index', this.state)
       }
       console.log(e, 'old......');
     });
@@ -73,11 +73,8 @@ export default class extends React.Component {
   render() {
     const messages = this.state.messages || this.props.messages;
     return (
-      <div id="container">
-        <h1>
-          <WSProvider hostName={this.props.hostName} />
-        </h1>
-        <div className="message-input">
+      <div>
+        <div>
           <select id="7411">
               <option>Hamster</option>
               <option>Mouse</option>
@@ -102,6 +99,7 @@ export default class extends React.Component {
             ))}
           </ul>
         </div>
+        <WSProvider hostName={this.props.hostName} />
       </div>
     )
   }
