@@ -74,6 +74,9 @@ export default class extends React.Component {
     const messages = this.state.messages || this.props.messages;
     return (
       <div>
+        <WSProvider
+          channel="Mouse"
+          hostName={this.props.hostName} />
         <div>
           <select id="7411">
               <option>Hamster</option>
@@ -99,7 +102,6 @@ export default class extends React.Component {
             ))}
           </ul>
         </div>
-        <WSProvider hostName={this.props.hostName} />
       </div>
     )
   }
