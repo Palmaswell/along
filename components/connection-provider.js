@@ -8,21 +8,21 @@ export class WSProvider extends React.Component {
     hostName: propTypes.string.isRequired
   };
 
-  static createMsgStreamHandle(ws, channel) {
-    return e => {
-      e.persist();
-      console.log(e.target.value, 'event, ;;;;;')
-      ws.send(JSON.stringify({
-        action:'PUBLISH',
-        channels: [channel],
-        message: e.target.value
-      }));
-    }
+  static createMsgStreamHandle(ws, channel, e) {
+    e.persist();
+    console.log(e.target.value)
+    ws.send(JSON.stringify({
+      action:'PUBLISH',
+      channels: [channel],
+      message: e.target.value
+    }));
   }
 
   constructor(props) {
     super(props);
-    this.state = { messages: new Set()};
+
+    this.state = { messages: new Set() };
+
     this.connection = Rx.Observable.create(observer => {
       const ws = new WebSocket(`ws://${this.props.hostName}:3001`);
       ws.addEventListener('open', () => {
@@ -36,21 +36,25 @@ export class WSProvider extends React.Component {
         `);
       });
       ws.addEventListener('message', message => {
-        observer.next({ws, message})
+        observer.next({ws, message});
       });
-      this.handleMsgStream = WSProvider.createMsgStreamHandle(ws, props.channel);
+      this.handleMsgStream = (e) => {
+        WSProvider.createMsgStreamHandle(ws, props.channel, e);
+      }
+      ;
    });
   }
 
   componentDidMount = () => {
     this.connection.subscribe(connection => {
-      console.log('it goes in here')
-      const redisMsg = JSON.parse(connection.message);
-      console.log(connection.message, 'should go in here ******');
+      console.log('you are subscribed')
+      const redisMsg = JSON.parse(connection.message.data);
       switch (redisMsg.action) {
         case 'SUBSCRIBEMSG':
-          this.state.messages.add(redisMsg);
-          this.setState(this.state);
+          this.setState(({messages}) => {
+            messages.add(redisMsg);
+          })
+          console.log(this.state, 'this is the state dfdfdf');
           break;
       }
     });
@@ -58,13 +62,13 @@ export class WSProvider extends React.Component {
 
   render() {
     const messages = Array.from(this.state.messages);
-    console.log(this.state.messages, 'empty ________******')
+    console.log(messages);
     return (
       <div>
-        <textarea onChange={this.handleMsgStream}/>
+        <textarea onChange={e => this.handleMsgStream(e)}/>
         <ul>
         {messages.map((message, index) => (
-            <li key={index}>{message.channel}: {message.message}</li>
+            console.log(message, 'iifuiduifd')
         ))}
         </ul>
       </div>
