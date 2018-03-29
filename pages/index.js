@@ -75,7 +75,7 @@ export default class extends React.Component {
     return (
       <div>
         <WSProvider
-          channel="Mouse"
+          channel="Hamster"
           hostName={this.props.hostName} />
         <div>
           <select id="7411">
