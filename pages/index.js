@@ -30,78 +30,13 @@ export default class extends React.Component {
     }
   }
 
-  constructor() {
-    super();
-    this.state = { messages: []};
-  }
-
-  componentDidMount() {
-
-    const ws =  new WebSocket (`ws://${this.props.hostName}:3001`);
-    ws.addEventListener('message', e => {
-      const redisMsg = JSON.parse(e.data);
-      switch (redisMsg.action) {
-        case 'SUBSCRIBEMSG':
-          this.state.messages.push(redisMsg);
-          this.setState(this.state);
-          console.log('index', this.state, '(YUYUYU')
-      }
-      console.log(e, 'old......');
-    });
-    ws.addEventListener('open', e => {
-      ws.send(JSON.stringify({
-        action: 'SUBSCRIBE',
-        channels: ['Hamster']
-      }));
-    })
-    this.ws = ws;
-  }
-
-  componentWillUnmount() {
-    // this.pubnub.unsubscribe();
-  }
-
-  setInput() {
-    return ev => {
-      const state = this.state || {};
-      this.setState(Object.assign({}, state, {
-        input: ev.target.value
-      }));
-    };
-  }
 
   render() {
-    const messages = this.state.messages || this.props.messages;
     return (
-      <div id="container">
-        <h1>
-          <WSProvider hostName={this.props.hostName} />
-        </h1>
-        <div className="message-input">
-          <select id="7411">
-              <option>Hamster</option>
-              <option>Mouse</option>
-          </select>
-          <textarea  onChange={
-            (e) => {
-              const options = document.getElementById('7411');
-              console.log(e.target.value, '@@@');
-              return (
-                this.ws.send(JSON.stringify({
-                  action: 'PUBLISH',
-                  channels: [options.value],
-                  message: e.target.value
-                }))
-              )
-            }
-          }>
-          </textarea>
-          <ul>
-            {this.state.messages.map((message, index) => (
-              <li key={index}>{message.channel}: {message.message}</li>
-            ))}
-          </ul>
-        </div>
+      <div>
+        <WSProvider
+          channel="Hamster"
+          hostName={this.props.hostName} />
       </div>
     )
   }

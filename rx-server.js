@@ -73,7 +73,6 @@ const deleteWSFromChannel = (ws) => {
 }
 
 redisSub.on('message', (channel, message) => {
-  console.log(`> Redis message 📩: ${message}`);
   const wsConnections = CHANNELS.get(channel);
   if(wsConnections) {
     wsConnections.forEach(ws => {

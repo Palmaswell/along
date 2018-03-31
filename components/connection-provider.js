@@ -2,66 +2,84 @@ import propTypes from 'prop-types';
 import React from 'react';
 import Rx from 'rxjs';
 
-const WSContext = React.createContext([]);
 export class WSProvider extends React.Component {
   static propTypes = {
-    hostName: propTypes.string.isRequired,
+    channel: propTypes.string.isRequired,
+    hostName: propTypes.string.isRequired
+  };
+
+  static createMsgStreamHandle(ws, channel, e) {
+    e.persist();
+    console.log(e.target.value)
+    ws.send(JSON.stringify({
+      action:'PUBLISH',
+      channels: [channel],
+      message: e.target.value
+    }));
   }
 
-  state = { messages: []};
+  constructor(props) {
+    super(props);
+
+    this.state = { messages: new Set() };
+
+    this.connection = Rx.Observable.create(observer => {
+      const ws = new WebSocket(`ws://${this.props.hostName}:3001`);
+      ws.addEventListener('open', () => {
+        ws.send(JSON.stringify({
+          action: 'SUBSCRIBE',
+          channels: [this.props.channel]
+        }));
+        console.log(`
+        > ⚗️ Reactive - Websocket client is up and running
+        > 📺 Connected to channel: ${this.props.channel}
+        `);
+      });
+      ws.addEventListener('message', message => {
+        observer.next({ws, message});
+      });
+      this.handleStream = (e) => {
+        WSProvider.createMsgStreamHandle(ws, props.channel, e);
+      }
+      ;
+   });
+  }
+
+  updateMessages = (redisMsg) => {
+    this.setState(state => {
+      return {
+        messages: state.messages.add(redisMsg)
+      };
+    });
+  }
 
   componentDidMount = () => {
-    this.messages = [];
-    this.ws = new WebSocket (`ws://${this.props.hostName}:3001`);
-    this.ws.addEventListener('open', () => {
-      this.ws.send(JSON.stringify({
-        action: 'SUBSCRIBE',
-        channels: ['Hamster']
-      }));
-      console.log(`> WS client connection is open`);
-    });
-    this.ws.addEventListener('message', message => {
-      const redisMsg = JSON.parse(message.data);
-      switch(redisMsg.action) {
+    this.connection.subscribe(connection => {
+      const redisMsg = JSON.parse(connection.message.data);
+      //-- to do remove switch with a if condition
+      switch (redisMsg.action) {
         case 'SUBSCRIBEMSG':
-        this.messages.push(JSON.parse(message.data));
+          this.updateMessages(redisMsg);
+          console.log(this.state, 'state in the didmount function')
+          // this.state.messages.add(redisMsg);
+          // this.setState(this.state);
+          // this.setState(({messages}) => {
+          //   messages.add(redisMsg);
+          // })
+          break;
       }
     });
   };
 
-  publish = (channel, message) => (
-    this.ws.send(JSON.stringify({
-      actions: 'PUBLISH',
-      channels: [channel],
-      message: message
-    }))
-  )
-
-  onStream = () => {
-    return e => {
-      Rx.Observable.from(this.messages).subscribe(redisMsg => {
-        this.setState(({ messages }) => {
-          messages.push(redisMsg);
-          console.log(`> Redis message: ${redisMsg}`);
-        })
-      })
-      this.ws.send(JSON.stringify({
-        action: 'PUBLISH',
-        channels: ['Hamster'],
-        message: e.target.value
-      }))
-    }
-  }
-
   render() {
+    const messages = Array.from(this.state.messages);
+    console.log(messages, 'state on the render function');
     return (
       <div>
-        <textarea  onChange={this.onStream()} />
+        <textarea onChange={e => this.handleStream(e)}/>
         <ul>
-            {this.state.messages.map((message, index) => (
-              <li key={index}>{message.channel}: {message.message}</li>
-            ))}
-          </ul>
+          {messages.map((message, i) => <li key={i}>{message.channel}:{message.message}</li>)}
+        </ul>
       </div>
     )
   }
