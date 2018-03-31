@@ -46,34 +46,22 @@ export class WSProvider extends React.Component {
   }
 
   updateMessages = (redisMsg) => {
-    this.setState(state => {
-      return {
-        messages: state.messages.add(redisMsg)
-      };
-    });
+    this.setState(({ messages }) => (
+      messages.add(redisMsg)
+    ));
   }
 
   componentDidMount = () => {
     this.connection.subscribe(connection => {
       const redisMsg = JSON.parse(connection.message.data);
-      //-- to do remove switch with a if condition
-      switch (redisMsg.action) {
-        case 'SUBSCRIBEMSG':
-          this.updateMessages(redisMsg);
-          console.log(this.state, 'state in the didmount function')
-          // this.state.messages.add(redisMsg);
-          // this.setState(this.state);
-          // this.setState(({messages}) => {
-          //   messages.add(redisMsg);
-          // })
-          break;
+      if (redisMsg.action === 'SUBSCRIBEMSG') {
+        this.updateMessages(redisMsg);
       }
     });
   };
 
   render() {
     const messages = Array.from(this.state.messages);
-    console.log(messages, 'state on the render function');
     return (
       <div>
         <textarea onChange={e => this.handleStream(e)}/>
