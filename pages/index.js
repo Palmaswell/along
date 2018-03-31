@@ -1,7 +1,7 @@
 import React from 'react';
 import { hydrate, injectGlobal } from 'react-emotion';
 import Router from 'next/router';
-import Test, {WSProvider} from '../components/connection-provider';
+import { MessagesContext, MessagesProvider } from '../components/connection-provider';
 
 // Adds server generated styles to emotion cache.
 // '__NEXT_DATA__.ids' is set in '_document.js'
@@ -33,11 +33,13 @@ export default class extends React.Component {
 
   render() {
     return (
-      <div>
-        <WSProvider
-          channel="Hamster"
-          hostName={this.props.hostName} />
-      </div>
+      <MessagesProvider
+        channel="Hamster"
+        hostName={this.props.hostName}>
+        <MessagesContext.Consumer>
+          Hi
+        </MessagesContext.Consumer>
+      </MessagesProvider>
     )
   }
 }

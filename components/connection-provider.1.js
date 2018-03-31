@@ -2,10 +2,7 @@ import propTypes from 'prop-types';
 import React from 'react';
 import Rx from 'rxjs';
 
-export const MessagesContext = React.createContext(new Set());
-console.log(MessagesContext , 'this works so far fine')
-
-export class MessagesProvider extends React.Component {
+export class WSProvider extends React.Component {
   static propTypes = {
     channel: propTypes.string.isRequired,
     hostName: propTypes.string.isRequired
@@ -13,6 +10,7 @@ export class MessagesProvider extends React.Component {
 
   static createMsgStreamHandle(ws, channel, e) {
     e.persist();
+    console.log(e.target.value)
     ws.send(JSON.stringify({
       action:'PUBLISH',
       channels: [channel],
@@ -41,7 +39,7 @@ export class MessagesProvider extends React.Component {
         observer.next({ws, message});
       });
       this.handleStream = (e) => {
-        MessagesProvider.createMsgStreamHandle(ws, props.channel, e);
+        WSProvider.createMsgStreamHandle(ws, props.channel, e);
       }
       ;
    });
@@ -63,12 +61,15 @@ export class MessagesProvider extends React.Component {
   };
 
   render() {
-    // const messages = Array.from(this.state.messages);
+    const messages = Array.from(this.state.messages);
     return (
-    <MessagesContext.Provider value={this.state.messages}>
-      {this.props.children}
-    </MessagesContext.Provider>
-    );
+      <div>
+        <textarea onChange={e => this.handleStream(e)}/>
+        <ul>
+          {messages.map((message, i) => <li key={i}>{message.channel}:{message.message}</li>)}
+        </ul>
+      </div>
+    )
   }
 }
 
