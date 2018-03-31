@@ -38,23 +38,34 @@ export class WSProvider extends React.Component {
       ws.addEventListener('message', message => {
         observer.next({ws, message});
       });
-      this.handleMsgStream = (e) => {
+      this.handleStream = (e) => {
         WSProvider.createMsgStreamHandle(ws, props.channel, e);
       }
       ;
    });
   }
 
+  updateMessages = (redisMsg) => {
+    this.setState(state => {
+      return {
+        messages: state.messages.add(redisMsg)
+      };
+    });
+  }
+
   componentDidMount = () => {
     this.connection.subscribe(connection => {
-      console.log('you are subscribed')
       const redisMsg = JSON.parse(connection.message.data);
+      //-- to do remove switch with a if condition
       switch (redisMsg.action) {
         case 'SUBSCRIBEMSG':
-          this.setState(({messages}) => {
-            messages.add(redisMsg);
-          })
-          console.log(this.state, 'this is the state dfdfdf');
+          this.updateMessages(redisMsg);
+          console.log(this.state, 'state in the didmount function')
+          // this.state.messages.add(redisMsg);
+          // this.setState(this.state);
+          // this.setState(({messages}) => {
+          //   messages.add(redisMsg);
+          // })
           break;
       }
     });
@@ -62,14 +73,12 @@ export class WSProvider extends React.Component {
 
   render() {
     const messages = Array.from(this.state.messages);
-    console.log(messages);
+    console.log(messages, 'state on the render function');
     return (
       <div>
-        <textarea onChange={e => this.handleMsgStream(e)}/>
+        <textarea onChange={e => this.handleStream(e)}/>
         <ul>
-        {messages.map((message, index) => (
-            console.log(message, 'iifuiduifd')
-        ))}
+          {messages.map((message, i) => <li key={i}>{message.channel}:{message.message}</li>)}
         </ul>
       </div>
     )
