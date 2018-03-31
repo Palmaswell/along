@@ -63,9 +63,9 @@ export class MessagesProvider extends React.Component {
   };
 
   render() {
-    // const messages = Array.from(this.state.messages);
+    const messages = Array.from(this.state.messages);
     return (
-    <MessagesContext.Provider value={this.state.messages}>
+    <MessagesContext.Provider value={messages}>
       {this.props.children}
     </MessagesContext.Provider>
     );

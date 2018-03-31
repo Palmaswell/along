@@ -1,5 +1,6 @@
-import React from 'react';
 import { hydrate, injectGlobal } from 'react-emotion';
+import React from 'react';
+import { render } from 'react-dom';
 import Router from 'next/router';
 import { MessagesContext, MessagesProvider } from '../components/connection-provider';
 
@@ -32,13 +33,15 @@ export default class extends React.Component {
 
 
   render() {
+    const MessagesConsumer = MessagesContext.Consumer;
+    console.log(MessagesConsumer, 'let see what it is')
     return (
       <MessagesProvider
         channel="Hamster"
         hostName={this.props.hostName}>
-        <MessagesContext.Consumer>
-          Hi
-        </MessagesContext.Consumer>
+        <MessagesConsumer>
+          {messages => <div>{messages}</div>}
+        </MessagesConsumer>
       </MessagesProvider>
     )
   }
