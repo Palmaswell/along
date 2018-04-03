@@ -2,22 +2,19 @@ import propTypes from 'prop-types';
 import React from 'react';
 import Rx from 'rxjs';
 
-export const MessagesContext = React.createContext(new Set());
-console.log(MessagesContext , 'this works so far fine')
+export const WSContext = React.createContext(new Set());
 
-export class MessagesProvider extends React.Component {
+export class WSProvider extends React.Component {
   static propTypes = {
     channel: propTypes.string.isRequired,
     hostName: propTypes.string.isRequired
   };
 
-  static createMsgStreamHandle(ws, channel, e) {
-    e.persist();
-    ws.send(JSON.stringify({
-      action:'PUBLISH',
-      channels: [channel],
-      message: e.target.value
-    }));
+  static send = (e) => {
+    console.log(e, 'from the static method')
+    return {
+      get: () => e
+    };
   }
 
   constructor(props) {
@@ -40,12 +37,14 @@ export class MessagesProvider extends React.Component {
       ws.addEventListener('message', message => {
         observer.next({ws, message});
       });
-      this.handleStream = (e) => {
-        MessagesProvider.createMsgStreamHandle(ws, props.channel, e);
-      }
-      ;
-   });
-  }
+
+      this.foo = (e) => (
+        this.handleMessageStream(ws, props.channel, e)
+      );
+    });
+    const test = WSProvider.send('test+++++');
+    this.test = test.get();
+  };
 
   componentDidMount = () => {
     this.connection.subscribe(connection => {
@@ -56,21 +55,40 @@ export class MessagesProvider extends React.Component {
     });
   };
 
-  updateMessages = (redisMsg) => {
+  handleConnection = ws => {
+    ws.send(JSON.stringify({
+      action:'PUBLISH',
+      channels: [channel],
+      message: e.target.value
+    }))
+  }
+
+  handleMessageStream = (ws, channel, e) => {
+    e.persist();
+    console.log(e, 'it goes inhere *******');
+    ws.send(JSON.stringify({
+      action:'PUBLISH',
+      channels: [channel],
+      message: e.target.value
+    }));
+  };
+
+  updateMessages = redisMsg => {
     this.setState(({ messages }) => (
       messages.add(redisMsg)
     ));
   };
 
   render() {
-    const messages = Array.from(this.state.messages);
+    const connection = {
+      messages: Array.from(this.state.messages),
+    };
+    console.log('this.test is available', this.test)
     return (
-    <MessagesContext.Provider value={messages}>
+    <WSContext.Provider value={ connection }>
       {this.props.children}
-    </MessagesContext.Provider>
+    </WSContext.Provider>
     );
   }
-}
-
-
+};
 

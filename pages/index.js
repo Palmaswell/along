@@ -2,7 +2,7 @@ import { hydrate, injectGlobal } from 'react-emotion';
 import React from 'react';
 import { render } from 'react-dom';
 import Router from 'next/router';
-import { MessagesContext, MessagesProvider } from '../components/connection-provider';
+import { WSContext, WSProvider } from '../components/connection-provider';
 
 // Adds server generated styles to emotion cache.
 // '__NEXT_DATA__.ids' is set in '_document.js'
@@ -12,12 +12,7 @@ if (typeof window !== 'undefined') {
 
 injectGlobal`
   html, body {
-    padding: 3rem 1rem;
-    margin: 0;
-    background: papayawhip;
     min-height: 100%;
-    font-family: Helvetica, Arial, sans-serif;
-    font-size: 24px;
   }
 `
 
@@ -31,18 +26,30 @@ export default class extends React.Component {
     }
   }
 
-
   render() {
-    const MessagesConsumer = MessagesContext.Consumer;
-    console.log(MessagesConsumer, 'let see what it is')
     return (
-      <MessagesProvider
+      <WSProvider
         channel="Hamster"
         hostName={this.props.hostName}>
-        <MessagesConsumer>
-          {messages => <div>{messages}</div>}
-        </MessagesConsumer>
-      </MessagesProvider>
+        <WSContext.Consumer>
+          {connection => {
+            console.log(connection, '==========');
+
+            return (
+              <div>
+                <input onChange={e => WSProvider.send(e)} type="text" />
+                {/* <input onChange={e => connection.handleStream(e)} type="text" />
+                {connection.messages.map(message => {
+                  return (
+                  <li>
+                    This is the message {message.channel}: {message.message}
+                  </li>)
+                })} */}
+              </div>
+             )
+          }}
+        </WSContext.Consumer>
+      </WSProvider>
     )
   }
 }
