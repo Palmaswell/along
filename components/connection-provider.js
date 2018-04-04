@@ -37,22 +37,30 @@ export class WSProvider extends React.Component {
       }
     });
     this.ws = ws;
-  };
+  }
 
   handleMessageStream = (e) => {
     e.persist();
-    this.ws.send(JSON.stringify({
-      action:'PUBLISH',
-      channels: [this.props.channel],
-      message: e.target.value
-    }));
-  };
+    if (this.ws.readyState === 1) {
+      this.sendMessage(e);
+    }
+  }
+
+  sendMessage = (e) => {
+    return (
+      this.ws.send(JSON.stringify({
+        action:'PUBLISH',
+        channels: [this.props.channel],
+        message: e.target.value
+      }))
+    );
+  }
 
   updateMessages = redisMsg => {
     this.setState(({ messages }) => (
       messages.add(redisMsg)
     ));
-  };
+  }
 
   render() {
     const broker = {
