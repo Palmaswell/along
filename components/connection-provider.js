@@ -10,20 +10,11 @@ export class WSProvider extends React.Component {
     hostName: propTypes.string.isRequired
   };
 
-  static send = (e) => {
-    console.log(e, 'from the static method')
-    return {
-      get: () => e
-    };
-  }
+  state = { messages: new Set() };
 
-  constructor(props) {
-    super(props);
-
-    this.state = { messages: new Set() };
-
+  componentDidMount = () => {
+    const ws = new WebSocket(`ws://${this.props.hostName}:3001`);
     this.connection = Rx.Observable.create(observer => {
-      const ws = new WebSocket(`ws://${this.props.hostName}:3001`);
       ws.addEventListener('open', () => {
         ws.send(JSON.stringify({
           action: 'SUBSCRIBE',
@@ -37,38 +28,22 @@ export class WSProvider extends React.Component {
       ws.addEventListener('message', message => {
         observer.next({ws, message});
       });
-
-      this.foo = (e) => (
-        this.handleMessageStream(ws, props.channel, e)
-      );
     });
-    const test = WSProvider.send('test+++++');
-    this.test = test.get();
-  };
 
-  componentDidMount = () => {
     this.connection.subscribe(connection => {
       const redisMsg = JSON.parse(connection.message.data);
       if (redisMsg.action === 'SUBSCRIBEMSG') {
         this.updateMessages(redisMsg);
       }
     });
+    this.ws = ws;
   };
 
-  handleConnection = ws => {
-    ws.send(JSON.stringify({
-      action:'PUBLISH',
-      channels: [channel],
-      message: e.target.value
-    }))
-  }
-
-  handleMessageStream = (ws, channel, e) => {
+  handleMessageStream = (e) => {
     e.persist();
-    console.log(e, 'it goes inhere *******');
-    ws.send(JSON.stringify({
+    this.ws.send(JSON.stringify({
       action:'PUBLISH',
-      channels: [channel],
+      channels: [this.props.channel],
       message: e.target.value
     }));
   };
@@ -80,12 +55,13 @@ export class WSProvider extends React.Component {
   };
 
   render() {
-    const connection = {
+    const broker = {
       messages: Array.from(this.state.messages),
-    };
-    console.log('this.test is available', this.test)
+      send: e => this.handleMessageStream(e)
+    }
+
     return (
-    <WSContext.Provider value={ connection }>
+    <WSContext.Provider value={ broker }>
       {this.props.children}
     </WSContext.Provider>
     );

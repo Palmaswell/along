@@ -32,19 +32,19 @@ export default class extends React.Component {
         channel="Hamster"
         hostName={this.props.hostName}>
         <WSContext.Consumer>
-          {connection => {
-            console.log(connection, '==========');
-
+          {broker => {
             return (
               <div>
-                <input onChange={e => WSProvider.send(e)} type="text" />
-                {/* <input onChange={e => connection.handleStream(e)} type="text" />
-                {connection.messages.map(message => {
-                  return (
-                  <li>
-                    This is the message {message.channel}: {message.message}
-                  </li>)
-                })} */}
+                <input onChange={broker.send} type="text" />
+                <ul>
+                  {broker.messages.map((message, i) => {
+                    return (
+                      <li key={i}>
+                        This is the message {message.channel}: {message.message}
+                      </li>
+                    )
+                  })}
+                </ul>
               </div>
              )
           }}
