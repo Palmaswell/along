@@ -2,19 +2,29 @@ import propTypes from 'prop-types';
 import React from 'react';
 import Rx from 'rxjs';
 
-export const WSContext = React.createContext(new Set());
-
 export class WSProvider extends React.Component {
   static propTypes = {
     channel: propTypes.string.isRequired,
     hostName: propTypes.string.isRequired
   };
 
-  state = { messages: new Set() };
+  static createMsgStreamHandle(ws, channel, e) {
+    e.persist();
+    console.log(e.target.value)
+    ws.send(JSON.stringify({
+      action:'PUBLISH',
+      channels: [channel],
+      message: e.target.value
+    }));
+  }
 
-  componentDidMount = () => {
-    const ws = new WebSocket(`ws://${this.props.hostName}:3001`);
+  constructor(props) {
+    super(props);
+
+    this.state = { messages: new Set() };
+
     this.connection = Rx.Observable.create(observer => {
+      const ws = new WebSocket(`ws://${this.props.hostName}:3001`);
       ws.addEventListener('open', () => {
         ws.send(JSON.stringify({
           action: 'SUBSCRIBE',
@@ -28,43 +38,40 @@ export class WSProvider extends React.Component {
       ws.addEventListener('message', message => {
         observer.next({ws, message});
       });
-    });
+      this.handleStream = (e) => {
+        WSProvider.createMsgStreamHandle(ws, props.channel, e);
+      }
+      ;
+   });
+  }
 
+  componentDidMount = () => {
     this.connection.subscribe(connection => {
       const redisMsg = JSON.parse(connection.message.data);
       if (redisMsg.action === 'SUBSCRIBEMSG') {
         this.updateMessages(redisMsg);
       }
     });
-    this.ws = ws;
   };
 
-  handleMessageStream = (e) => {
-    e.persist();
-    this.ws.send(JSON.stringify({
-      action:'PUBLISH',
-      channels: [this.props.channel],
-      message: e.target.value
-    }));
-  };
-
-  updateMessages = redisMsg => {
+  updateMessages = (redisMsg) => {
     this.setState(({ messages }) => (
       messages.add(redisMsg)
     ));
   };
 
   render() {
-    const broker = {
-      messages: Array.from(this.state.messages),
-      send: e => this.handleMessageStream(e)
-    }
-
+    const messages = Array.from(this.state.messages);
     return (
-    <WSContext.Provider value={ broker }>
-      {this.props.children}
-    </WSContext.Provider>
-    );
+      <div>
+        <textarea onChange={e => this.handleStream(e)}/>
+        <ul>
+          {messages.map((message, i) => <li key={i}>{message.channel}:{message.message}</li>)}
+        </ul>
+      </div>
+    )
   }
-};
+}
+
+
 
