@@ -4,6 +4,7 @@
   "scripts": {
     "build": "next build",
     "dev": "concurrently \"npm run server:next\" \"npm run server:rx\"",
+    "dev:off": "concurrently \"npm run server:next\" \"npm run server:off\"",
     "deploy": "now -e EXPRESS_PORT=\"3001\" -e NEXT_PORT=\"1313\" -e REDIS_HOST=@redis-host -e REDIS_PASS=@redis-pass -e REDIS_PORT=@redis-port",
     "server:next": "node server.js",
     "server:rx": "node rx-server.js",
@@ -33,6 +34,7 @@
     "ws": "^5.0.0"
   },
   "devDependencies": {
+    "@google-cloud/speech": "^1.4.0",
     "concurrently": "^3.5.1",
     "dotenv": "^5.0.1",
     "fs": "^0.0.1-security"
