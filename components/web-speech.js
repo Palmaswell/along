@@ -5,34 +5,41 @@ import { WSContext, WSProvider } from '../components/connection-provider';
 
 const languages = Rx.Observable.from(
   [
-    [
-      'English',
-      ['en-AU', 'Australia'],
-      ['en-CA', 'Canada'],
-      ['en-IN', 'India'],
-      ['en-NZ', 'New Zealand'],
-      ['en-ZA', 'South Africa'],
-      ['en-GB', 'United Kingdom'],
-      ['en-US', 'United States']
-    ],
-    [
-      'Español',
-      ['es-AR', 'Argentina'],
-      ['es-CL', 'Chile'],
-      ['es-CO', 'Colombia'],
-      ['es-CR', 'Costa Rica'],
-      ['es-EC', 'Ecuador'],
-      ['es-SV', 'El Salvador'],
-      ['es-ES', 'España'],
-      ['es-US', 'Estados Unidos']
-      ['es-MX', 'México'],
-    ],
-    [
-      'Deutsch',
-      ['de-DE']
-    ],
+    {
+      lang: 'English',
+      countries: {
+        'Australia': 'en-AU',
+        'Canada': 'en-CA',
+        'New Zealand': 'en-NZ',
+        'South Africa': 'en-ZA',
+        'United Kingdom': 'en-GB',
+        'United States': 'en-US'
+      }
+    },
+    {
+      lang: 'Español',
+      countries: {
+        'Argentina': 'es-AR',
+        'Chile': 'es-CL',
+        'Costa Rica': 'es-CR',
+        'España': 'es-ES',
+        'Estados Unidos': 'es-US',
+        'México': 'es-MX'
+      }
+    },
+    {
+      lang: 'Deutsch',
+      countries: {
+        'Austria': 'de-AT',
+        'Germany': 'de-DE',
+        'Liechtenstein': 'de-LI',
+        'Luxembourg': 'de-LU',
+        'Switzerland': 'de-CH',
+      }
+    }
   ]
 );
+
 
 export default class WebSpeech extends React.Component {
   static propTypes = {
@@ -48,9 +55,10 @@ export default class WebSpeech extends React.Component {
   speechRecognition = Rx.Observable.create(observer => {
     try {
       const webSpeechRecognition = new webkitSpeechRecognition();
-      webSpeechRecognition.lang = languages[0][1][6];
       webSpeechRecognition.continuous = true;
       webSpeechRecognition.interimResults = true;
+      // webSpeechRecognition.lang = languages[0][1][0];
+
 
       observer.next(webSpeechRecognition);
       observer.complete();
@@ -66,11 +74,14 @@ export default class WebSpeech extends React.Component {
   // };
 
   handleStart = () => {
-    // const onStart = this.speechRecognition.map(recognition => recognition);
-    // onStart.subscribe(x => {
-    //   console.log(x, 'it is actually working')
-    // })
-    console.log('it definitely goes in here');
+    const onStart = this.speechRecognition.map(recognition => recognition);
+    onStart.subscribe(recognition => {
+      console.log(recognition, 'it is actually working');
+      // recognition.onstart = () => {
+      //   console.log('Speech recognition service has started');
+      //   this.toggleRecognizing();
+      // };
+    })
   }
 
   startSpeech = e => {
@@ -83,28 +94,30 @@ export default class WebSpeech extends React.Component {
       }
       recognition.start();
       this.updateTimestamp(e);
+      this.toggleRecognizing();
       this.handleStart();
-      return recognition;
+      // return recognition;
     },
-      (err) => console.warn(err),
+      (err) => console.log(err),
       () => console.log('completed')
     );
   }
 
-  updateRecognition = () => {
-    this.setState(({recognizing}) => {
-      recognizing = !recognizing
+  toggleRecognizing = () => {
+    this.setState(({ recognizing }) => {
+      recognizing = !recognizing;
+      console.log(recognizing, '!!!!!!!!');
     });
-    console.log(this.state.recognizing);
   }
 
   updateTimestamp = e => {
-    this.setState(({timeStamp}) => {
+    this.setState(({ timeStamp }) => {
       timeStamp = e.timeStamp;
     });
   }
 
   render () {
+    console.log('++++++++', this.state.recognizing)
     return (
       <WSProvider
         channel="Hamster"
