@@ -54,34 +54,38 @@ export default class WebSpeech extends React.Component {
 
   speechRecognition = Rx.Observable.create(observer => {
     try {
-      const webSpeechRecognition = new webkitSpeechRecognition();
-      webSpeechRecognition.continuous = true;
-      webSpeechRecognition.interimResults = true;
-      // webSpeechRecognition.lang = languages[0][1][0];
-
+      const  SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+      const webSpeechRecognition = new SpeechRecognition();
+      // webSpeechRecognition.continuous = true;
+      // webSpeechRecognition.interimResults = false;
+      console.log('++++++++++', webSpeechRecognition)
 
       observer.next(webSpeechRecognition);
-      observer.complete();
+      // observer.complete();
     } catch(err) {
       observer.error(err);
     }
   })
 
-  // recognition.onstart = function() {
-  //   recognizing = true;
-  //   showInfo('info_speak_now');
-  //   start_img.src = 'mic-animate.gif';
-  // };
+  handleRecognition = (recognition) => {
+    recognition.onstart = () => {
+      console.log('Speech recognition service has started');
+      this.toggleRecognizing();
+      console.log('onstart recognizing', this.state.recognizing);
+    };
 
-  handleStart = () => {
-    const onStart = this.speechRecognition.map(recognition => recognition);
-    onStart.subscribe(recognition => {
-      console.log(recognition, 'it is actually working');
-      // recognition.onstart = () => {
-      //   console.log('Speech recognition service has started');
-      //   this.toggleRecognizing();
-      // };
-    })
+    recognition.onend = () => {
+      this.toggleRecognizing();
+      console.log('onend recognizing', this.state.recognizing);
+    }
+
+    recognition.onresult = e => {
+      console.log(e.results, 'this are the results');
+    }
+
+    recognition.onspeechend = () => {
+      recognition.stop();
+    }
   }
 
   startSpeech = e => {
@@ -92,11 +96,11 @@ export default class WebSpeech extends React.Component {
         recognition.stop();
         return;
       }
+
+      recognition.lang = 'en-US';
       recognition.start();
       this.updateTimestamp(e);
-      this.toggleRecognizing();
-      this.handleStart();
-      // return recognition;
+      this.handleRecognition(recognition);
     },
       (err) => console.log(err),
       () => console.log('completed')
@@ -106,7 +110,6 @@ export default class WebSpeech extends React.Component {
   toggleRecognizing = () => {
     this.setState(({ recognizing }) => {
       recognizing = !recognizing;
-      console.log(recognizing, '!!!!!!!!');
     });
   }
 
@@ -117,7 +120,6 @@ export default class WebSpeech extends React.Component {
   }
 
   render () {
-    console.log('++++++++', this.state.recognizing)
     return (
       <WSProvider
         channel="Hamster"
