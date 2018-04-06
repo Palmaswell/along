@@ -29,11 +29,7 @@ export default class extends React.Component {
   }
 
   render() {
-    return (
-      <div>
-        <WebSpeech hostName={this.props.hostName} />
-      </div>
-    )
+    return <WebSpeech hostName={this.props.hostName} />
   }
 }
 

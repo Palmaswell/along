@@ -3,6 +3,9 @@ import React from 'react';
 import Rx from 'rxjs';
 import { WSContext, WSProvider } from '../components/connection-provider';
 
+//-- $todo: language selection
+//-- $todo:
+
 const languages = Rx.Observable.from(
   [
     {
@@ -40,7 +43,6 @@ const languages = Rx.Observable.from(
   ]
 );
 
-
 export default class WebSpeech extends React.Component {
   static propTypes = {
     hostName: propTypes.string.isRequired
@@ -56,31 +58,33 @@ export default class WebSpeech extends React.Component {
     try {
       const  SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
       const webSpeechRecognition = new SpeechRecognition();
-      // webSpeechRecognition.continuous = true;
-      // webSpeechRecognition.interimResults = false;
-      console.log('++++++++++', webSpeechRecognition)
+      webSpeechRecognition.interimResults = false;
 
       observer.next(webSpeechRecognition);
-      // observer.complete();
+      observer.complete();
     } catch(err) {
       observer.error(err);
     }
   })
 
+  // messageResults = Rx.Observable.from()
+
   handleRecognition = (recognition) => {
     recognition.onstart = () => {
-      console.log('Speech recognition service has started');
       this.toggleRecognizing();
-      console.log('onstart recognizing', this.state.recognizing);
     };
+
+    recognition.onerror = e => {
+      console.warn(`> 💥 Recognition error: ${e}`)
+    }
 
     recognition.onend = () => {
       this.toggleRecognizing();
-      console.log('onend recognizing', this.state.recognizing);
     }
 
     recognition.onresult = e => {
-      console.log(e.results, 'this are the results');
+      // this.messageResults(e.results);
+      console.log(e.results);
     }
 
     recognition.onspeechend = () => {
@@ -108,18 +112,20 @@ export default class WebSpeech extends React.Component {
   }
 
   toggleRecognizing = () => {
-    this.setState(({ recognizing }) => {
-      recognizing = !recognizing;
-    });
+    this.setState(({ recognizing }) => (
+      recognizing = !recognizing
+    ));
+    console.log(this.state.recognizing);
   }
 
   updateTimestamp = e => {
-    this.setState(({ timeStamp }) => {
-      timeStamp = e.timeStamp;
-    });
+    this.setState(({ timeStamp }) => (
+      timeStamp = e.timeStamp
+    ));
   }
 
   render () {
+    // console.log(this.messageResults, '_______')
     return (
       <WSProvider
         channel="Hamster"
