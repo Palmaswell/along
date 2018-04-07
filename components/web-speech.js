@@ -4,8 +4,6 @@ import Rx from 'rxjs';
 import { WSContext, WSProvider } from '../components/connection-provider';
 
 //-- $todo: language selection
-//-- $todo:
-
 const languages = Rx.Observable.from(
   [
     {
@@ -70,6 +68,10 @@ export default class WebSpeech extends React.Component {
     }
   })
 
+  displayMesage = brokerSend => {
+    brokerSend(this.state.speechResult.transcript);
+  }
+
   handleRecognition = (recognition) => {
     recognition.onstart = () => {
       this.toggleRecognizing();
@@ -86,10 +88,10 @@ export default class WebSpeech extends React.Component {
     recognition.onresult = e => {
       const speechResults = Rx.Observable.from(e.results);
       speechResults.subscribe(result => {
-        this.setResult(result);
+        this.setResultsState(result);
       },
       (err) => console.log(`> Recognition result 💥: ${err}`),
-      () => console.log(`> Completed collecting speech results 👏`))
+      () => console.log(`> Completed collecting speech results 🎙`))
     }
 
     recognition.onspeechend = () => {
@@ -97,7 +99,14 @@ export default class WebSpeech extends React.Component {
     }
   }
 
-  startSpeech = e => {
+  setResultsState = results => {
+    this.setState(({ speechResult }) => {
+      speechResult.transcript = results[0].transcript;
+      speechResult.confidence = results[0].confidence;
+    });
+  }
+
+  start = e => {
     e.persist();
 
     this.speechRecognition.subscribe(recognition => {
@@ -114,12 +123,6 @@ export default class WebSpeech extends React.Component {
       (err) => console.log(`> Start speech recognition 💥: ${err}`),
       () => console.log(`> Completed start speech recognition 👏`)
     );
-  }
-  setResult = results => {
-    this.setState(({ speechResult }) => {
-      speechResult.transcript = results[0].transcript;
-      speechResult.confidence = results[0].confidence;
-    });
   }
 
   toggleRecognizing = () => {
@@ -146,11 +149,11 @@ export default class WebSpeech extends React.Component {
               <div>
                 <button
                   name="Start Speech"
-                  onClick={this.startSpeech}
+                  onClick={this.start}
                   type="button">
                   Talk !
                 </button>
-                <input onChange={broker.send} type="text" />
+                <input onChange={e => broker.send(e.target.value)} type="text" />
                 <ul>
                   {broker.messages.map((message, i) => {
                     return (

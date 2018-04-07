@@ -24,53 +24,36 @@ export class WSProvider extends React.Component {
         > ⚗️ Reactive - Websocket client is up and running
         > 📺 Connected to channel: ${this.props.channel}
         `);
-        observer.next(ws);
+
         if (ws.readyState === 1) {
-          console.log(ws.readyState, '1111')
+          observer.next(ws);
           observer.complete();
         }
       });
-      // ws.addEventListener('message', message => {
-      //   observer.next({ws, message});
-      //   observer.complete();
-      // });
     } catch(err) {
       observer.error(err);
     }
   })
 
-  componentDidMount = () => {
+  componentDidMount () {
     this.ws.subscribe(ws => {
-      console.log(ws.readyState, '2222')
       ws.addEventListener('message', message => {
         const redisMsg = JSON.parse(message.data);
-        console.log('message.data', message.data);
         if (redisMsg.action === 'SUBSCRIBEMSG') {
           this.updateMessages(redisMsg);
         }
-      })
+      },
+      (err) => console.log(`> WS SUBSCRIBEMSG 💥: ${err}`),
+      () => console.log(`> Completed SUBSCRIBEMSG  💌`))
     });
-    // this.connection.subscribe(connection => {
-    //   console.log('it goes in her&&&&&')
-    //   const redisMsg = JSON.parse(connection.message.data);
-    //   if (redisMsg.action === 'SUBSCRIBEMSG') {
-    //     this.updateMessages(redisMsg);
-    //   }
-    // });
-    // this.ws = ws;
   }
 
   handleMessageStream = (e) => {
-    if (e.persist) {
-      e.persist();
-    }
-    this.sendMessage(e);
-  }
-
-  sendMessage = (e) => {
-    const connection = this.ws.map(ws => ws);
     const messages = Rx.Observable.create(observer => {
       try {
+        if (e.persist) {
+          e.persist();
+        }
         observer.next(e);
         observer.complete();
       } catch(err) {
@@ -78,20 +61,29 @@ export class WSProvider extends React.Component {
       }
     });
 
+    messages.subscribe(message => {
+      this.sendMessage(message);
+    },
+    (err) => console.log(`> Stream message 💥: ${err}`),
+    () => console.log(`> Completed streaming messages 💌💨`));
+  }
+
+  sendMessage = (e) => {
+    const connection = this.ws.map(ws => ws);
+
     connection.subscribe(ws => {
       if (ws.readyState === 1) {
-        console.log(ws.readyState, '3333')
         return (
           ws.send(JSON.stringify({
             action:'PUBLISH',
             channels: [this.props.channel],
-            message: e.target.value
+            message: e
           }))
         );
       }
     },
     (err) => console.log(`> WS PUBLISH 💥: ${err}`),
-    () => console.log(`> Completed PUBLISHing messages 💌`))
+    () => console.log(`> Completed publishing messages 👩‍💻`))
   }
 
   updateMessages = redisMsg => {
@@ -102,12 +94,10 @@ export class WSProvider extends React.Component {
 
   render() {
     return (
-    <WSContext.Provider value={
-        {
-          messages: Array.from(this.state.messages),
-          send: e => this.handleMessageStream(e)
-        }
-      }>
+    <WSContext.Provider value={{
+        messages: Array.from(this.state.messages),
+        send: e => this.handleMessageStream(e)
+      }}>
       {this.props.children}
     </WSContext.Provider>
     );
