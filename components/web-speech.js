@@ -49,8 +49,11 @@ export default class WebSpeech extends React.Component {
   }
 
   state = {
-    transcript: '',
     recognizing: false,
+    speechResult: {
+      transcript: '',
+      confidence: 0
+    },
     timeStamp: 0
   }
 
@@ -67,8 +70,6 @@ export default class WebSpeech extends React.Component {
     }
   })
 
-  // messageResults = Rx.Observable.from()
-
   handleRecognition = (recognition) => {
     recognition.onstart = () => {
       this.toggleRecognizing();
@@ -83,8 +84,12 @@ export default class WebSpeech extends React.Component {
     }
 
     recognition.onresult = e => {
-      // this.messageResults(e.results);
-      console.log(e.results);
+      const speechResults = Rx.Observable.from(e.results);
+      speechResults.subscribe(result => {
+        this.setResult(result);
+      },
+      (err) => console.log(`> Recognition result 💥: ${err}`),
+      () => console.log(`> Completed collecting speech results 👏`))
     }
 
     recognition.onspeechend = () => {
@@ -106,16 +111,21 @@ export default class WebSpeech extends React.Component {
       this.updateTimestamp(e);
       this.handleRecognition(recognition);
     },
-      (err) => console.log(err),
-      () => console.log('completed')
+      (err) => console.log(`> Start speech recognition 💥: ${err}`),
+      () => console.log(`> Completed start speech recognition 👏`)
     );
+  }
+  setResult = results => {
+    this.setState(({ speechResult }) => {
+      speechResult.transcript = results[0].transcript;
+      speechResult.confidence = results[0].confidence;
+    });
   }
 
   toggleRecognizing = () => {
     this.setState(({ recognizing }) => (
       recognizing = !recognizing
     ));
-    console.log(this.state.recognizing);
   }
 
   updateTimestamp = e => {
@@ -125,7 +135,7 @@ export default class WebSpeech extends React.Component {
   }
 
   render () {
-    // console.log(this.messageResults, '_______')
+    console.log(this.state.speechResult, '******');
     return (
       <WSProvider
         channel="Hamster"

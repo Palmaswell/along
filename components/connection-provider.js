@@ -40,7 +40,7 @@ export class WSProvider extends React.Component {
   }
 
   handleMessageStream = (e) => {
-    e.persist();
+    // e.persist();
     if (this.ws.readyState === 1) {
       this.sendMessage(e);
     }
