@@ -4,6 +4,8 @@
     "NEXT_PORT": "1337",
     "REDIS_HOST": "@redis-host",
     "REDIS_PASS": "@redis-pass",
-    "REDIS_PORT": "@redis-port"
+    "REDIS_PORT": "@redis-port",
+    "SPOTIFY_CLIENT": "@spotify-client",
+    "SPOTIFY_SEC": "@spotify-sec"
   }
 }
