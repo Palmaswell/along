@@ -56,16 +56,20 @@ export default class WebSpeech extends React.Component {
   }
 
   speechRecognition = Rx.Observable.create(observer => {
-    try {
-      const  SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
-      const webSpeechRecognition = new SpeechRecognition();
-      webSpeechRecognition.interimResults = false;
-
-      observer.next(webSpeechRecognition);
+    const  SpeechRecognition = window.SpeechRecognition ||
+                              window.webkitSpeechRecognition ||
+                              window.mozSpeechRecognition ||
+                              window.msSpeechRecognition ||
+                              window.oSpeechRecognition;
+    if (!SpeechRecognition) {
       observer.complete();
-    } catch(err) {
-      observer.error(err);
+      return;
     }
+    const webSpeechRecognition = new SpeechRecognition();
+    webSpeechRecognition.interimResults = false;
+
+    observer.next(webSpeechRecognition);
+
   })
 
   displayMesage = brokerSend => {
@@ -89,9 +93,7 @@ export default class WebSpeech extends React.Component {
       const speechResults = Rx.Observable.from(e.results);
       speechResults.subscribe(result => {
         this.setResultsState(result);
-      },
-      (err) => console.log(`> Recognition result 💥: ${err}`),
-      () => console.log(`> Completed collecting speech results 🎙`))
+      });
     }
 
     recognition.onspeechend = () => {

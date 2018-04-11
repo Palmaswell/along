@@ -4,3 +4,4 @@ yarn-error.log
 dump.rdb
 .env
 gcloud.json
+now.json
