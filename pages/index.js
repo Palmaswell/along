@@ -3,7 +3,7 @@ import React from 'react';
 import { render } from 'react-dom';
 import Router from 'next/router';
 import { WSContext, WSProvider } from '../components/connection-provider';
-import WebSpeech from '../components/web-speech';
+import Speech from '../components/speech/speech-component';
 
 
 // Adds server generated styles to emotion cache.
@@ -30,7 +30,7 @@ export default class extends React.Component {
   }
 
   render() {
-    return <WebSpeech hostName={this.props.hostName} />
+    return <Speech hostName={this.props.hostName} />
   }
 }
 

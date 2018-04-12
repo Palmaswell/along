@@ -26,10 +26,8 @@ export class WSProvider extends React.Component {
 
       if (ws.readyState === 1) {
         observer.next(ws);
-        // observer.complete();
       }
     });
-
   })
 
   componentDidMount () {

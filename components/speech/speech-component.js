@@ -1,47 +1,9 @@
 import propTypes from 'prop-types';
 import React from 'react';
 import Rx from 'rxjs';
-import { WSContext, WSProvider } from '../components/connection-provider';
+import { WSContext, WSProvider } from '../connection-provider';
 
-//-- $todo: language selection
-const languages = Rx.Observable.from(
-  [
-    {
-      lang: 'English',
-      countries: {
-        'Australia': 'en-AU',
-        'Canada': 'en-CA',
-        'New Zealand': 'en-NZ',
-        'South Africa': 'en-ZA',
-        'United Kingdom': 'en-GB',
-        'United States': 'en-US'
-      }
-    },
-    {
-      lang: 'Español',
-      countries: {
-        'Argentina': 'es-AR',
-        'Chile': 'es-CL',
-        'Costa Rica': 'es-CR',
-        'España': 'es-ES',
-        'Estados Unidos': 'es-US',
-        'México': 'es-MX'
-      }
-    },
-    {
-      lang: 'Deutsch',
-      countries: {
-        'Austria': 'de-AT',
-        'Germany': 'de-DE',
-        'Liechtenstein': 'de-LI',
-        'Luxembourg': 'de-LU',
-        'Switzerland': 'de-CH',
-      }
-    }
-  ]
-);
-
-export default class WebSpeech extends React.Component {
+export default class Speech extends React.Component {
   static propTypes = {
     hostName: propTypes.string.isRequired
   }
@@ -73,12 +35,22 @@ export default class WebSpeech extends React.Component {
   }
 
   handleRecognition = (recognition) => {
+    console.log('it goes in here', recognition)
     recognition.onstart = () => {
       this.toggleRecognizing();
     };
 
     recognition.onerror = e => {
-      console.warn(`> 💥 Recognition error: ${e}`)
+      console.log('event on erroe', e)
+      switch (e.error) {
+        case 'network':
+          console.warn(`> 💥 Network recognition error: ${e.error}`);
+          break;
+        case 'not-allowed':
+        case 'service-not-allowed':
+          console.warn(`> 💥 Service-Not-Allowed recognition error: ${e.error}`);
+          break;
+      }
     }
 
     recognition.onend = () => {
@@ -107,21 +79,18 @@ export default class WebSpeech extends React.Component {
   start = e => {
     e.persist();
 
-    this.speechRecognition.subscribe(recognition => {
-      if (this.state.recognizing) {
-        recognition.stop();
-        return;
-      }
-
-      recognition.interimResults = false;
-      recognition.lang = 'en-US';
-      recognition.start();
-      this.updateTimestamp(e);
-      this.handleRecognition(recognition);
-    },
-      (err) => console.log(`> Start speech recognition 💥: ${err}`),
-      () => console.log(`> Completed start speech recognition 👏`)
-    );
+  this.speechRecognition.subscribe(recognition => {
+    if (this.state.recognizing) {
+      recognition.stop();
+      return;
+    }
+    recognition.maxAlternatives = 3;
+    recognition.interimResults = false;
+    recognition.lang = 'en-US';
+    recognition.start();
+    this.updateTimestamp(e);
+    this.handleRecognition(recognition);
+  });
   }
 
   toggleRecognizing = () => {
