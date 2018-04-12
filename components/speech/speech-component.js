@@ -1,7 +1,11 @@
 import propTypes from 'prop-types';
 import React from 'react';
 import Rx from 'rxjs';
+
+import cmd, { cmdGrammar } from './speech-commands';
+import { getCmdName } from './speech-utils';
 import { WSContext, WSProvider } from '../connection-provider';
+
 
 export default class Speech extends React.Component {
   static propTypes = {
@@ -18,11 +22,7 @@ export default class Speech extends React.Component {
   }
 
   speechRecognition = Rx.Observable.create(observer => {
-    const  SpeechRecognition = window.SpeechRecognition ||
-            window.webkitSpeechRecognition ||
-            window.mozSpeechRecognition ||
-            window.msSpeechRecognition ||
-            window.oSpeechRecognition;
+    const  SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
       observer.complete();
       return;
@@ -30,18 +30,12 @@ export default class Speech extends React.Component {
     observer.next(new SpeechRecognition());
   })
 
-  displayMesage = brokerSend => {
-    brokerSend(this.state.speechResult.transcript);
-  }
-
   handleRecognition = (recognition) => {
-    console.log('it goes in here', recognition)
     recognition.onstart = () => {
       this.toggleRecognizing();
     };
 
     recognition.onerror = e => {
-      console.log('event on erroe', e)
       switch (e.error) {
         case 'network':
           console.warn(`> 💥 Network recognition error: ${e.error}`);
@@ -58,6 +52,7 @@ export default class Speech extends React.Component {
     }
 
     recognition.onresult = e => {
+      foo(e);
       const speechResults = Rx.Observable.from(e.results);
       speechResults.subscribe(result => {
         this.setResultsState(result);
@@ -84,9 +79,14 @@ export default class Speech extends React.Component {
       recognition.stop();
       return;
     }
-    recognition.maxAlternatives = 3;
+    const SpeechGrammarList = window.SpeechGrammarList ||window.webkitSpeechGrammarList;
+    const recognitionList = new SpeechGrammarList();
+    recognitionList.addFromString(cmdGrammar, 1);
+
+    recognition.maxAlternatives = 1; // which is actually default
     recognition.interimResults = false;
     recognition.lang = 'en-US';
+    recognition.grammar = recognitionList;
     recognition.start();
     this.updateTimestamp(e);
     this.handleRecognition(recognition);
@@ -106,7 +106,6 @@ export default class Speech extends React.Component {
   }
 
   render () {
-    console.log(this.state.speechResult, '******');
     return (
       <WSProvider
         channel="Hamster"

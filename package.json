@@ -43,5 +43,16 @@
     "fs": "^0.0.1-security"
   },
   "license": "ISC",
-  "author": "Mauricio Palma <mauricio.palma@sinnerschrader.com>"
+  "author": "Mauricio Palma <mauricio.palma@sinnerschrader.com>",
+  "keywords": [
+    "along",
+    "along.js",
+    "recognition",
+    "speech",
+    "speechrecognition",
+    "spotify",
+    "spotify web api",
+    "voice",
+    "webkitspeechrecognition"
+  ]
 }
