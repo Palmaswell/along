@@ -2,9 +2,8 @@ import { hydrate, injectGlobal } from 'react-emotion';
 import React from 'react';
 import { render } from 'react-dom';
 import Router from 'next/router';
-import { WSContext, WSProvider } from '../components/connection-provider';
-import Speech from '../components/speech/speech-component';
-
+import { WSContext, WSProvider } from '../providers/connection-provider';
+import { SpeechContext, SpeechProvider } from '../providers/speech/speech-provider';
 
 // Adds server generated styles to emotion cache.
 // '__NEXT_DATA__.ids' is set in '_document.js'
@@ -30,7 +29,25 @@ export default class extends React.Component {
   }
 
   render() {
-    return <Speech hostName={this.props.hostName} />
+    return (
+      <SpeechProvider>
+        <SpeechContext.Consumer>
+          {speech => {
+            console.log(speech)
+            return(
+              <button
+                name="Start Speech"
+                onClick={e => speech.start(e)}
+                type="button">
+                  Talk !
+              </button>
+            )
+          }}
+        </SpeechContext.Consumer>
+      </SpeechProvider>
+    )
   }
 }
+
+
 
