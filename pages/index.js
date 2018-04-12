@@ -7,7 +7,7 @@ import Router from 'next/router';
 
 export default class extends React.Component {
   static getInitialProps({ req }) {
-    console.log(req.cookies.access_token, 'on the client, _______')
+    // console.log(req, 'on the client, _______')
     if (!req.headers.host.match(/(:1337)/)) {
       return {};
     }
@@ -19,13 +19,24 @@ export default class extends React.Component {
   render() {
     return (
       <Providers
-        channel="Hamster"
+        channel="Home"
         hostName={this.props.hostName}>
         <Consumers>
           {({speech, broker}) => {
             console.log(speech, broker);
             return (
-              <div>Hi</div>
+              <div>
+                <input onChange={e => broker.send(e.target.value)} type="text" />
+                <ul>
+                  {broker.messages.map((message, i) => {
+                    return (
+                      <li key={i}>
+                        This is the message {message.channel}: {message.message}
+                      </li>
+                    )
+                  })}
+                </ul>
+              </div>
             )
           }}
         </Consumers>

@@ -41,7 +41,7 @@ export class WSProvider extends React.Component {
     });
   }
 
-  handleMessageStream = (e) => {
+  handleMessageStream = e => {
     const messages = Rx.Observable.create(observer => {
       if (e.persist) {
         e.persist();
@@ -57,13 +57,11 @@ export class WSProvider extends React.Component {
   sendMessage = (e) => {
     this.ws.subscribe(ws => {
       if (ws.readyState === 1) {
-        return (
-          ws.send(JSON.stringify({
-            action:'PUBLISH',
-            channels: [this.props.channel],
-            message: e
-          }))
-        );
+        ws.send(JSON.stringify({
+          action:'PUBLISH',
+          channels: [this.props.channel],
+          message: e
+        }));
       }
     })
   }
