@@ -7,13 +7,18 @@ import Router from 'next/router';
 
 export default class extends React.Component {
   static getInitialProps({ req }) {
-    // console.log(req, 'on the client, _______')
+    console.log(req.cookies, 'on the client, _______')
     if (!req.headers.host.match(/(:1337)/)) {
-      return {};
+      return {
+        cookies: req.cookies
+      };
+    } else {
+      return {
+        cookies: req.cookies,
+        hostName: req.headers.host.replace(/(:1337)/, '')
+      }
     }
-    return {
-      hostName: req.headers.host.replace(/(:1337)/, '')
-    }
+
   }
 
   render() {
@@ -24,8 +29,22 @@ export default class extends React.Component {
         <Consumers>
           {({speech, broker}) => {
             console.log(speech, broker);
+            // if (speech.stream) {
+            //   // speech.stream.subscribe(result => {
+            //   //   console.log(result[0][0], 'final________');
+            //   //   broker.send(result[0][0].transcript)
+            //   // })
+            //   console.log(speech.stream, 'final________');
+            // }
             return (
               <div>
+                {/* <div>COOKIES {JSON.stringify(this.props.cookies)}</div> */}
+                <button
+                  name="Start Speech"
+                  onClick={speech.start}
+                  type="button">
+                  Talk !
+                </button>
                 <input onChange={e => broker.send(e.target.value)} type="text" />
                 <ul>
                   {broker.messages.map((message, i) => {

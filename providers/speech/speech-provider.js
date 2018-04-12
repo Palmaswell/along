@@ -6,7 +6,7 @@ export const SpeechContext = React.createContext({
   transcript: '',
   confidence: 0
 });
-
+let onEnd;
 export class SpeechProvider extends React.Component {
   state = {
     recognizing: false,
@@ -17,6 +17,7 @@ export class SpeechProvider extends React.Component {
     timeStamp: 0
   }
 
+
   speechRecognition = Rx.Observable.create(observer => {
     const  SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
@@ -26,7 +27,14 @@ export class SpeechProvider extends React.Component {
     observer.next(new SpeechRecognition());
   })
 
-  handleRecognition = (recognition) => {
+  getResultStream = stream => {
+    stream.subscribe(result => {
+      this.updateState(result);
+    });
+    // return speechStream = stream;
+  }
+
+  handleRecognition = recognition => {
     recognition.onstart = () => {
       this.toggleRecognizing();
     };
@@ -43,27 +51,28 @@ export class SpeechProvider extends React.Component {
       }
     }
 
-    recognition.onend = () => {
-      this.toggleRecognizing();
-    }
+    // recognition.onend = (e) => {
+    //   console.log('this is the ne', e)
+    //   this.toggleRecognizing();
+    // }
 
     recognition.onresult = e => {
-      const speechResults = Rx.Observable.from(e.results);
-      speechResults.subscribe(result => {
-        this.setResultsState(result);
-      });
+      const resultStream = Rx.Observable.create(observer => {
+        observer.next(e.results)
+      })
+      this.getResultStream(resultStream);
     }
 
     recognition.onspeechend = () => {
       recognition.stop();
     }
-  }
 
-  setResultsState = results => {
-    this.setState(({ speechResult }) => {
-      speechResult.transcript = results[0].transcript;
-      speechResult.confidence = results[0].confidence;
-    });
+    recognition.onend = e => {
+      console.log(e, 'this is the end 22222')
+      onEnd = e;
+      return onEnd;
+    };
+
   }
 
   start = e => {
@@ -94,6 +103,13 @@ export class SpeechProvider extends React.Component {
     ));
   }
 
+  updateState = result => {
+    this.setState(({ speechResult }) => {
+      speechResult.transcript = result[0][0].transcript;
+      speechResult.confidence = result[0][0].confidence;
+    });
+  }
+
   updateTimestamp = e => {
     this.setState(({ timeStamp }) => (
       timeStamp = e.timeStamp
@@ -101,10 +117,11 @@ export class SpeechProvider extends React.Component {
   }
 
   render () {
+    console.log(onEnd, '*******')
     return (
       <SpeechContext.Provider value={{
         result: this.state.speechResult,
-        start: e => this.start(e)
+        start: e => this.start(e),
       }}>
         {this.props.children}
       </SpeechContext.Provider>

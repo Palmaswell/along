@@ -59,7 +59,7 @@ nextApp.prepare().then(() => {
       redirect_uri: redirectUri,
       state: state
     });
-    res.cookie(stateKey, state);
+    res.cookie('spotify_auth_state', state);
 
     res.redirect(`https://accounts.spotify.com/authorize?${loginParams}`);
     return nextApp.render(req, res, '/login', req.query)
@@ -104,15 +104,14 @@ nextApp.prepare().then(() => {
           console.log(`> 💥 Status Code: ${response.statusCode}`)
         }
       }).then(json => {
-        const accessToken = json.access_token;
-        res.cookie('access_token', json.access_token);
-        res.cookie('refresh_token', json.refresh_token);
+        res.cookie('sp_token', json.access_token);
+        res.cookie('sp_rf_token', json.refresh_token);
         res.cookie('expires_in', json.expires_in);
         if (res.cookies) {
           console.log(`> 🍪 Cookies: ${JSON.stringify(res.cookies)}`);
         }
         return nextApp.render(req, res, '/callback', req.query);
-      })
+      });
     }
   })
 
@@ -121,10 +120,10 @@ nextApp.prepare().then(() => {
    * @return {void}
    */
   app.get('/refresh_token', (req, res) => {
+    res.redirect('/');
     if (req.cookies) {
       console.log(`> 🍪 : ${JSON.stringify(req.cookies)}`);
     }
-    res.redirect('/');
     const searchParamsOptions = new URLSearchParams({
         grant_type: 'refresh_token',
         refresh_token: req.cookies.refresh_token
