@@ -51,7 +51,7 @@ nextApp.prepare().then(() => {
    * @return {void}
    */
   app.get('/login', (req, res) => {
-    const scope = 'user-read-private';
+    const scope = 'user-read-private playlist-read-private playlist-read-collaborative user-read-playback-state user-modify-playback-state user-read-currently-playing';
     const loginParams = new URLSearchParams({
       response_type: 'code',
       client_id: `${SPOTIFY_CLIENT}`,

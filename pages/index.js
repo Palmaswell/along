@@ -20,6 +20,7 @@ injectGlobal`
 
 export default class extends React.Component {
   static getInitialProps({ req }) {
+    console.log(req.cookies.access_token, 'on the client, _______')
     if (!req.headers.host.match(/(:1337)/)) {
       return {};
     }

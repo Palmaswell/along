@@ -57,19 +57,15 @@ export default class WebSpeech extends React.Component {
 
   speechRecognition = Rx.Observable.create(observer => {
     const  SpeechRecognition = window.SpeechRecognition ||
-                              window.webkitSpeechRecognition ||
-                              window.mozSpeechRecognition ||
-                              window.msSpeechRecognition ||
-                              window.oSpeechRecognition;
+            window.webkitSpeechRecognition ||
+            window.mozSpeechRecognition ||
+            window.msSpeechRecognition ||
+            window.oSpeechRecognition;
     if (!SpeechRecognition) {
       observer.complete();
       return;
     }
-    const webSpeechRecognition = new SpeechRecognition();
-    webSpeechRecognition.interimResults = false;
-
-    observer.next(webSpeechRecognition);
-
+    observer.next(new SpeechRecognition());
   })
 
   displayMesage = brokerSend => {
@@ -117,6 +113,7 @@ export default class WebSpeech extends React.Component {
         return;
       }
 
+      recognition.interimResults = false;
       recognition.lang = 'en-US';
       recognition.start();
       this.updateTimestamp(e);
