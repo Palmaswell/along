@@ -88,14 +88,13 @@ nextApp.prepare().then(() => {
         redirect_uri: redirectUri,
         grant_type: 'authorization_code'
       });
-      const headers = new Headers({
-        'Authorization': `Basic ${Buffer.from(`${SPOTIFY_CLIENT}:${SPOTIFY_SEC}`).toString('base64')}`,
-        'Content-Type': 'application/x-www-form-urlencoded',
-      })
       fetch('https://accounts.spotify.com/api/token', {
         method: 'POST',
-        body: searchParamsOptions,
-        headers: headers
+        headers: new Headers({
+          'Authorization': `Basic ${Buffer.from(`${SPOTIFY_CLIENT}:${SPOTIFY_SEC}`).toString('base64')}`,
+          'Content-Type': 'application/x-www-form-urlencoded',
+        }),
+        body: searchParamsOptions
       }).then(response => {
         if (response.status === 200 && response.ok) {
           console.log(`> ⏆ Token fetch status Code: ${response.status}`);
@@ -110,7 +109,7 @@ nextApp.prepare().then(() => {
         if (res.cookies) {
           console.log(`> 🍪 Cookies: ${JSON.stringify(res.cookies)}`);
         }
-        return nextApp.render(req, res, '/callback', req.query);
+        nextApp.render(req, res, '/callback', req.query);
       });
     }
   })
@@ -149,6 +148,11 @@ nextApp.prepare().then(() => {
       });
       res.redirect('/');
     })
+  });
+
+  app.get('/user/:id', (req, res) => {
+    const queryParams = { id: req.params.id }
+    nextApp.render(req, res, '/playlists', queryParams);
   });
 
   app.get('*', (req, res) => {

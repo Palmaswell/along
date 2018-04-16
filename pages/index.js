@@ -1,24 +1,36 @@
 import Consumers from '../components/consumers';
+import fetch, { Headers }  from 'node-fetch';
 import { hydrate, injectGlobal } from 'react-emotion';
+import Link from 'next/link';
 import Providers from '../components/providers';
 import React from 'react';
 import { render } from 'react-dom';
 import Router from 'next/router';
 
 export default class extends React.Component {
-  static getInitialProps({ req }) {
-    console.log(req.cookies, 'on the client, _______')
+  static async getInitialProps({ req }) {
+    const headers = new Headers({
+      'Authorization': `Bearer ${req.cookies.sp_token}`,
+      'Content-Type': 'application/json',
+    });
+    const res = await fetch(`https://api.spotify.com/v1/me`, {
+      method: 'GET',
+      headers: headers
+    });
+    const data = await res.json();
+
     if (!req.headers.host.match(/(:1337)/)) {
       return {
-        cookies: req.cookies
+        cookies: req.cookies,
+        spotify: data
       };
     } else {
       return {
         cookies: req.cookies,
-        hostName: req.headers.host.replace(/(:1337)/, '')
+        hostName: req.headers.host.replace(/(:1337)/, ''),
+        spotify: data
       }
     }
-
   }
 
   render() {
@@ -38,6 +50,10 @@ export default class extends React.Component {
             // }
             return (
               <div>
+                <h1>Hi {this.props.spotify.display_name}</h1>
+                <Link as={`/user/${this.props.spotify.id}`} href={`/playlists?id=${this.props.spotify}`}>
+                  <a>Dummy link make it readable</a>
+                </Link>
                 {/* <div>COOKIES {JSON.stringify(this.props.cookies)}</div> */}
                 <button
                   name="Start Speech"
