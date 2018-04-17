@@ -103,9 +103,11 @@ nextApp.prepare().then(() => {
           console.log(`> 💥 Status Code: ${response.statusCode}`)
         }
       }).then(json => {
-        res.cookie('sp_token', json.access_token);
-        res.cookie('sp_rf_token', json.refresh_token);
-        res.cookie('expires_in', json.expires_in);
+        res.cookie('tokens', {
+          access: json.access_token,
+          refresh: json.refresh_token,
+          expiration: json.expires_in
+        })
         if (res.cookies) {
           console.log(`> 🍪 Cookies: ${JSON.stringify(res.cookies)}`);
         }

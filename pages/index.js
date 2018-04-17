@@ -7,32 +7,32 @@ import React from 'react';
 import { render } from 'react-dom';
 import Router from 'next/router';
 
-export default class extends React.Component {
-  static async getInitialProps({ req }) {
-    const headers = new Headers({
-      'Authorization': `Bearer ${req.cookies.sp_token}`,
-      'Content-Type': 'application/json',
-    });
+export default class Home extends React.Component {
+  static getInitialProps =  async context => {
+    const { host } = context.req.headers;
+    const { tokens } = context.req.cookies;
     const res = await fetch(`https://api.spotify.com/v1/me`, {
       method: 'GET',
-      headers: headers
+      headers: new Headers({
+        'Authorization': `Bearer ${tokens.access}`,
+        'Content-Type': 'application/json',
+      })
     });
     const data = await res.json();
+    console.log(data, '&*&**&')
 
-    if (!req.headers.host.match(/(:1337)/)) {
+    if (!host.match(/(:1337)/)) {
       return {
-        cookies: req.cookies,
+        cookies: tokens,
         spotify: data
       };
-    } else {
-      return {
-        cookies: req.cookies,
-        hostName: req.headers.host.replace(/(:1337)/, ''),
-        spotify: data
-      }
+    }
+    return {
+      cookies: tokens,
+      hostName: host.replace(/(:1337)/, ''),
+      spotify: data
     }
   }
-
   render() {
     return (
       <Providers
@@ -51,7 +51,7 @@ export default class extends React.Component {
             return (
               <div>
                 <h1>Hi {this.props.spotify.display_name}</h1>
-                <Link as={`/user/${this.props.spotify.id}`} href={`/playlists?id=${this.props.spotify}`}>
+                <Link prefetch as={`/user/${this.props.spotify.id}`} href={`/playlists?id=${this.props.spotify}`}>
                   <a>Dummy link make it readable</a>
                 </Link>
                 {/* <div>COOKIES {JSON.stringify(this.props.cookies)}</div> */}
@@ -79,6 +79,4 @@ export default class extends React.Component {
     );
   }
 }
-
-
 
