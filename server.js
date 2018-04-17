@@ -62,7 +62,7 @@ nextApp.prepare().then(() => {
     res.cookie('spotify_auth_state', state);
 
     res.redirect(`https://accounts.spotify.com/authorize?${loginParams}`);
-    return nextApp.render(req, res, '/login', req.query)
+    nextApp.render(req, res, '/login', req.query)
   })
 
   /**
@@ -155,6 +155,14 @@ nextApp.prepare().then(() => {
   app.get('/user/:id', (req, res) => {
     const queryParams = { id: req.params.id }
     nextApp.render(req, res, '/playlists', queryParams);
+  });
+
+  app.get('/playlist/:id/:play_id', (req, res) => {
+    const queryParams = {
+      id: req.params.id,
+      playListId: req.params.play_id
+    }
+    nextApp.render(req, res, '/playlist', queryParams);
   });
 
   app.get('*', (req, res) => {

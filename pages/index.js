@@ -8,9 +8,9 @@ import { render } from 'react-dom';
 import Router from 'next/router';
 
 export default class Home extends React.Component {
-  static getInitialProps =  async context => {
-    const { host } = context.req.headers;
-    const { tokens } = context.req.cookies;
+  static getInitialProps =  async ctx => {
+    const { host } = ctx.req.headers;
+    const { tokens } = ctx.req.cookies;
     const res = await fetch(`https://api.spotify.com/v1/me`, {
       method: 'GET',
       headers: new Headers({
