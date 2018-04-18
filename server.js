@@ -108,48 +108,19 @@ nextApp.prepare().then(() => {
           refresh: json.refresh_token,
           expiration: json.expires_in
         })
-        if (res.cookies) {
-          console.log(`> 🍪 Cookies: ${JSON.stringify(res.cookies)}`);
-        }
-        nextApp.render(req, res, '/callback', req.query);
+        queryParams = {
+          access: json.access_token,
+          refresh: json.refresh_token,
+          expiration: json.expires_in
+        };
+        nextApp.render(req, res, '/callback', queryParams);
       });
     }
   })
 
-  /**
-   * Refresh the access token
-   * @return {void}
-   */
-  app.get('/refresh_token', (req, res) => {
-    res.redirect('/');
-    if (req.cookies) {
-      console.log(`> 🍪 : ${JSON.stringify(req.cookies)}`);
-    }
-    const searchParamsOptions = new URLSearchParams({
-        grant_type: 'refresh_token',
-        refresh_token: req.cookies.refresh_token
-    });
-    const headers = new Headers({
-      'Authorization': `Basic ${Buffer.from(`${SPOTIFY_CLIENT}:${SPOTIFY_SEC}`).toString('base64')}`
-    });
-    fetch('https://accounts.spotify.com/api/token', {
-      method: 'POST',
-      body: searchParamsOptions,
-      headers: headers
-    }).then(response => {
-      if (response.status === 200 && response.ok) {
-        console.log(`>  Refresh fetch status Code: ${response.status}`);
-        return response.json();
-      } else {
-        console.log(`> 💥 Status Code: ${response.statusCode}`)
-      }
-    })
-    .then(json => {
-      res.send({
-        'access_token': json.access_token
-      });
-      res.redirect('/');
-    })
+  app.get('/user/:access', (req, res) => {
+    const queryParams = { access: req.params.access }
+    nextApp.render(req, res, '/', queryParams);
   });
 
   app.get('/user/:id', (req, res) => {
