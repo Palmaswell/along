@@ -19,7 +19,6 @@ export default class PlayLists extends React.Component {
       })
     });
     const data = await res.json();
-    // console.log(data, '_______')
     if (!host.match(/(:1337)/)) {
       return {
         playlists: data

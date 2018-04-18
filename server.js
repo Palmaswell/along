@@ -44,7 +44,7 @@ nextApp.prepare().then(() => {
   // Spotify Authentification
   const stateKey = 'spotify_auth_state';
   const state = generateRandomString(16);
-  const redirectUri = `http://0.0.0.0:${NEXT_PORT}/callback`;
+  const redirectUri = `http://localhost:${NEXT_PORT}/callback`;
 
   /**
    * User logs in and gives permission
@@ -171,7 +171,7 @@ nextApp.prepare().then(() => {
     handle(req, res, parsedUrl);
   });
 
-  server.listen(NEXT_PORT, '0.0.0.0', err => {
+  server.listen(NEXT_PORT, 'localhost', err => {
     if (err) {
       console.log(`> ▲ Next Js server error ${err}`);
     }

@@ -17,7 +17,6 @@ export class SpeechProvider extends React.Component {
     timeStamp: 0
   }
 
-
   speechRecognition = Rx.Observable.create(observer => {
     const  SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
@@ -31,7 +30,6 @@ export class SpeechProvider extends React.Component {
     stream.subscribe(result => {
       this.updateState(result);
     });
-    // return speechStream = stream;
   }
 
   handleRecognition = recognition => {
@@ -117,7 +115,7 @@ export class SpeechProvider extends React.Component {
   }
 
   render () {
-    console.log(onEnd, '*******')
+    // console.log(onEnd, '*******')
     return (
       <SpeechContext.Provider value={{
         result: this.state.speechResult,
