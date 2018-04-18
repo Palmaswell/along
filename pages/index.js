@@ -10,7 +10,6 @@ import Router from 'next/router';
 export default class extends React.Component {
   static getInitialProps =  async ctx => {
     const { tokens } = ctx.req.cookies;
-    const { host } = ctx.req.headers;
     if (tokens.access) {
       const res = await fetch(`https://api.spotify.com/v1/me`, {
         method: 'GET',
@@ -22,22 +21,20 @@ export default class extends React.Component {
       const data = await res.json();
       return {
         cookies: tokens,
-        hostName: host.match(/(:1337)/) ? host.replace(/(:1337)/, '') : host,
         spotify: data
       }
     } else {
       return {
         cookies: tokens,
-        hostName: host.match(/(:1337)/) ? host.replace(/(:1337)/, '') : host,
       }
     }
   }
 
   render() {
+
     return (
       <Providers
-        channel="Home"
-        hostName={this.props.hostName}>
+        channel="Home">
         <Consumers>
           {({speech, broker}) => {
             broker.ws.subscribe(foo => console.log(foo, '^^^^^'))

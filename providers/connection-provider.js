@@ -43,7 +43,6 @@ export const WSContext = React.createContext({
 export class WSProvider extends React.Component {
   static propTypes = {
     channel: propTypes.string.isRequired,
-    hostName: propTypes.string.isRequired
   };
 
   state = {
@@ -53,9 +52,13 @@ export class WSProvider extends React.Component {
   };
 
   componentDidMount () {
-    const hostName = this.props.hostName;
+    const locationOrigin = window.location.origin.replace(/(http:\/\/)/g, '');
+    const hostName = locationOrigin.match(/(:1337)/)
+      ? locationOrigin.replace(/(:1337)/g, '')
+      : locationOrigin;
     const channel = this.props.channel;
-    const wsSingleton = new WSProviderSingleton(hostName,channel);
+
+    const wsSingleton = new WSProviderSingleton(hostName, channel);
 
     wsSingleton.ws.subscribe(message => {
       switch(message.action) {

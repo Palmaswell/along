@@ -9,7 +9,6 @@ import { render } from 'react-dom';
 export default class PlayList extends React.Component {
   static getInitialProps = async ctx => {
     const { id, playListId } = ctx.query;
-    const { host } =  ctx.req.headers;
     const { tokens } =  ctx.req.cookies;
     const res = await fetch(`https://api.spotify.com/v1/users/${id}/playlists/${playListId}/tracks`, {
       method: 'GET',
@@ -20,13 +19,7 @@ export default class PlayList extends React.Component {
     });
     const data = await res.json();
     console.log(data, '_______')
-    if (!host.match(/(:1337)/)) {
-      return {
-        playlists: data
-      };
-    };
     return {
-      hostName: host.replace(/(:1337)/, ''),
       playlists: data
     }
   }
