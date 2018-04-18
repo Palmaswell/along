@@ -31,34 +31,27 @@ export default class extends React.Component {
         hostName: host.match(/(:1337)/) ? host.replace(/(:1337)/, '') : host,
       }
     }
-
-
   }
-  componentWillMount() {
 
-  }
   render() {
     return (
       <Providers
         channel="Home"
-        hostName={this.props.host}>
+        hostName={this.props.hostName}>
         <Consumers>
           {({speech, broker}) => {
-            console.log(speech, broker);
-            // if (speech.stream) {
-            //   speech.stream.subscribe(result => {
-            //     console.log(result[0][0], 'final________');
-            //     broker.send(result[0][0].transcript)
-            //   })
-            //   console.log(speech.stream, 'final________');
-            // }
+            broker.ws.subscribe(foo => console.log(foo, '^^^^^'))
+            broker.ws.next({
+              action:'PUBLISH',
+              channels: ['Home'],
+              message: speech.result.transcript
+            })
             return (
               <div>
                 <h1>Hi {this.props.spotify.display_name}</h1>
                 <Link as={`/user/${this.props.spotify.id}`} href={`/playlists?id=${this.props.spotify}`}>
                   <a>Go to playlists</a>
                 </Link>
-
                 <button
                   name="Start Speech"
                   onClick={speech.start}
@@ -71,15 +64,6 @@ export default class extends React.Component {
                     message: e.target.value
                   })}
                   type="text"/>
-                {/* <ul>
-                  {broker.messages.map((message, i) => {
-                    return (
-                      <li key={i}>
-                        This is the message {message.channel}: {message.message}
-                      </li>
-                    )
-                  })}
-                </ul> */}
               </div>
             )
           }}

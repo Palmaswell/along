@@ -6,7 +6,7 @@ export const SpeechContext = React.createContext({
   transcript: '',
   confidence: 0
 });
-let onEnd;
+
 export class SpeechProvider extends React.Component {
   state = {
     recognizing: false,
@@ -20,7 +20,6 @@ export class SpeechProvider extends React.Component {
   speechRecognition = Rx.Observable.create(observer => {
     const  SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
-      observer.complete();
       return;
     }
     observer.next(new SpeechRecognition());
@@ -49,10 +48,9 @@ export class SpeechProvider extends React.Component {
       }
     }
 
-    // recognition.onend = (e) => {
-    //   console.log('this is the ne', e)
-    //   this.toggleRecognizing();
-    // }
+    recognition.onend = (e) => {
+      this.toggleRecognizing();
+    }
 
     recognition.onresult = e => {
       const resultStream = Rx.Observable.create(observer => {
@@ -64,12 +62,6 @@ export class SpeechProvider extends React.Component {
     recognition.onspeechend = () => {
       recognition.stop();
     }
-
-    recognition.onend = e => {
-      console.log(e, 'this is the end 22222')
-      onEnd = e;
-      return onEnd;
-    };
 
   }
 
@@ -115,7 +107,6 @@ export class SpeechProvider extends React.Component {
   }
 
   render () {
-    // console.log(onEnd, '*******')
     return (
       <SpeechContext.Provider value={{
         result: this.state.speechResult,

@@ -3,19 +3,20 @@ import React from 'react';
 import Rx from 'rxjs';
 
 
-export class WSProviderSingleton {
-  constructor(hostName) {
-    this.webSock = new WebSocket(`ws://localhost:3001`);
+class WSProviderSingleton {
+  constructor(hostName, channel) {
+    this.webSock = new WebSocket(`ws://${hostName}:3001`);
     const ws = this.webSock;
     this.ws = new Rx.Subject();
     ws.addEventListener('open', () => {
       ws.send(JSON.stringify({
         action: 'SUBSCRIBE',
-        channels: ['Home']
+        channels: [channel]
       }));
+
       console.log(`
       > ⚗️ Reactive - Websocket client is up and running
-      > 📺 Connected to channel: ${4711}
+      > 📺 Connected to channel: ${channel}
       `);
       this.ws.next({
         action: "WSOPEN",
@@ -27,11 +28,10 @@ export class WSProviderSingleton {
     }));
 
     ws.addEventListener('message', message => {
-        const redisMsg = JSON.parse(message.data);
-        console.log("ws", message);
-        if (redisMsg.action === 'SUBSCRIBEMSG') {
-          this.ws.next(message);
-        }
+      const redisMsg = JSON.parse(message.data);
+      if (redisMsg.action === 'SUBSCRIBEMSG') {
+        this.ws.next(message);
+      }
     });
   }
 }
@@ -46,37 +46,44 @@ export class WSProvider extends React.Component {
     hostName: propTypes.string.isRequired
   };
 
-  state = { wsProviderSingleton: null, wsopen: false };
+  state = {
+    wsSingleton: null,
+    wsmessages: new Set(),
+    wsopen: false
+  };
 
   componentDidMount () {
-    const wsProviderSingleton = new WSProviderSingleton();
-    wsProviderSingleton.ws.subscribe(message => {
-      console.log("jjjj!!!!!", message);
-      if (message.action == "WSOPEN") {
-        this.setState({ ...this.state, wsopen: true });
-      }
-      if (message.action == "WSCLOSE") {
-        this.setState({ ...this.state, wsopen: false });
-      }
-      if (message.action == "PUBLISH") {
-        console.log("ggggg", message);
-        wsProviderSingleton.webSock.send(JSON.stringify(message));
+    const hostName = this.props.hostName;
+    const channel = this.props.channel;
+    const wsSingleton = new WSProviderSingleton(hostName,channel);
+
+    wsSingleton.ws.subscribe(message => {
+      switch(message.action) {
+        case 'WSOPEN':
+          this.setState({ ...this.state, wsopen: true });
+          break;
+        case 'WSCLOSE':
+          this.setState({ ...this.state, wsopen: false });
+          break;
+        case 'PUBLISH':
+          wsSingleton.ws.next({message});
+          wsSingleton.webSock.send(JSON.stringify(message));
       }
     });
-    this.setState({...this.state, wsProviderSingleton});
+    this.setState({...this.state, wsSingleton});
   }
 
   renderChildren = () => {
     if (this.state.wsopen) {
       return this.props.children;
     }
-    return <div>waiting for Websocket</div>
+    return <div>📺  Waiting for Websocket client</div>
   }
 
   render() {
     return (
-      <WSContext.Provider value={this.state.wsProviderSingleton}>
-        {this.props.children}
+      <WSContext.Provider value={this.state.wsSingleton}>
+        {this.renderChildren()}
       </WSContext.Provider>
     );
   }
