@@ -117,11 +117,8 @@ nextApp.prepare().then(() => {
     nextApp.render(req, res, '/playlists', queryParams);
   });
 
-  app.get('/tracks/:id/:play_id', (req, res) => {
-    const queryParams = {
-      id: req.params.id,
-      playListId: req.params.play_id
-    }
+  app.get('/tracks/:play_id', (req, res) => {
+    const queryParams = { playListId: req.params.play_id}
     nextApp.render(req, res, '/tracks', queryParams);
   });
 

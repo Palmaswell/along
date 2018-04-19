@@ -1,9 +1,10 @@
 import Consumers from '../components/consumers';
-import fetch, { Headers }  from 'node-fetch';
-import { hydrate, injectGlobal } from 'react-emotion';
+import Cookie from 'js-cookie';
 import Link from 'next/link';
 import Providers from '../components/providers';
 import React from 'react';
+import fetch, { Headers }  from 'node-fetch';
+import { hydrate, injectGlobal } from 'react-emotion';
 import { getCookie } from '../utils/cookies';
 
 export default class PlayLists extends React.Component {
@@ -17,6 +18,7 @@ export default class PlayLists extends React.Component {
       })
     });
     const data = await res.json();
+    Cookie.set('user_id', id);
     return {
       id: id,
       playlist: data
@@ -25,11 +27,11 @@ export default class PlayLists extends React.Component {
 
   render() {
     return (
-      this.props.playlist.items.map(playlist => {
+      this.props.playlist.items.map((playlist, i) => {
         // console.log(playlist, '🛬🛬🛬🛬🛬🛬')
         return (
-          <div>
-            <Link as={`/tracks/${this.props.id}/${playlist.id}`} href={`/tracks?id=${this.props.id}?playid=${playlist.id}`}>
+          <div key={playlist.id}>
+            <Link as={`/tracks/${playlist.id}`} href={`/tracks?playid=${playlist.id}`}>
               <a data-id={playlist.id}>
                 <img src={playlist.images[0].url} alt={`${playlist.name} cover`} />
               </a>
