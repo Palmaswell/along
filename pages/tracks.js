@@ -5,15 +5,15 @@ import Link from 'next/link';
 import Providers from '../components/providers';
 import React from 'react';
 import { render } from 'react-dom';
+import { getCookie } from '../utils/cookies';
 
-export default class PlayList extends React.Component {
+export default class Tracks extends React.Component {
   static getInitialProps = async ctx => {
     const { id, playListId } = ctx.query;
-    const { tokens } =  ctx.req.cookies;
     const res = await fetch(`https://api.spotify.com/v1/users/${id}/playlists/${playListId}/tracks`, {
       method: 'GET',
       headers: new Headers({
-        'Authorization': `Bearer ${tokens.access}`,
+        'Authorization': `Bearer ${getCookie('access', ctx)}`,
         'Content-Type': 'application/json',
       })
     });

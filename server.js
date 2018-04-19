@@ -103,37 +103,26 @@ nextApp.prepare().then(() => {
           console.log(`> 💥 Status Code: ${response.statusCode}`)
         }
       }).then(json => {
-        res.cookie('tokens', {
-          access: json.access_token,
-          refresh: json.refresh_token,
-          expiration: json.expires_in
-        })
-        queryParams = {
-          access: json.access_token,
-          refresh: json.refresh_token,
-          expiration: json.expires_in
-        };
-        nextApp.render(req, res, '/callback', queryParams);
+        res.cookie('access', json.access_token);
+        res.cookie('refresh', json.refresh_token);
+        res.cookie('expiration', json.expires_in);
+
+        nextApp.render(req, res, '/callback', req.query);
       });
     }
   })
 
-  app.get('/user/:access', (req, res) => {
-    const queryParams = { access: req.params.access }
-    nextApp.render(req, res, '/', queryParams);
-  });
-
-  app.get('/user/:id', (req, res) => {
+  app.get('/playlists/:id', (req, res) => {
     const queryParams = { id: req.params.id }
     nextApp.render(req, res, '/playlists', queryParams);
   });
 
-  app.get('/playlist/:id/:play_id', (req, res) => {
+  app.get('/tracks/:id/:play_id', (req, res) => {
     const queryParams = {
       id: req.params.id,
       playListId: req.params.play_id
     }
-    nextApp.render(req, res, '/playlist', queryParams);
+    nextApp.render(req, res, '/tracks', queryParams);
   });
 
   app.get('*', (req, res) => {

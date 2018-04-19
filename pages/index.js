@@ -4,30 +4,25 @@ import { hydrate, injectGlobal } from 'react-emotion';
 import Link from 'next/link';
 import Providers from '../components/providers';
 import React from 'react';
-import { render } from 'react-dom';
 import Router from 'next/router';
+import { getCookie } from '../utils/cookies';
 
 export default class extends React.Component {
   static getInitialProps =  async ctx => {
-    // const { tokens } = ctx.req.cookies;
-
     const res = await fetch(`https://api.spotify.com/v1/me`, {
       method: 'GET',
       headers: new Headers({
-        'Authorization': `Bearer ${ctx.query.access}`,
+        'Authorization': `Bearer ${getCookie('access', ctx)}`,
         'Content-Type': 'application/json',
       })
     });
     const data = await res.json();
-    console.log(ctx.query.access, '*****')
-    console.log(data, '----')
     return {
       spotify: data ? data : null
     }
   }
 
   render() {
-
     return (
       <Providers
         channel="Home">
@@ -42,7 +37,7 @@ export default class extends React.Component {
             return (
               <div>
                 <h1>Hi {"this.props.spotify.display_name"}</h1>
-                <Link as={`/user/${this.props.spotify.id}`} href={`/playlists?id=${this.props.spotify}`}>
+                <Link as={`/playlists/${this.props.spotify.id}`} href={`/playlists?id=${this.props.spotify.id}`}>
                   <a>Go to playlists</a>
                 </Link>
                 <button
