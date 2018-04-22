@@ -28,7 +28,6 @@ export default class PlayLists extends React.Component {
   render() {
     return (
       this.props.playlist.items.map((playlist, i) => {
-        // console.log(playlist, '🛬🛬🛬🛬🛬🛬')
         return (
           <div key={playlist.id}>
             <Link as={`/tracks/${playlist.id}`} href={`/tracks?playid=${playlist.id}`}>
