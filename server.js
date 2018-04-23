@@ -118,7 +118,7 @@ nextApp.prepare().then(() => {
   });
 
   app.get('/tracks/:play_id', (req, res) => {
-    const queryParams = { playListId: req.params.play_id}
+    const queryParams = { play_id: req.params.play_id};
     nextApp.render(req, res, '/tracks', queryParams);
   });
 

@@ -30,7 +30,7 @@ export default class PlayLists extends React.Component {
       this.props.playlist.items.map((playlist, i) => {
         return (
           <div key={playlist.id}>
-            <Link as={`/tracks/${playlist.id}`} href={`/tracks?playid=${playlist.id}`}>
+            <Link as={`/tracks/${playlist.id}`} href={`/tracks?play_id=${playlist.id}`}>
               <a data-id={playlist.id}>
                 <img src={playlist.images[0].url} alt={`${playlist.name} cover`} />
               </a>
