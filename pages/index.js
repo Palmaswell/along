@@ -17,7 +17,6 @@ export default class extends React.Component {
       })
     });
     const data = await res.json();
-    console.log('show me someting 909090909090')
     return {
       spotify: data ? data : null
     }

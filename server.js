@@ -8,7 +8,8 @@ const next = require('next');
 const { parse, URLSearchParams } = require('url');
 
 /**
- * Code from Spotify https://github.com/spotify/web-api-auth-examples
+ * generateRandomString from Spotify
+ * https://github.com/spotify/web-api-auth-examples
  * Generates a random string containing numbers and letters
  * @param  {number} length The length of the string
  * @return {string} The generated string
@@ -120,6 +121,13 @@ nextApp.prepare().then(() => {
   app.get('/tracks/:play_id', (req, res) => {
     const queryParams = { play_id: req.params.play_id};
     nextApp.render(req, res, '/tracks', queryParams);
+  });
+
+  app.get('/', (req, res) => {
+    if (!req.cookies.access || Object.keys(req.cookies).length === 0 ) {
+      res.redirect('/login')
+    }
+    nextApp.render(req, res, '/', req.params);
   });
 
   app.get('*', (req, res) => {
