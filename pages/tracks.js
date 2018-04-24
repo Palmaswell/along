@@ -1,4 +1,4 @@
-import Cookie from 'js-cookie';
+import ActiveLink from '../components/active-link';
 import Consumers from '../components/consumers';
 import fetch, { Headers }  from 'node-fetch';
 import Link from 'next/link';
@@ -56,21 +56,26 @@ export default class Tracks extends React.Component {
   updatePlayState = () => this.setState({ playState: !this.state.playState });
 
   render() {
-    console.log('this props tracks', this.state)
     return (
-      this.props.tracks.map(playlist => (
-        <div key={playlist.track.id}>
-          <a onClick={e => this.playTrack(playlist.track.album.uri)}>
-            <img src={playlist.track.album.images[0].url} alt={`${playlist.track.album.name} track name`} />
-            <div>{playlist.added_at}</div>
-            <div>{playlist.track.name}</div>
-            <div>{playlist.track.duration_ms}</div>
-            <div>{playlist.track.explicit}</div>
-          </a>
-          <button onClick={this.pauseTrack}>pause</button>
-          <button onClick={this.resumeTrack}>resume</button>
-        </div>
-      ))
+      <main>
+        <ActiveLink
+          href={`/`}>
+          Back
+        </ActiveLink>
+        {this.props.tracks.map(playlist => (
+          <div key={playlist.track.id}>
+            <a onClick={e => this.playTrack(playlist.track.album.uri)}>
+              <img src={playlist.track.album.images[0].url} alt={`${playlist.track.album.name} track name`} />
+              <div>{playlist.added_at}</div>
+              <div>{playlist.track.name}</div>
+              <div>{playlist.track.duration_ms}</div>
+              <div>{playlist.track.explicit}</div>
+            </a>
+            <button onClick={this.pauseTrack}>pause</button>
+            <button onClick={this.resumeTrack}>resume</button>
+          </div>
+        ))}
+      </main>
     )
   }
 }

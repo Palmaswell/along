@@ -1,16 +1,15 @@
-import Link from 'next/link';
+import ActiveLink from '../components/active-link';
 
 const CallBack = (props) => (
   <main>
-    <h1>Successful Spotify Auth</h1>
-    <Link as={`/${props.access}`} href={`/?id=${props.access}`}>
-      <a>Go to playlists</a>
-    </Link>
+    <h1>You are now successfully loged in with your Spotify account</h1>
+    <ActiveLink href='/' >
+      Go back Home
+    </ActiveLink>
   </main>
 );
 
 CallBack.getInitialProps = ctx => {
-  console.log(ctx.query.access, '*********00000')
   return {
     access: ctx.query.access
   }
