@@ -24,6 +24,10 @@ export default class MyDocument extends Document {
       <html>
         <Head>
           <title>Along</title>
+          <link
+            rel="preload"
+            href="https://fonts.googleapis.com/css?family=Hind:400,700" rel="stylesheet" />
+
           <style dangerouslySetInnerHTML={{ __html: this.props.css }} />
         </Head>
         <body>

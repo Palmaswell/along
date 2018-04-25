@@ -1,35 +1,64 @@
-import { hydrate, injectGlobal } from 'react-emotion';
+import ActiveLink from '../components/active-link';
+import Consumers from '../components/consumers';
+import Providers from '../components/providers';
 import React from 'react';
-import { render } from 'react-dom';
 import Router from 'next/router';
-import { WSContext, WSProvider } from '../components/connection-provider';
-import WebSpeech from '../components/web-speech';
-
-
-// Adds server generated styles to emotion cache.
-// '__NEXT_DATA__.ids' is set in '_document.js'
-if (typeof window !== 'undefined') {
-  hydrate(window.__NEXT_DATA__.ids)
-}
-
-injectGlobal`
-  html, body {
-    min-height: 100%;
-  }
-`
+import fetch, { Headers }  from 'node-fetch';
+import { hydrate, injectGlobal } from 'react-emotion';
+import { getCookie } from '../utils/cookies';
 
 export default class extends React.Component {
-  static getInitialProps({ req }) {
-    if (!req.headers.host.match(/(:1337)/)) {
-      return {};
-    }
+  static getInitialProps =  async ctx => {
+    const res = await fetch(`https://api.spotify.com/v1/me`, {
+      method: 'GET',
+      headers: new Headers({
+        'Authorization': `Bearer ${getCookie('access', ctx)}`,
+        'Content-Type': 'application/json',
+      })
+    });
+    const data = await res.json();
     return {
-      hostName: req.headers.host.replace(/(:1337)/, '')
+      spotify: data ? data : null
     }
   }
 
   render() {
-    return <WebSpeech hostName={this.props.hostName} />
+    return (
+      <Providers
+        channel="Home">
+        <Consumers>
+          {({speech, broker}) => {
+            broker.ws.subscribe(foo => console.log(foo, ' ws subscribe ^^^^^'))
+            broker.ws.next({
+              action:'PUBLISH',
+              channels: ['Home'],
+              message: speech.result.transcript
+            })
+            return (
+              <div>
+                <h1>Hi {this.props.spotify.display_name} 👋</h1>
+                <ActiveLink
+                  href={`/playlists/${this.props.spotify.id}`}>
+                  Playlists
+                </ActiveLink>
+                <button
+                  name="Start Speech"
+                  onClick={speech.start}
+                  type="button">
+                  Talk !
+                </button>
+                <input onChange={e => broker.ws.next({
+                    action:'PUBLISH',
+                    channels: ['Home'],
+                    message: e.target.value
+                  })}
+                  type="text"/>
+              </div>
+            )
+          }}
+        </Consumers>
+      </Providers>
+    );
   }
 }
 
