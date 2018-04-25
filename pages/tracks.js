@@ -10,24 +10,38 @@ import { render } from 'react-dom';
 
 export default class Tracks extends React.Component {
 
-  state = { playState: false }
+  componentDidMount() {
+    const devices = this.getDevices();
 
-  pauseTrack = async () => {
-    if (this.state.playState) {
-      const res = await fetch(`https://api.spotify.com/v1/me/player/pause`, {
-        method: 'PUT',
-        headers: new Headers({
-          'Authorization': `Bearer ${getCookie('access')}`,
-          'Content-Type': 'application/json',
-        }),
-      });
-      const data = await res.json();
-      this.updatePlayState();
-    }
+    console.log(devices, 'this are the devices')
   }
 
+  getDevices = async () => {
+    const res = await fetch('https://api.spotify.com/v1/me/player/devices', {
+      method: 'GET',
+      headers: new Headers({
+        'Authorization': `Bearer ${getCookie('access')}`,
+        'Content-Type': 'application/json',
+      })
+    });
+    const devices = await res.json();
+    return devices;
+  }
+
+  pauseTrack = async () => {
+    const res = await fetch(`https://api.spotify.com/v1/me/player/pause`, {
+      method: 'PUT',
+      headers: new Headers({
+        'Authorization': `Bearer ${getCookie('access')}`,
+        'Content-Type': 'application/json',
+      }),
+    });
+    const data = await res.json();
+}
+
   playTrack = async uri => {
-    const res = await fetch(`https://api.spotify.com/v1/me/player/play`, {
+    const devices = this.devices ? `?device_id=${this.devices}` : '';
+    const res = await fetch(`https://api.spotify.com/v1/me/player/play${devices}`, {
       method: 'PUT',
       headers: new Headers({
         'Authorization': `Bearer ${getCookie('access')}`,
@@ -36,24 +50,19 @@ export default class Tracks extends React.Component {
       body: JSON.stringify({'context_uri': `${uri}`})
     });
     const data = await res.json();
-    this.setState({ playState: true })
   }
+
 
   resumeTrack = async () => {
-    if (!this.state.playState) {
-      const res = await fetch(`https://api.spotify.com/v1/me/player/play`, {
-        method: 'PUT',
-        headers: new Headers({
-          'Authorization': `Bearer ${getCookie('access')}`,
-          'Content-Type': 'application/json',
-        }),
-      });
-      const data = await res.json();
-      this.updatePlayState();
-    }
+    const res = await fetch(`https://api.spotify.com/v1/me/player/play`, {
+      method: 'PUT',
+      headers: new Headers({
+        'Authorization': `Bearer ${getCookie('access')}`,
+        'Content-Type': 'application/json',
+      }),
+    });
+    const data = await res.json();
   }
-
-  updatePlayState = () => this.setState({ playState: !this.state.playState });
 
   render() {
     return (
@@ -64,7 +73,7 @@ export default class Tracks extends React.Component {
         </ActiveLink>
         {this.props.tracks.map(playlist => (
           <div key={playlist.track.id}>
-            <a onClick={e => this.playTrack(playlist.track.album.uri)}>
+            <a onClick={() => this.playTrack(playlist.track.album.uri)}>
               <img src={playlist.track.album.images[0].url} alt={`${playlist.track.album.name} track name`} />
               <div>{playlist.added_at}</div>
               <div>{playlist.track.name}</div>
