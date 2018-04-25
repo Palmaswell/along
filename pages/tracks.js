@@ -10,13 +10,11 @@ import { render } from 'react-dom';
 
 export default class Tracks extends React.Component {
 
-  componentDidMount() {
-    const devices = this.getDevices();
-
-    console.log(devices, 'this are the devices')
+  componentWillMount() {
+    this.fetchDevices();
   }
 
-  getDevices = async () => {
+  fetchDevices = async () => {
     const res = await fetch('https://api.spotify.com/v1/me/player/devices', {
       method: 'GET',
       headers: new Headers({
@@ -25,6 +23,7 @@ export default class Tracks extends React.Component {
       })
     });
     const devices = await res.json();
+    console.log(devices, 'this are the devices')
     return devices;
   }
 
