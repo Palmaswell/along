@@ -68,7 +68,7 @@ export default class Tracks extends React.Component {
     return (
       <main>
         <ActiveLink
-          href={`/`}>
+          href={`/playlists/${this.props.userId}`}>
           Back
         </ActiveLink>
         {this.props.tracks.map(playlist => (
@@ -90,7 +90,7 @@ export default class Tracks extends React.Component {
 }
 
 Tracks.getInitialProps = async ctx => {
-  const { play_id } = ctx.query;
+  const { play_id, user_id } = ctx.query;
   const res = await fetch(`https://api.spotify.com/v1/users/${getCookie('user_id', ctx)}/playlists/${play_id}/tracks`, {
     method: 'GET',
     headers: new Headers({
@@ -101,6 +101,7 @@ Tracks.getInitialProps = async ctx => {
   const tracks = await res.json();
 
   return {
-    tracks: tracks.items || []
+    tracks: tracks.items || [],
+    userId: user_id
   }
 }

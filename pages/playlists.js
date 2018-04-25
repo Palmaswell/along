@@ -10,24 +10,22 @@ import { getCookie } from '../utils/cookies';
 export default class PlayLists extends React.Component {
   render() {
     return (
-      this.props.playlist.items.map((playlist, i) => {
-        return (
-          <div key={playlist.id}>
-            <ActiveLink
-              href={`/tracks/${playlist.id}`}>
-              <img src={playlist.images[0].url} alt={`${playlist.name} cover`} />
-            </ActiveLink>
-            <ActiveLink
-              href={`/tracks?play_id=${playlist.id}`}>
-              Back
-            </ActiveLink>
-
-            <div>{playlist.name}</div>
-            <div>{playlist.tracks.total} tracks</div>
-            <div>{playlist.tracks.total} tracks</div>
-          </div>
-        );
-      })
+      <main>
+         <ActiveLink href={`/`}>Back</ActiveLink>
+        {this.props.playlist.items.map((playlist, i) => {
+            return (
+              <div key={playlist.id}>
+                <ActiveLink
+                  href={`/tracks/${playlist.id}`}>
+                  <img src={playlist.images[0].url} alt={`${playlist.name} cover`} />
+                </ActiveLink>
+                <div>{playlist.name}</div>
+                <div>{playlist.tracks.total} tracks</div>
+                <div>{playlist.tracks.total} tracks</div>
+              </div>
+            );
+          })}
+      </main>
     );
   }
 }
