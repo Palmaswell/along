@@ -8,7 +8,8 @@ const next = require('next');
 const { parse, URLSearchParams } = require('url');
 
 /**
- * Code from Spotify https://github.com/spotify/web-api-auth-examples
+ * generateRandomString from Spotify
+ * https://github.com/spotify/web-api-auth-examples
  * Generates a random string containing numbers and letters
  * @param  {number} length The length of the string
  * @return {string} The generated string
@@ -44,14 +45,14 @@ nextApp.prepare().then(() => {
   // Spotify Authentification
   const stateKey = 'spotify_auth_state';
   const state = generateRandomString(16);
-  const redirectUri = `http://0.0.0.0:${NEXT_PORT}/callback`;
+  const redirectUri = `http://localhost:${NEXT_PORT}/callback`;
 
   /**
    * User logs in and gives permission
    * @return {void}
    */
   app.get('/login', (req, res) => {
-    const scope = 'user-read-private';
+    const scope = 'user-read-private playlist-read-private playlist-read-collaborative user-read-playback-state user-modify-playback-state user-read-currently-playing';
     const loginParams = new URLSearchParams({
       response_type: 'code',
       client_id: `${SPOTIFY_CLIENT}`,
@@ -59,10 +60,10 @@ nextApp.prepare().then(() => {
       redirect_uri: redirectUri,
       state: state
     });
-    res.cookie(stateKey, state);
+    res.cookie('spotify_auth_state', state);
 
     res.redirect(`https://accounts.spotify.com/authorize?${loginParams}`);
-    return nextApp.render(req, res, '/login', req.query)
+    nextApp.render(req, res, '/login', req.query)
   })
 
   /**
@@ -88,14 +89,13 @@ nextApp.prepare().then(() => {
         redirect_uri: redirectUri,
         grant_type: 'authorization_code'
       });
-      const headers = new Headers({
-        'Authorization': `Basic ${Buffer.from(`${SPOTIFY_CLIENT}:${SPOTIFY_SEC}`).toString('base64')}`,
-        'Content-Type': 'application/x-www-form-urlencoded',
-      })
       fetch('https://accounts.spotify.com/api/token', {
         method: 'POST',
-        body: searchParamsOptions,
-        headers: headers
+        headers: new Headers({
+          'Authorization': `Basic ${Buffer.from(`${SPOTIFY_CLIENT}:${SPOTIFY_SEC}`).toString('base64')}`,
+          'Content-Type': 'application/x-www-form-urlencoded',
+        }),
+        body: searchParamsOptions
       }).then(response => {
         if (response.status === 200 && response.ok) {
           console.log(`> ⏆ Token fetch status Code: ${response.status}`);
@@ -104,52 +104,33 @@ nextApp.prepare().then(() => {
           console.log(`> 💥 Status Code: ${response.statusCode}`)
         }
       }).then(json => {
-        const accessToken = json.access_token;
-        res.cookie('access_token', json.access_token);
-        res.cookie('refresh_token', json.refresh_token);
-        res.cookie('expires_in', json.expires_in);
-        if (res.cookies) {
-          console.log(`> 🍪 Cookies: ${JSON.stringify(res.cookies)}`);
-        }
-        return nextApp.render(req, res, '/callback', req.query);
-      })
+        res.cookie('access', json.access_token);
+        res.cookie('refresh', json.refresh_token);
+        res.cookie('expiration', json.expires_in);
+
+        nextApp.render(req, res, '/callback', req.query);
+      });
     }
   })
 
-  /**
-   * Refresh the access token
-   * @return {void}
-   */
-  app.get('/refresh_token', (req, res) => {
-    if (req.cookies) {
-      console.log(`> 🍪 : ${JSON.stringify(req.cookies)}`);
+  app.get('/playlists/:id', (req, res) => {
+    const queryParams = { id: req.params.id }
+    nextApp.render(req, res, '/playlists', queryParams);
+  });
+
+  app.get('/tracks/:play_id', (req, res) => {
+    const queryParams = {
+      play_id: req.params.play_id,
+      user_id: req.cookies.user_id
+    };
+    nextApp.render(req, res, '/tracks', queryParams);
+  });
+
+  app.get('/', (req, res) => {
+    if (!req.cookies.access || Object.keys(req.cookies).length === 0 ) {
+      res.redirect('/login')
     }
-    res.redirect('/');
-    const searchParamsOptions = new URLSearchParams({
-        grant_type: 'refresh_token',
-        refresh_token: req.cookies.refresh_token
-    });
-    const headers = new Headers({
-      'Authorization': `Basic ${Buffer.from(`${SPOTIFY_CLIENT}:${SPOTIFY_SEC}`).toString('base64')}`
-    });
-    fetch('https://accounts.spotify.com/api/token', {
-      method: 'POST',
-      body: searchParamsOptions,
-      headers: headers
-    }).then(response => {
-      if (response.status === 200 && response.ok) {
-        console.log(`>  Refresh fetch status Code: ${response.status}`);
-        return response.json();
-      } else {
-        console.log(`> 💥 Status Code: ${response.statusCode}`)
-      }
-    })
-    .then(json => {
-      res.send({
-        'access_token': json.access_token
-      });
-      res.redirect('/');
-    })
+    nextApp.render(req, res, '/', req.params);
   });
 
   app.get('*', (req, res) => {
@@ -158,7 +139,7 @@ nextApp.prepare().then(() => {
     handle(req, res, parsedUrl);
   });
 
-  server.listen(NEXT_PORT, '0.0.0.0', err => {
+  server.listen(NEXT_PORT, 'localhost', err => {
     if (err) {
       console.log(`> ▲ Next Js server error ${err}`);
     }
