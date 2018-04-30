@@ -4441,9 +4441,9 @@ rc@^1.0.1, rc@^1.1.6, rc@^1.1.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-react-dom@^16.3.0-alpha.2:
-  version "16.3.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.3.0-alpha.2.tgz#a970b6185684941e89a568c09321d22643457cb6"
+react-dom@16.3.2:
+  version "16.3.2"
+  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.3.2.tgz#cb90f107e09536d683d84ed5d4888e9640e0e4df"
   dependencies:
     fbjs "^0.8.16"
     loose-envify "^1.1.0"
@@ -4472,9 +4472,9 @@ react-lifecycles-compat@^2.0.0:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-2.0.2.tgz#00a23160eec17a43b94dd74f95d44a1a2c3c5ec1"
 
-react@^16.3.0-alpha.2:
-  version "16.3.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/react/-/react-16.3.0-alpha.2.tgz#91e2b82bb985b23e7b6555f810e1fd94894afce2"
+react@16.3.2:
+  version "16.3.2"
+  resolved "https://registry.yarnpkg.com/react/-/react-16.3.2.tgz#fdc8420398533a1e58872f59091b272ce2f91ea9"
   dependencies:
     fbjs "^0.8.16"
     loose-envify "^1.1.0"

@@ -2,12 +2,12 @@ import propTypes from 'prop-types';
 import React from 'react';
 import Rx from 'rxjs';
 
-
 class WSProviderSingleton {
   constructor(hostName, channel) {
     this.webSock = new WebSocket(`ws://${hostName}:3001`);
     const ws = this.webSock;
     this.ws = new Rx.Subject();
+
     ws.addEventListener('open', () => {
       ws.send(JSON.stringify({
         action: 'SUBSCRIBE',
@@ -23,6 +23,7 @@ class WSProviderSingleton {
         ws
       })
     });
+
     ws.addEventListener('close', () => this.ws.next({
       action: "WSCLOSE"
     }));

@@ -1,14 +1,13 @@
 import { SpeechProvider } from '../providers/speech/speech-provider';
 import { WSProvider } from '../providers/connection-provider';
 
-const Providers = ({ children, channel }) => (
-  <SpeechProvider>
-    <WSProvider
-      channel={channel}
-      >
+export const Providers = ({ children, channel }) => (
+  <WSProvider
+    channel={channel}>
+    <SpeechProvider>
       { children }
-    </WSProvider>
-  </SpeechProvider>
+    </SpeechProvider>
+  </WSProvider>
 );
 
 export default Providers;

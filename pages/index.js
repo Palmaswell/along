@@ -11,42 +11,31 @@ import { handleRouter } from '../utils/handle-router';
 import ActiveLink from '../components/active-link';
 import Consumers from '../components/consumers';
 import Providers from '../components/providers';
-
-function test() {
-  console.log('just a call back')
-}
+import SpeechBroker from '../components/speech-broker';
+import { runInThisContext } from 'vm';
 
 export default class Index extends React.Component {
-  componentWillMount() {
-    abstractCommandFactory.register('playlist');
-    abstractCommandFactory.register('go to playlist');
-    abstractCommandFactory.register('show playlist');
-    abstractCommandFactory.register('show the playlist');
+  constructor(props) {
+    super(props);
+    this.state = { handle: 'unknown'};
   }
+
   render() {
     return (
       <Providers
         channel="Home">
         <Consumers>
           {({speech, broker}) => {
-            broker.ws.subscribe(messageStream => {
-              console.log('subscribed message stream', messageStream.data)
-              abstractCommandFactory
-                .match(safeParse(messageStream.data).message)
-                .map(callbackableIntent => {
-                  callbackableIntent.register(handleRouter);
-                  callbackableIntent.execute(handleRouter, `/playlists/${this.props.spotify.id}`, this.props.spotify.id);
-                  return callbackableIntent;
-                })
-            })
-            broker.ws.next({
-              action:'PUBLISH',
-              channels: ['Home'],
-              message: speech.result.transcript
-            })
             return (
-              <div>
+              <SpeechBroker
+                speech={speech}
+                action={'PUBLISH'}
+                broker={broker}
+                channels={['Home']}
+                id={ this.props.spotify.id}
+                >
                 <h1>Hi {this.props.spotify.display_name} 👋</h1>
+                <h2>{this.state.handle}</h2>
                 <ActiveLink
                   href={`/playlists/${this.props.spotify.id}`}>
                   Playlists
@@ -55,23 +44,24 @@ export default class Index extends React.Component {
                   name="Start Speech"
                   onClick={speech.start}
                   type="button">
-                  Talk !
+                  Talk ! {""+speech.recognizing}
                 </button>
                 <button
-                  name="navigate"
-                  onClick={e => handleRouter( `/playlists/${this.props.spotify.id}`, this.props.spotify.id)}
+                  name="unregister"
+                  onClick={() => abstractCommandFactory.unregister()}
                   type="button">
-                  navigate !
+                  unregister !
                 </button>
-
-                <input onChange={e => broker.ws.next({
-                    action:'PUBLISH',
-                    channels: ['Home'],
-                    message: e.target.value
-                  })}
-                  type="text"/>
-                  {`/playlists/${this.props.spotify.id}`}
-              </div>
+                <div>
+                  <input onChange={e => broker.ws.next({
+                      action:'PUBLISH',
+                      channels: ['Home'],
+                      message: e.target.value,
+                      id: 'random'
+                    })}
+                    type="text"/>
+                </div>
+              </SpeechBroker>
             )
           }}
         </Consumers>
