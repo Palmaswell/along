@@ -1,31 +1,45 @@
 import Rx from 'rxjs';
 export const cmdGrammar = '#JSGF V1.0; grammar commands; public  = go home | show mixtapes | pause | play | stop;'
 
-class CallBackableIntention {
+function Foo(intent) {
+  const callbacks = [];
+  return {
+    register(cb) {
+      callbacks.push(cb);
+      console.log(' 📞 CallBackableIntention list:', callbacks)
+    },
+    execute() {
+      return;
+    }
+  }
+}
+
+class CallBackableIntent {
   constructor(intention) {
     this.intention = intention;
     this.callbacks = [];
-    console.log('CallBackableIntention list:', this.callbacks)
+    console.log(' 📞 CallBackableIntention list:', this.callbacks)
   }
-
   register(callback) {
     this.callbacks.push(callback);
+  }
+  execute() {
+    return;
   }
 }
 
 class AbstractCommandFactory {
-    speechIntentions = [];
+    speechIntents = [];
     speechObservers = [];
 
     grammarStream = new Rx.Observable(observer => {
       speechObservers.push(observer);
-      grammarStream.next(this.generateGrammar(this.speechIntentions));
+      grammarStream.next(this.generateGrammar(this.speechIntents));
     });
 
     register(intents) {
-      this.speechIntentions.push(intents);
-
-      const grammars = this.generateGrammar(this.speechIntentions);
+      this.speechIntents.push(intents);
+      const grammars = this.generateGrammar(this.speechIntents);
       this.speechObservers.forEach(obs => obs.next(grammars));
     }
 
@@ -34,13 +48,15 @@ class AbstractCommandFactory {
     }
 
     match(speechResult) {
-      return this.speechIntentions.filter(intention => {
-        this.speechIntentions.includes(speechResult);
-      }).map(int =>  new CallBackableIntention(int)); //every intentio should return a CallBackableIntention
+      const filteredCallBackableIntent = this.speechIntents
+      .filter(intent =>  this.speechIntents.includes(speechResult))
+      .map(int => new CallBackableIntention(int));
+      console.log('** registered intents', this.speechIntents)
+      return filteredCallBackableIntent;
     }
 
-    generateGrammar(speechIntentions) {
-      return `#JSGF V1.0; grammar commands; public  = ${speechIntentions.join(" | ")}`
+    generateGrammar(speechIntents) {
+      return `#JSGF V1.0; grammar commands; public  = ${speechIntents.join(" | ")}`
     }
 }
 

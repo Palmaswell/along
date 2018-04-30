@@ -23,10 +23,11 @@ export default class Index extends React.Component {
         <Consumers>
           {({speech, broker}) => {
             broker.ws.subscribe(messageStream => {
+              console.log('subscribed message stream', messageStream.data)
               abstractCommandFactory
                 .match(safeParse(messageStream.data).message)
-                .map(intention => {
-                  console.log('index in the intention', intention)
+                .map(callbackableIntent => {
+                  console.log('1234 map index intent', callbackableIntent)
                 });
             })
             broker.ws.next({
