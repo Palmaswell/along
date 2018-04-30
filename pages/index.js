@@ -15,24 +15,21 @@ import SpeechBroker from '../components/speech-broker';
 import { runInThisContext } from 'vm';
 
 export default class Index extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { handle: 'unknown'};
-  }
+  state = { handle: 'unknown'};
 
   render() {
     return (
       <Providers
-        channel="Home">
+        channel="Home"
+        id={this.props.spotify.id}>
         <Consumers>
           {({speech, broker}) => {
+            console.log(speech.result, 'this is speech in index')
             return (
               <SpeechBroker
                 speech={speech}
-                action={'PUBLISH'}
                 broker={broker}
-                channels={['Home']}
-                id={ this.props.spotify.id}
+                id={this.props.spotify.id}
                 >
                 <h1>Hi {this.props.spotify.display_name} 👋</h1>
                 <h2>{this.state.handle}</h2>
@@ -44,7 +41,7 @@ export default class Index extends React.Component {
                   name="Start Speech"
                   onClick={speech.start}
                   type="button">
-                  Talk ! {""+speech.recognizing}
+                  Talk ! ${speech.recognizing}
                 </button>
                 <button
                   name="unregister"

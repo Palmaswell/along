@@ -6,12 +6,8 @@ function CallBackableIntent(intent) {
   return {
     intent,
     callbacks: [],
-    execute(cb, ...args) {
-      this.callbacks.find(cb => cb === cb)(...args);
-    },
-
     publish(...args) {
-      this.callbacks.forEach(cb => cb(...args))
+      this.callbacks.forEach(cb => cb(...args));
     },
     register(cb) {
       this.callbacks.push(cb);
@@ -62,8 +58,7 @@ class AbstractCommandFactory {
     }
 
     generateGrammar(speechIntents) {
-      return `#JSGF V1.0; grammar commands; public  = ${
-        speechIntents.map(i=> i.intent).join(" | ")}`
+      return `#JSGF V1.0; grammar commands; public  = ${speechIntents.map(i => i.intent).join(" | ")}`
     }
 }
 

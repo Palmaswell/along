@@ -9,18 +9,8 @@ export const SpeechContext = React.createContext({
   confidence: 0
 });
 
-
 export class SpeechProvider extends React.Component {
-  SpeechGrammarList() {
-    const x = window.SpeechGrammarList ||window.webkitSpeechGrammarList;
-    return new x();
-  }
-  SpeechRecognition() {
-    const x = window.SpeechRecognition || window.webkitSpeechRecognition;
-    return new x();
-  }
-
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.state = {
       recognizing: false,
@@ -30,17 +20,14 @@ export class SpeechProvider extends React.Component {
       },
       timeStamp: 0
     }
-
   }
 
-  // getResultStream = stream => {
-  //   stream.subscribe(result => {
-  //     this.updateState(result);
-  //   });
-  // }
+  componentDidMount() {
+    this.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
+    this.SpeechGrammarList = window.SpeechGrammarList ||window.webkitSpeechGrammarList;
+  }
 
   handleRecognition() {
-    console.log("handler");
     this.speechRecognition.onerror = e => {
       console.log("error", e);
       switch (e.error) {
@@ -54,18 +41,14 @@ export class SpeechProvider extends React.Component {
       }
     }
 
-    this.speechRecognition.onend = (e) => {
-      console.log("onEnd");
+    this.speechRecognition.onend = () => {
       this.speechRecognition = null;
       this.setState({...this.state, recognizing: false});
-      // this.toggleRecognizing();
     }
 
     this.speechRecognition.onresult = e => {
-      // console.log(e.results);
-      const fintents = abstractCommandFactory.match(e.results[0][0]);
-      console.log(fintents, 'match on');
-      // fintents.forEach(fi => fi.publish());
+      const filteredIntents = abstractCommandFactory.match(e.results[0][0]);
+      filteredIntents.forEach(cbIntent => cbIntent.publish(this.props));
       // const resultStream = Rx.Observable.create(observer => {
       //   observer.next(e.results)
       // })
@@ -81,12 +64,12 @@ export class SpeechProvider extends React.Component {
 
   start = e => {
     e.persist();
+
     if (this.speechRecognition) {
       return;
     }
-    this.speechRecognition = this.SpeechRecognition() ;
-
-    this.recognitionList = this.SpeechGrammarList();
+    this.speechRecognition = new this.SpeechRecognition() ;
+    this.recognitionList = new this.SpeechGrammarList();
     this.recognitionList.addFromString(cmdGrammar, 1);
 
     this.speechRecognition.maxAlternatives = 1; // which is actually default
@@ -94,7 +77,6 @@ export class SpeechProvider extends React.Component {
     this.speechRecognition.lang = 'en-US';
     this.speechRecognition.grammar = this.recognitionList;
     this.speechRecognition.start();
-    // this.updateTimestamp(e);
     this.handleRecognition();
 
     this.setState({...this.state, recognizing: true});
@@ -106,16 +88,7 @@ export class SpeechProvider extends React.Component {
       // Todo: new SpeechGrammarList() and the
       // grammars list should be delivered in the
       // start parameter.
-
-
-    // };
   }
-
-  // toggleRecognizing = () => {
-  //   this.setState(({ recognizing }) => (
-  //     recognizing = !recognizing
-  //   ));
-  // }
 
   updateState = result => {
     this.setState(({ speechResult }) => {
@@ -124,13 +97,8 @@ export class SpeechProvider extends React.Component {
     });
   }
 
-  updateTimestamp = e => {
-    this.setState(({ timeStamp }) => (
-      timeStamp = e.timeStamp
-    ));
-  }
-
   render () {
+    console.log(this.state.speechResult, 'the result from origin speech')
     return (
       <SpeechContext.Provider value={{
         result: this.state.speechResult,
