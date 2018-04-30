@@ -1,13 +1,20 @@
-import ActiveLink from '../components/active-link';
-import Consumers from '../components/consumers';
-import Providers from '../components/providers';
 import React from 'react';
 import Router from 'next/router';
 import fetch, { Headers }  from 'node-fetch';
 import { hydrate, injectGlobal } from 'react-emotion';
-import { getCookie } from '../utils/cookies';
+
 import { abstractCommandFactory } from '../providers/speech/speech-commands';
+import { getCookie } from '../utils/cookies';
 import { safeParse } from '../utils/safe-parse';
+import { handleRouter } from '../utils/handle-router';
+
+import ActiveLink from '../components/active-link';
+import Consumers from '../components/consumers';
+import Providers from '../components/providers';
+
+function test() {
+  console.log('just a call back')
+}
 
 export default class Index extends React.Component {
   componentWillMount() {
@@ -27,8 +34,10 @@ export default class Index extends React.Component {
               abstractCommandFactory
                 .match(safeParse(messageStream.data).message)
                 .map(callbackableIntent => {
-                  console.log('1234 map index intent', callbackableIntent)
-                });
+                  callbackableIntent.register(handleRouter);
+                  callbackableIntent.execute(handleRouter, `/playlists/${this.props.spotify.id}`, this.props.spotify.id);
+                  return callbackableIntent;
+                })
             })
             broker.ws.next({
               action:'PUBLISH',
@@ -48,12 +57,20 @@ export default class Index extends React.Component {
                   type="button">
                   Talk !
                 </button>
+                <button
+                  name="navigate"
+                  onClick={e => handleRouter( `/playlists/${this.props.spotify.id}`, this.props.spotify.id)}
+                  type="button">
+                  navigate !
+                </button>
+
                 <input onChange={e => broker.ws.next({
                     action:'PUBLISH',
                     channels: ['Home'],
                     message: e.target.value
                   })}
                   type="text"/>
+                  {`/playlists/${this.props.spotify.id}`}
               </div>
             )
           }}
