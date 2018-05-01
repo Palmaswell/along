@@ -8,16 +8,15 @@ import { safeParse } from '../utils/safe-parse';
 import { handleRouter } from '../utils/handle-router';
 
 import { abstractCommandFactory } from '../providers/speech/speech-commands';
+import { SpeechContext, SpeechProvider } from '../providers/speech/speech-provider';
+import { WSContext, WSProvider } from '../providers/connection-provider';
 import SpeechBroker from '../providers/speech/speech-broker';
 
 import ActiveLink from '../components/active-link';
-import Consumers from '../components/consumers';
-import Providers from '../components/providers';
-
 
 export default class Index extends React.Component {
+
   registerCommands = () => {
-    // const { props } = this.props;
     const registrations = [];
     registrations.push({
       callableIntent: abstractCommandFactory.register('go to playlist'),
@@ -35,48 +34,57 @@ export default class Index extends React.Component {
       callableIntent: abstractCommandFactory.register('so playlist'),
       action: props =>  handleRouter(`/playlists/${this.props.spotify.id}`, this.props.spotify.id)
     });
-    // console.log('the props are there', props)
     return registrations;
   }
 
   render() {
     return (
-      <Providers
-        channel="Home">
-        <Consumers>
-          {({speech, wsBroker}) => (
-            <SpeechBroker registrationList={this.registerCommands()}>
-              <div>
-                <h1>Hi {this.props.spotify.display_name} 👋</h1>
-                <ActiveLink
-                  href={`/playlists/${this.props.spotify.id}`}>
-                  Playlists
-                </ActiveLink>
-                <button
-                  name="Start Speech"
-                  onClick={speech.start}
-                  type="button">
-                  Talk !
-                </button>
-                <button
-                  name="navigate"
-                  onClick={e => handleRouter( `/playlists/${this.props.spotify.id}`, this.props.spotify.id)}
-                  type="button">
-                  navigate !
-                </button>
+    <WSProvider
+      channel="Home"
+      >
+      <WSContext.Consumer>
+        {wsBroker => (
+          <SpeechProvider
+            channel="Home"
+            ws={wsBroker}>
+            <SpeechContext.Consumer>
+              {speech => (
+                <SpeechBroker registrationList={this.registerCommands()}>
+                <div>
+                  <h1>Hi {this.props.spotify.display_name} 👋</h1>
+                  <h1>You said {speech.result.transcript} </h1>
+                  <ActiveLink
+                    href={`/playlists/${this.props.spotify.id}`}>
+                    Playlists
+                  </ActiveLink>
+                  <button
+                    name="Start Speech"
+                    onClick={speech.start}
+                    type="button">
+                    Talk !
+                  </button>
+                  <button
+                    name="navigate"
+                    onClick={e => handleRouter( `/playlists/${this.props.spotify.id}`, this.props.spotify.id)}
+                    type="button">
+                    navigate !
+                  </button>
 
-                <input onChange={e => wsBroker.ws.next({
-                    action:'PUBLISH',
-                    channels: ['Home'],
-                    message: e.target.value
-                  })}
-                  type="text"/>
-                  {`/playlists/${this.props.spotify.id}`}
-              </div>
-            </SpeechBroker>
-          )}
-        </Consumers>
-      </Providers>
+                  <input onChange={e => wsBroker.ws.next({
+                      action:'PUBLISH',
+                      channels: ['Home'],
+                      message: e.target.value
+                    })}
+                    type="text"/>
+                    {`/playlists/${this.props.spotify.id}`}
+                </div>
+              </SpeechBroker>
+              )}
+            </SpeechContext.Consumer>
+          </SpeechProvider>
+        )}
+      </WSContext.Consumer>
+    </WSProvider>
     );
   }
 }

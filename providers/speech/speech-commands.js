@@ -7,7 +7,6 @@ function CallBackableIntent(intent) {
     intent,
     callbacks: [],
     execute(cb, ...args) {
-      console.log('this are the executable args', ...args)
       this.callbacks.find(cb => cb === cb)(...args);
     },
     register(cb) {
@@ -35,7 +34,7 @@ class AbstractCommandFactory {
     }
 
     generateGrammar(speechIntents) {
-      return `#JSGF V1.0; grammar commands; public  = ${speechIntents.map(intent => intent.callableIntent).join(" | ")}`
+      return `#JSGF V1.0; grammar commands; public  = ${speechIntents.map(cbIntent => cbIntent.intent).join(" | ")}`
     }
 
     match(speechResult) {
@@ -45,10 +44,9 @@ class AbstractCommandFactory {
         cbIntent.intent.includes(speechResult.transcript));
 
       console.log(`
-      > 🙌  Command ${speechResult.transcript} matched!
-      > Match with a confidence score of ${speechResult.confidence.toFixed(2)}.
+      > 🎙 Intent ${speechResult.transcript} was heard!
+      > We heard with confidence score of ${speechResult.confidence.toFixed(2)}.
       `);
-      console.log('filteredIntents 🎤🎤🎤', filteredCallBackableIntents)
 
       return filteredCallBackableIntents;
     }

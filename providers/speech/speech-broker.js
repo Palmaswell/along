@@ -16,7 +16,7 @@ export default class SpeechBroker extends React.Component {
 
       const registeredCallback = registration.callableIntent.register(action);
     });
-    console.log('speech broker props', props)
+    // console.log('speech broker props', props)
     return null;
   }
 

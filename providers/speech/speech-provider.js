@@ -12,8 +12,8 @@ export const SpeechContext = React.createContext({
 export class SpeechProvider extends React.Component {
   static propTypes = {
     id: propTypes.string,
-    channel: propTypes.string,
-    ws: propTypes.object
+    channel: propTypes.string.isRequired,
+    ws: propTypes.object.isRequired
   }
 
   state = {
@@ -52,7 +52,7 @@ export class SpeechProvider extends React.Component {
     recognition.onresult = e => {
       this.updateState(e.results);
       const filteredIntents = abstractCommandFactory.match(e.results[0][0]);
-      filteredIntents.forEach(cbIntent => cbIntent.execute(this.props.id));
+      filteredIntents.forEach(cbIntent => cbIntent.execute());
     }
 
     recognition.onend = e => {
@@ -106,7 +106,7 @@ export class SpeechProvider extends React.Component {
   }
 
   render () {
-    console.log('speech provider 🎤 results', this.state.speechResult)
+    // console.log('speech provider 🎤 results', this.state.speechResult)
     return (
       <SpeechContext.Provider
         id={this.props.id}

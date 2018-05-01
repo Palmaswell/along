@@ -88,11 +88,9 @@ export class WSProvider extends React.Component {
   render() {
     return (
       <WSContext.Provider value={this.state.wsSingleton}>
-        <SpeechProvider
-          channel={this.props.channel}
-          ws={this.state.wsSingleton}>
+
         {this.renderChildren()}
-        </SpeechProvider>
+
       </WSContext.Provider>
     );
   }
