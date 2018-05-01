@@ -21,8 +21,7 @@ export class SpeechProvider extends React.Component {
     speechResult: {
       transcript: '',
       confidence: 0
-    },
-    timeStamp: 0
+    }
   }
 
   speechRecognition = Rx.Observable.create(observer => {
@@ -78,22 +77,23 @@ export class SpeechProvider extends React.Component {
       if (this.state.recognizing) {
         recognition.stop();
       }
-      // Todo: new SpeechGrammarList() and the
-      // grammars list should be delivered in the
-      // start parameter.
+
       const SpeechGrammarList = window.SpeechGrammarList ||window.webkitSpeechGrammarList;
       const recognitionList = new SpeechGrammarList();
-      const grammarStream = abstractCommandFactory.getGrammarStream()
-      console.log(grammarStream, '%%% grammar stream');
 
-      recognitionList.addFromString(cmdGrammar, 1);
+      const grammarStream = abstractCommandFactory.getGrammarStream();
+
+      grammarStream.subscribe(grammars => {
+        console.log(grammars, '%%% grammars stream');
+        return recognitionList.addFromString(grammars, 1);
+      })
+
 
       recognition.maxAlternatives = 1; // which is actually default
       recognition.interimResults = false;
       recognition.lang = 'en-US';
       recognition.grammar = recognitionList;
       recognition.start();
-      this.updateTimestamp(e);
       this.handleRecognition(recognition);
     });
   }

@@ -26,8 +26,8 @@ class AbstractCommandFactory {
     speechObservers = [];
 
     grammarStream = new Rx.Observable(observer => {
-      speechObservers.push(observer);
-      grammarStream.next(this.generateGrammar(this.speechCallableIntents));
+      this.speechObservers.push(observer);
+      observer.next(this.generateGrammar(this.speechCallableIntents));
     });
 
     getGrammarStream() {
