@@ -110,6 +110,7 @@ export class SpeechProvider extends React.Component {
   }
 
   render () {
+    console.log(this.state, 'the origin state')
     return (
       <SpeechContext.Provider value={{
         result: this.state.speechResult,

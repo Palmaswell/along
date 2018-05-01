@@ -4,6 +4,7 @@ import fetch, { Headers }  from 'node-fetch';
 import { hydrate, injectGlobal } from 'react-emotion';
 
 import { abstractCommandFactory } from '../providers/speech/speech-commands';
+import Broker from '../providers/broker';
 import { getCookie } from '../utils/cookies';
 import { safeParse } from '../utils/safe-parse';
 import { handleRouter } from '../utils/handle-router';
@@ -45,6 +46,7 @@ export default class Index extends React.Component {
               message: speech.result.transcript
             })
             return (
+
               <div>
                 <h1>Hi {this.props.spotify.display_name} 👋</h1>
                 <ActiveLink
