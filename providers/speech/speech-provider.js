@@ -11,6 +11,7 @@ export const SpeechContext = React.createContext({
 
 export class SpeechProvider extends React.Component {
   static propTypes = {
+    channel: propTypes.string,
     ws: propTypes.object
   }
 
@@ -22,10 +23,7 @@ export class SpeechProvider extends React.Component {
     },
     timeStamp: 0
   }
-  constructor(props) {
-    super(props);
-    console.log('speech provider 🎤', this.props)
-  }
+
   speechRecognition = Rx.Observable.create(observer => {
     const  SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
@@ -52,6 +50,12 @@ export class SpeechProvider extends React.Component {
     }
 
     recognition.onend = (e) => {
+      const ws = this.props.ws.ws;
+      ws.next({
+        action: 'PUBLISH',
+        channels:[this.props.channel],
+        message: this.state.speechResult.transcript
+      });
       this.setState({recognizing: false});
     }
 
