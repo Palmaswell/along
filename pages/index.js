@@ -16,16 +16,24 @@ import Providers from '../components/providers';
 
 
 export default class Index extends React.Component {
-  registerCommands = props => {
-    props = this.props;
+  registerCommands = () => {
+    // const { props } = this.props;
     const registrations = [];
     registrations.push({
       callableIntent: abstractCommandFactory.register('go to playlist'),
-      action: props => handleRouter(`/playlists/${props.spotify.id}`, props.spotify.id)
+      action: props => handleRouter(`/playlists/${this.props.spotify.id}`, this.props.spotify.id)
     });
     registrations.push({
       callableIntent: abstractCommandFactory.register('show playlist'),
-      action: props =>  handleRouter(`/playlists/${props.spotify.id}`, props.spotify.id)
+      action: props =>  handleRouter(`/playlists/${this.props.spotify.id}`, this.props.spotify.id)
+    });
+    registrations.push({
+      callableIntent: abstractCommandFactory.register('ok list'),
+      action: props =>  handleRouter(`/playlists/${this.props.spotify.id}`, this.props.spotify.id)
+    });
+    registrations.push({
+      callableIntent: abstractCommandFactory.register('so playlist'),
+      action: props =>  handleRouter(`/playlists/${this.props.spotify.id}`, this.props.spotify.id)
     });
     // console.log('the props are there', props)
     return registrations;
@@ -36,49 +44,37 @@ export default class Index extends React.Component {
       <Providers
         channel="Home">
         <Consumers>
-          {({speech, wsBroker}) => {
-            // wsBroker.ws.subscribe(messageStream => {
-            //   console.log('subscribed message stream', messageStream.data)
-            //   abstractCommandFactory
-            //     .match(safeParse(messageStream.data).message)
-            //     .map(callbackableIntent => {
-            //       callbackableIntent.register(handleRouter);
-            //       callbackableIntent.execute(handleRouter, `/playlists/${this.props.spotify.id}`, this.props.spotify.id);
-            //       return callbackableIntent;
-            //     })
-            // })
-            return (
-              <SpeechBroker registrationList={this.registerCommands()}>
-                <div>
-                  <h1>Hi {this.props.spotify.display_name} 👋</h1>
-                  <ActiveLink
-                    href={`/playlists/${this.props.spotify.id}`}>
-                    Playlists
-                  </ActiveLink>
-                  <button
-                    name="Start Speech"
-                    onClick={speech.start}
-                    type="button">
-                    Talk !
-                  </button>
-                  <button
-                    name="navigate"
-                    onClick={e => handleRouter( `/playlists/${this.props.spotify.id}`, this.props.spotify.id)}
-                    type="button">
-                    navigate !
-                  </button>
+          {({speech, wsBroker}) => (
+            <SpeechBroker registrationList={this.registerCommands()}>
+              <div>
+                <h1>Hi {this.props.spotify.display_name} 👋</h1>
+                <ActiveLink
+                  href={`/playlists/${this.props.spotify.id}`}>
+                  Playlists
+                </ActiveLink>
+                <button
+                  name="Start Speech"
+                  onClick={speech.start}
+                  type="button">
+                  Talk !
+                </button>
+                <button
+                  name="navigate"
+                  onClick={e => handleRouter( `/playlists/${this.props.spotify.id}`, this.props.spotify.id)}
+                  type="button">
+                  navigate !
+                </button>
 
-                  <input onChange={e => wsBroker.ws.next({
-                      action:'PUBLISH',
-                      channels: ['Home'],
-                      message: e.target.value
-                    })}
-                    type="text"/>
-                    {`/playlists/${this.props.spotify.id}`}
-                </div>
-              </SpeechBroker>
-            )
-          }}
+                <input onChange={e => wsBroker.ws.next({
+                    action:'PUBLISH',
+                    channels: ['Home'],
+                    message: e.target.value
+                  })}
+                  type="text"/>
+                  {`/playlists/${this.props.spotify.id}`}
+              </div>
+            </SpeechBroker>
+          )}
         </Consumers>
       </Providers>
     );
