@@ -12,10 +12,6 @@ import ActiveLink from '../components/active-link';
 import Consumers from '../components/consumers';
 import Providers from '../components/providers';
 
-function test() {
-  console.log('just a call back')
-}
-
 export default class Index extends React.Component {
   componentWillMount() {
     // abstractCommandFactory.register('playlist');
@@ -28,8 +24,8 @@ export default class Index extends React.Component {
       <Providers
         channel="Home">
         <Consumers>
-          {({speech, broker}) => {
-            // broker.ws.subscribe(messageStream => {
+          {({speech, wsBroker}) => {
+            // wsBroker.ws.subscribe(messageStream => {
             //   console.log('subscribed message stream', messageStream.data)
             //   abstractCommandFactory
             //     .match(safeParse(messageStream.data).message)
@@ -39,7 +35,7 @@ export default class Index extends React.Component {
             //       return callbackableIntent;
             //     })
             // })
-            // broker.ws.next({
+            // wsBroker.ws.next({
             //   action:'PUBLISH',
             //   channels: ['Home'],
             //   message: speech.result.transcript
@@ -64,7 +60,7 @@ export default class Index extends React.Component {
                   navigate !
                 </button>
 
-                <input onChange={e => broker.ws.next({
+                <input onChange={e => wsBroker.ws.next({
                     action:'PUBLISH',
                     channels: ['Home'],
                     message: e.target.value
