@@ -1,6 +1,8 @@
+import propTypes from 'prop-types';
 import React from 'react';
 import Rx from 'rxjs';
-import { cmdGrammar } from './speech-commands';
+
+import { abstractCommandFactory, cmdGrammar } from './speech-commands';
 
 export const SpeechContext = React.createContext({
   transcript: '',
@@ -8,13 +10,18 @@ export const SpeechContext = React.createContext({
 });
 
 export class SpeechProvider extends React.Component {
+  static propTypes = {
+    id: propTypes.string,
+    channel: propTypes.string.isRequired,
+    ws: propTypes.object.isRequired
+  }
+
   state = {
     recognizing: false,
     speechResult: {
       transcript: '',
       confidence: 0
-    },
-    timeStamp: 0
+    }
   }
 
   speechRecognition = Rx.Observable.create(observer => {
@@ -25,17 +32,7 @@ export class SpeechProvider extends React.Component {
     observer.next(new SpeechRecognition());
   })
 
-  getResultStream = stream => {
-    stream.subscribe(result => {
-      this.updateState(result);
-    });
-  }
-
   handleRecognition = recognition => {
-    recognition.onstart = () => {
-      this.toggleRecognizing();
-    };
-
     recognition.onerror = e => {
       switch (e.error) {
         case 'network':
@@ -48,21 +45,29 @@ export class SpeechProvider extends React.Component {
       }
     }
 
-    recognition.onend = (e) => {
-      this.toggleRecognizing();
-    }
+    recognition.onstart = () => {
+      this.setState({recognizing: true });
+    };
 
     recognition.onresult = e => {
-      const resultStream = Rx.Observable.create(observer => {
-        observer.next(e.results)
-      })
-      this.getResultStream(resultStream);
+      this.updateState(e.results);
+      const filteredIntents = abstractCommandFactory.match(e.results[0][0]);
+      filteredIntents.forEach(cbIntent => cbIntent.execute());
+    }
+
+    recognition.onend = e => {
+      const ws = this.props.ws.ws;
+      ws.next({
+        action: 'PUBLISH',
+        channels:[this.props.channel],
+        message: this.state.speechResult.transcript
+      });
+      this.setState({recognizing: false});
     }
 
     recognition.onspeechend = () => {
       recognition.stop();
     }
-
   }
 
   start = e => {
@@ -71,26 +76,26 @@ export class SpeechProvider extends React.Component {
     this.speechRecognition.subscribe(recognition => {
       if (this.state.recognizing) {
         recognition.stop();
-        return;
       }
+
       const SpeechGrammarList = window.SpeechGrammarList ||window.webkitSpeechGrammarList;
       const recognitionList = new SpeechGrammarList();
-      recognitionList.addFromString(cmdGrammar, 1);
+
+      const grammarStream = abstractCommandFactory.getGrammarStream();
+
+      grammarStream.subscribe(grammars => {
+        console.log(grammars, '%%% grammars stream');
+        return recognitionList.addFromString(grammars, 1);
+      })
+
 
       recognition.maxAlternatives = 1; // which is actually default
       recognition.interimResults = false;
       recognition.lang = 'en-US';
       recognition.grammar = recognitionList;
       recognition.start();
-      this.updateTimestamp(e);
       this.handleRecognition(recognition);
     });
-  }
-
-  toggleRecognizing = () => {
-    this.setState(({ recognizing }) => (
-      recognizing = !recognizing
-    ));
   }
 
   updateState = result => {
@@ -100,18 +105,17 @@ export class SpeechProvider extends React.Component {
     });
   }
 
-  updateTimestamp = e => {
-    this.setState(({ timeStamp }) => (
-      timeStamp = e.timeStamp
-    ));
-  }
-
   render () {
+    // console.log('speech provider 🎤 results', this.state.speechResult)
     return (
-      <SpeechContext.Provider value={{
-        result: this.state.speechResult,
-        start: e => this.start(e),
-      }}>
+      <SpeechContext.Provider
+        id={this.props.id}
+        value={{
+          recognizing: this.state.recognizing,
+          result: this.state.speechResult,
+          start: e => this.start(e)
+        }}
+        ws={this.props.ws}>
         {this.props.children}
       </SpeechContext.Provider>
     );

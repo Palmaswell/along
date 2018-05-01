@@ -5,7 +5,7 @@ const Consumers = ({ children }) => (
   <SpeechContext.Consumer>
     {speech => (
       <WSContext.Consumer>
-        {broker => children({speech, broker})}
+        {wsBroker => children({speech, wsBroker})}
       </WSContext.Consumer>
     )}
   </SpeechContext.Consumer>
