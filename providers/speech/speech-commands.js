@@ -2,63 +2,65 @@ import Rx from 'rxjs';
 export const cmdGrammar = '#JSGF V1.0; grammar commands; public  = go home | show mixtapes | pause | play | stop;'
 
 
-// class CallBackableIntent {
-//   constructor(intention) {
-//     this.intention = intention;
-//     this.callbacks = [];
-//     console.log(' 📞 CallBackableIntention list:', this.callbacks)
-//   }
-//   register(callback) {
-//     this.callbacks.push(callback);
-//   }
-//   execute() {
-//     return;
-//   }
-// }
-
 function CallBackableIntent(intent) {
   return {
+    intent,
     callbacks: [],
+    execute(cb, ...args) {
+      console.log('this are the executable args', ...args)
+      this.callbacks.find(cb => cb === cb)(...args);
+    },
     register(cb) {
       const callbacks = this.callbacks;
       callbacks.push(cb);
     },
-    execute(cb, ...args) {
-      console.log('this are the executable args', ...args)
-      this.callbacks.find(cb => cb === cb)(...args);
+    unregister(cb) {
+      const idx = this.callbacks.indexOf(cb);
+      this.callbacks.splice(idx, 1);
     }
   }
 }
 
 class AbstractCommandFactory {
-    speechIntents = [];
+    speechCallableIntents = [];
     speechObservers = [];
 
     grammarStream = new Rx.Observable(observer => {
       speechObservers.push(observer);
-      grammarStream.next(this.generateGrammar(this.speechIntents));
+      grammarStream.next(this.generateGrammar(this.speechCallableIntents));
     });
-
-    register(intents) {
-      this.speechIntents.push(intents);
-      const grammars = this.generateGrammar(this.speechIntents);
-      this.speechObservers.forEach(obs => obs.next(grammars));
-    }
 
     getGrammarStream() {
       return this.grammarStream;
     }
 
-    match(speechResult) {
-      const filteredCallBackableIntent = this.speechIntents
-      .filter(intent =>  this.speechIntents.includes(speechResult))
-      .map(int => CallBackableIntent(int));
-      // console.log('** registered intents', this.speechIntents)
-      return filteredCallBackableIntent;
+    generateGrammar(speechIntents) {
+      return `#JSGF V1.0; grammar commands; public  = ${speechIntents.map(intent => intent.callableIntent).join(" | ")}`
     }
 
-    generateGrammar(speechIntents) {
-      return `#JSGF V1.0; grammar commands; public  = ${speechIntents.join(" | ")}`
+    match(speechResult) {
+      const filteredCallBackableIntents = this.speechCallableIntents
+      .filter(intent =>
+        speechResult.confidence > 0.75 &&
+        intent.callableIntent.includes(speechResult).transcript)
+
+      console.log('filteredIntents 🎤🎤🎤', filteredCallBackableIntents)
+
+      return filteredCallBackableIntents;
+    }
+
+    register(intent) {
+      const callBackableIntent = CallBackableIntent(intent);
+      this.speechCallableIntents.push(callBackableIntent);
+
+      const grammars = this.generateGrammar(this.speechCallableIntents);
+      this.speechObservers.forEach(obs => obs.next(grammars));
+      return callBackableIntent;
+    }
+
+    unregister(intent) {
+      const idx = this.speechCallableIntents.indexOf(intent);
+      this.speechCallableIntents.splice(idx, 1);
     }
 }
 

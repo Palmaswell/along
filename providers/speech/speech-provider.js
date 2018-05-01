@@ -2,7 +2,7 @@ import propTypes from 'prop-types';
 import React from 'react';
 import Rx from 'rxjs';
 
-import { cmdGrammar } from './speech-commands';
+import { abstractCommandFactory, cmdGrammar } from './speech-commands';
 
 export const SpeechContext = React.createContext({
   transcript: '',
@@ -33,10 +33,6 @@ export class SpeechProvider extends React.Component {
   })
 
   handleRecognition = recognition => {
-    recognition.onstart = () => {
-      this.setState({recognizing: true });
-    };
-
     recognition.onerror = e => {
       switch (e.error) {
         case 'network':
@@ -49,7 +45,15 @@ export class SpeechProvider extends React.Component {
       }
     }
 
-    recognition.onend = (e) => {
+    recognition.onstart = () => {
+      this.setState({recognizing: true });
+    };
+
+    recognition.onresult = e => {
+      this.updateState(e.results);
+    }
+
+    recognition.onend = e => {
       const ws = this.props.ws.ws;
       ws.next({
         action: 'PUBLISH',
@@ -57,10 +61,6 @@ export class SpeechProvider extends React.Component {
         message: this.state.speechResult.transcript
       });
       this.setState({recognizing: false});
-    }
-
-    recognition.onresult = e => {
-      this.updateState(e.results)
     }
 
     recognition.onspeechend = () => {
@@ -80,6 +80,7 @@ export class SpeechProvider extends React.Component {
       // start parameter.
       const SpeechGrammarList = window.SpeechGrammarList ||window.webkitSpeechGrammarList;
       const recognitionList = new SpeechGrammarList();
+
       recognitionList.addFromString(cmdGrammar, 1);
 
       recognition.maxAlternatives = 1; // which is actually default
