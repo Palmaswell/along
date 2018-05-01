@@ -11,6 +11,7 @@ export const SpeechContext = React.createContext({
 
 export class SpeechProvider extends React.Component {
   static propTypes = {
+    id: propTypes.string,
     channel: propTypes.string,
     ws: propTypes.object
   }
@@ -51,6 +52,8 @@ export class SpeechProvider extends React.Component {
 
     recognition.onresult = e => {
       this.updateState(e.results);
+      const filteredIntents = abstractCommandFactory.match(e.results[0][0]);
+      filteredIntents.forEach(cbIntent => cbIntent.execute(this.props.id));
     }
 
     recognition.onend = e => {
@@ -80,6 +83,8 @@ export class SpeechProvider extends React.Component {
       // start parameter.
       const SpeechGrammarList = window.SpeechGrammarList ||window.webkitSpeechGrammarList;
       const recognitionList = new SpeechGrammarList();
+      const grammarStream = abstractCommandFactory.getGrammarStream()
+      console.log(grammarStream, '%%% grammar stream');
 
       recognitionList.addFromString(cmdGrammar, 1);
 
@@ -100,16 +105,11 @@ export class SpeechProvider extends React.Component {
     });
   }
 
-  updateTimestamp = e => {
-    this.setState(({ timeStamp }) => (
-      timeStamp = e.timeStamp
-    ));
-  }
-
   render () {
     console.log('speech provider 🎤 results', this.state.speechResult)
     return (
       <SpeechContext.Provider
+        id={this.props.id}
         value={{
           recognizing: this.state.recognizing,
           result: this.state.speechResult,
