@@ -1,5 +1,7 @@
+import propTypes from 'prop-types';
 import React from 'react';
 import Rx from 'rxjs';
+
 import { cmdGrammar } from './speech-commands';
 
 export const SpeechContext = React.createContext({
@@ -8,6 +10,10 @@ export const SpeechContext = React.createContext({
 });
 
 export class SpeechProvider extends React.Component {
+  static propTypes = {
+    ws: propTypes.object
+  }
+
   state = {
     recognizing: false,
     speechResult: {
@@ -16,7 +22,10 @@ export class SpeechProvider extends React.Component {
     },
     timeStamp: 0
   }
-
+  constructor(props) {
+    super(props);
+    console.log('speech provider 🎤', this.props)
+  }
   speechRecognition = Rx.Observable.create(observer => {
     const  SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
@@ -25,15 +34,9 @@ export class SpeechProvider extends React.Component {
     observer.next(new SpeechRecognition());
   })
 
-  getResultStream = stream => {
-    stream.subscribe(result => {
-      this.updateState(result);
-    });
-  }
-
   handleRecognition = recognition => {
     recognition.onstart = () => {
-      this.toggleRecognizing();
+      this.setState({recognizing: true });
     };
 
     recognition.onerror = e => {
@@ -49,20 +52,16 @@ export class SpeechProvider extends React.Component {
     }
 
     recognition.onend = (e) => {
-      this.toggleRecognizing();
+      this.setState({recognizing: false});
     }
 
     recognition.onresult = e => {
-      const resultStream = Rx.Observable.create(observer => {
-        observer.next(e.results)
-      })
-      this.getResultStream(resultStream);
+      this.updateState(e.results)
     }
 
     recognition.onspeechend = () => {
       recognition.stop();
     }
-
   }
 
   start = e => {
@@ -71,7 +70,6 @@ export class SpeechProvider extends React.Component {
     this.speechRecognition.subscribe(recognition => {
       if (this.state.recognizing) {
         recognition.stop();
-        return;
       }
       // Todo: new SpeechGrammarList() and the
       // grammars list should be delivered in the
@@ -90,12 +88,6 @@ export class SpeechProvider extends React.Component {
     });
   }
 
-  toggleRecognizing = () => {
-    this.setState(({ recognizing }) => (
-      recognizing = !recognizing
-    ));
-  }
-
   updateState = result => {
     this.setState(({ speechResult }) => {
       speechResult.transcript = result[0][0].transcript;
@@ -110,11 +102,15 @@ export class SpeechProvider extends React.Component {
   }
 
   render () {
+    console.log('speech provider 🎤 results', this.state.speechResult)
     return (
-      <SpeechContext.Provider value={{
-        result: this.state.speechResult,
-        start: e => this.start(e),
-      }}>
+      <SpeechContext.Provider
+        value={{
+          recognizing: this.state.recognizing,
+          result: this.state.speechResult,
+          start: e => this.start(e)
+        }}
+        ws={this.props.ws}>
         {this.props.children}
       </SpeechContext.Provider>
     );

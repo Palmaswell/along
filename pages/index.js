@@ -18,10 +18,10 @@ function test() {
 
 export default class Index extends React.Component {
   componentWillMount() {
-    abstractCommandFactory.register('playlist');
-    abstractCommandFactory.register('go to playlist');
-    abstractCommandFactory.register('show playlist');
-    abstractCommandFactory.register('show the playlist');
+    // abstractCommandFactory.register('playlist');
+    // abstractCommandFactory.register('go to playlist');
+    // abstractCommandFactory.register('show playlist');
+    // abstractCommandFactory.register('show the playlist');
   }
   render() {
     return (
@@ -29,21 +29,21 @@ export default class Index extends React.Component {
         channel="Home">
         <Consumers>
           {({speech, broker}) => {
-            broker.ws.subscribe(messageStream => {
-              console.log('subscribed message stream', messageStream.data)
-              abstractCommandFactory
-                .match(safeParse(messageStream.data).message)
-                .map(callbackableIntent => {
-                  callbackableIntent.register(handleRouter);
-                  callbackableIntent.execute(handleRouter, `/playlists/${this.props.spotify.id}`, this.props.spotify.id);
-                  return callbackableIntent;
-                })
-            })
-            broker.ws.next({
-              action:'PUBLISH',
-              channels: ['Home'],
-              message: speech.result.transcript
-            })
+            // broker.ws.subscribe(messageStream => {
+            //   console.log('subscribed message stream', messageStream.data)
+            //   abstractCommandFactory
+            //     .match(safeParse(messageStream.data).message)
+            //     .map(callbackableIntent => {
+            //       callbackableIntent.register(handleRouter);
+            //       callbackableIntent.execute(handleRouter, `/playlists/${this.props.spotify.id}`, this.props.spotify.id);
+            //       return callbackableIntent;
+            //     })
+            // })
+            // broker.ws.next({
+            //   action:'PUBLISH',
+            //   channels: ['Home'],
+            //   message: speech.result.transcript
+            // })
             return (
               <div>
                 <h1>Hi {this.props.spotify.display_name} 👋</h1>

@@ -2,6 +2,8 @@ import propTypes from 'prop-types';
 import React from 'react';
 import Rx from 'rxjs';
 
+import { SpeechProvider } from './speech/speech-provider';
+
 
 class WSProviderSingleton {
   constructor(hostName, channel) {
@@ -86,7 +88,9 @@ export class WSProvider extends React.Component {
   render() {
     return (
       <WSContext.Provider value={this.state.wsSingleton}>
+        <SpeechProvider ws={this.state.wsSingleton}>
         {this.renderChildren()}
+        </SpeechProvider>
       </WSContext.Provider>
     );
   }
