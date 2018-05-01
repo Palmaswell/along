@@ -43,7 +43,10 @@ class AbstractCommandFactory {
       .filter(intent =>
         speechResult.confidence > 0.75 &&
         intent.callableIntent.includes(speechResult).transcript)
-
+      console.log(`
+      > 🙌  Command ${speechResult.transcript} matched!
+      > Match with a confidence score of ${speechResult.confidence}.
+      `);
       console.log('filteredIntents 🎤🎤🎤', filteredCallBackableIntents)
 
       return filteredCallBackableIntents;
