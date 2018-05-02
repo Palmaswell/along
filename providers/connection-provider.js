@@ -88,9 +88,7 @@ export class WSProvider extends React.Component {
   render() {
     return (
       <WSContext.Provider value={this.state.wsSingleton}>
-
         {this.renderChildren()}
-
       </WSContext.Provider>
     );
   }

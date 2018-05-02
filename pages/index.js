@@ -46,7 +46,7 @@ export default class Index extends React.Component {
         {wsBroker => (
           <SpeechProvider
             channel="Home"
-            ws={wsBroker}>
+            wsBroker={wsBroker}>
             <SpeechContext.Consumer>
               {speech => (
                 <SpeechBroker registrationList={this.registerCommands()}>

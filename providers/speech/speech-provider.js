@@ -13,7 +13,7 @@ export class SpeechProvider extends React.Component {
   static propTypes = {
     id: propTypes.string,
     channel: propTypes.string.isRequired,
-    ws: propTypes.object.isRequired
+    wsBroker: propTypes.object.isRequired
   }
 
   state = {
@@ -23,6 +23,8 @@ export class SpeechProvider extends React.Component {
       confidence: 0
     }
   }
+
+  ws = this.props.wsBroker.ws
 
   speechRecognition = Rx.Observable.create(observer => {
     const  SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -51,13 +53,15 @@ export class SpeechProvider extends React.Component {
 
     recognition.onresult = e => {
       this.updateState(e.results);
-      const filteredIntents = abstractCommandFactory.match(e.results[0][0]);
-      filteredIntents.forEach(cbIntent => cbIntent.execute());
+      this.ws.subscribe(messageStream => {
+        console.log('subscribed message stream', messageStream.data)
+        const filteredIntents = abstractCommandFactory.match(e.results[0][0]);
+        filteredIntents.forEach(cbIntent => cbIntent.execute());
+      })
     }
 
     recognition.onend = e => {
-      const ws = this.props.ws.ws;
-      ws.next({
+      this.ws.next({
         action: 'PUBLISH',
         channels:[this.props.channel],
         message: this.state.speechResult.transcript
@@ -88,7 +92,6 @@ export class SpeechProvider extends React.Component {
         return recognitionList.addFromString(grammars, 1);
       })
 
-
       recognition.maxAlternatives = 1; // which is actually default
       recognition.interimResults = false;
       recognition.lang = 'en-US';
@@ -115,7 +118,7 @@ export class SpeechProvider extends React.Component {
           result: this.state.speechResult,
           start: e => this.start(e)
         }}
-        ws={this.props.ws}>
+        wsBroker={this.props.wsBroker}>
         {this.props.children}
       </SpeechContext.Provider>
     );
