@@ -40,8 +40,7 @@ export default class Index extends React.Component {
   render() {
     return (
     <WSProvider
-      channel="Home"
-      >
+      channel="Home">
       <WSContext.Consumer>
         {wsBroker => (
           <SpeechProvider
@@ -49,7 +48,9 @@ export default class Index extends React.Component {
             wsBroker={wsBroker}>
             <SpeechContext.Consumer>
               {speech => (
-                <SpeechBroker registrationList={this.registerCommands()}>
+                <SpeechBroker
+                  registrationList={this.registerCommands()}
+                  wsBroker={wsBroker}>
                 <div>
                   <h1>Hi {this.props.spotify.display_name} 👋</h1>
                   <h1>You said {speech.result.transcript} </h1>

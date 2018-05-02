@@ -3,6 +3,7 @@ import React from 'react';
 import Rx from 'rxjs';
 
 import { abstractCommandFactory, cmdGrammar } from './speech-commands';
+import { WSProviderSingleton } from '../connection-provider';
 
 export const SpeechContext = React.createContext({
   transcript: '',
@@ -13,7 +14,7 @@ export class SpeechProvider extends React.Component {
   static propTypes = {
     id: propTypes.string,
     channel: propTypes.string.isRequired,
-    wsBroker: propTypes.object.isRequired
+    wsBroker: propTypes.instanceOf(WSProviderSingleton).isRequired
   }
 
   state = {
@@ -53,11 +54,10 @@ export class SpeechProvider extends React.Component {
 
     recognition.onresult = e => {
       this.updateState(e.results);
-      this.ws.subscribe(messageStream => {
-        console.log('subscribed message stream', messageStream.data)
-        const filteredIntents = abstractCommandFactory.match(e.results[0][0]);
-        filteredIntents.forEach(cbIntent => cbIntent.execute());
-      })
+
+      const filteredIntents = abstractCommandFactory.match(e.results[0][0]);
+      filteredIntents.forEach(cbIntent => cbIntent.execute());
+      return filteredIntents;
     }
 
     recognition.onend = e => {
