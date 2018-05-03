@@ -2,11 +2,12 @@ import propTypes from 'prop-types';
 import React from 'react';
 
 import abstractCommandFactory from './speech-commands';
+import { WSProviderSingleton } from '../connection-provider';
 
 export default class SpeechBroker extends React.Component {
   static propTypes = {
     registrationList: propTypes.array.isRequired,
-    arguments: propTypes.object
+    wsBroker: propTypes.instanceOf(WSProviderSingleton).isRequired
   }
 
   static getDerivedStateFromProps(props) {
@@ -16,7 +17,6 @@ export default class SpeechBroker extends React.Component {
 
       const registeredCallback = registration.callableIntent.register(action);
     });
-    // console.log('speech broker props', props)
     return null;
   }
 

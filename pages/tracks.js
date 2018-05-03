@@ -1,16 +1,22 @@
-import ActiveLink from '../components/active-link';
-import Consumers from '../components/consumers';
 import fetch, { Headers }  from 'node-fetch';
 import Link from 'next/link';
-import Providers from '../components/providers';
-import React from 'react';
 import { hydrate, injectGlobal } from 'react-emotion';
+
 import { getCookie } from '../utils/cookies';
-import { render } from 'react-dom';
+import { handleRouter } from '../utils/handle-router';
+
+import { abstractCommandFactory } from '../providers/speech/speech-commands';
+import {
+  SpeechContext,
+  SpeechProvider
+} from '../providers/speech/speech-provider';
+import { WSContext, WSProvider } from '../providers/connection-provider';
+import SpeechBroker from '../providers/speech/speech-broker';
+
+import ActiveLink from '../components/active-link';
 
 export default class Tracks extends React.Component {
-
-  componentWillMount() {
+  componentDidMount() {
     this.fetchDevices();
   }
 
@@ -63,26 +69,87 @@ export default class Tracks extends React.Component {
     const data = await res.json();
   }
 
+  registerCommands = () => {
+    const registrations = this.props.tracks.map(playlist => {
+      return {
+        callableIntent: abstractCommandFactory.register(`play ${playlist.track.name}`),
+        action: props => this.playTrack(playlist.track.album.uri)
+      };
+      return {
+        callableIntent: abstractCommandFactory.register(`please play ${playlist.track.name.toLowerCase()}`),
+        action: props => this.playTrack(playlist.track.album.uri)
+      };
+    });
+
+    registrations.push({
+      callableIntent: abstractCommandFactory.register('pause'),
+      action: props => this.pauseTrack()
+    });
+    registrations.push({
+      callableIntent: abstractCommandFactory.register('stop'),
+      action: props => this.pauseTrack()
+    });
+    registrations.push({
+      callableIntent: abstractCommandFactory.register('continue'),
+      action: props => this.resumeTrack()
+    });
+    registrations.push({
+      callableIntent: abstractCommandFactory.register('go back to playlist'),
+      action: props => handleRouter(`/playlists/${this.props.userId}`, this.props.userId)
+    });
+    registrations.push({
+      callableIntent: abstractCommandFactory.register('go back'),
+      action: props => handleRouter(`/playlists/${this.props.userId}`, this.props.userId)
+    });
+
+    return registrations;
+  }
+
   render() {
     return (
       <main>
-        <ActiveLink
-          href={`/playlists/${this.props.userId}`}>
-          Back
-        </ActiveLink>
-        {this.props.tracks.map(playlist => (
-          <div key={playlist.track.id}>
-            <a onClick={() => this.playTrack(playlist.track.album.uri)}>
-              <img src={playlist.track.album.images[0].url} alt={`${playlist.track.album.name} track name`} />
-              <div>{playlist.added_at}</div>
-              <div>{playlist.track.name}</div>
-              <div>{playlist.track.duration_ms}</div>
-              <div>{playlist.track.explicit}</div>
-            </a>
-            <button onClick={this.pauseTrack}>pause</button>
-            <button onClick={this.resumeTrack}>resume</button>
-          </div>
-        ))}
+        <WSProvider
+        channel="Home">
+        <WSContext.Consumer>
+          {wsBroker => (
+            <SpeechProvider
+              channel="Home"
+              wsBroker={wsBroker}>
+              <SpeechContext.Consumer>
+                {speech => (
+                  <SpeechBroker
+                    registrationList={this.registerCommands()}
+                    wsBroker={wsBroker}>
+                    <ActiveLink
+                    href={`/playlists/${this.props.userId}`}>
+                    Back
+                    </ActiveLink>
+                    <button
+                      name="Start Speech"
+                      onClick={speech.start}
+                      type="button">
+                      Talk !
+                    </button>
+                    {this.props.tracks.map(playlist => (
+                      <div key={playlist.track.id}>
+                        <a onClick={() => this.playTrack(playlist.track.album.uri)}>
+                        <img src={playlist.track.album.images[0].url} alt={`${playlist.track.album.name} track name`} />
+                        <div>{playlist.added_at}</div>
+                        <div>{playlist.track.name}</div>
+                        <div>{playlist.track.duration_ms}</div>
+                        <div>{playlist.track.explicit}</div>
+                        </a>
+                        <button onClick={this.pauseTrack}>pause</button>
+                        <button onClick={this.resumeTrack}>resume</button>
+                      </div>
+                    ))}
+                  </SpeechBroker>
+                )}
+              </SpeechContext.Consumer>
+            </SpeechProvider>
+          )}
+        </WSContext.Consumer>
+        </WSProvider>
       </main>
     )
   }

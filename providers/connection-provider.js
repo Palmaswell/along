@@ -5,7 +5,7 @@ import Rx from 'rxjs';
 import { SpeechProvider } from './speech/speech-provider';
 
 
-class WSProviderSingleton {
+export class WSProviderSingleton {
   constructor(hostName, channel) {
     this.webSock = new WebSocket(`ws://${hostName}:3001`);
     const ws = this.webSock;
@@ -88,9 +88,7 @@ export class WSProvider extends React.Component {
   render() {
     return (
       <WSContext.Provider value={this.state.wsSingleton}>
-
         {this.renderChildren()}
-
       </WSContext.Provider>
     );
   }

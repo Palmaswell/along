@@ -1,4 +1,3 @@
-import React from 'react';
 import Router from 'next/router';
 import fetch, { Headers }  from 'node-fetch';
 import { hydrate, injectGlobal } from 'react-emotion';
@@ -8,7 +7,10 @@ import { safeParse } from '../utils/safe-parse';
 import { handleRouter } from '../utils/handle-router';
 
 import { abstractCommandFactory } from '../providers/speech/speech-commands';
-import { SpeechContext, SpeechProvider } from '../providers/speech/speech-provider';
+import {
+  SpeechContext,
+  SpeechProvider
+} from '../providers/speech/speech-provider';
 import { WSContext, WSProvider } from '../providers/connection-provider';
 import SpeechBroker from '../providers/speech/speech-broker';
 
@@ -40,16 +42,17 @@ export default class Index extends React.Component {
   render() {
     return (
     <WSProvider
-      channel="Home"
-      >
+      channel="Home">
       <WSContext.Consumer>
         {wsBroker => (
           <SpeechProvider
             channel="Home"
-            ws={wsBroker}>
+            wsBroker={wsBroker}>
             <SpeechContext.Consumer>
               {speech => (
-                <SpeechBroker registrationList={this.registerCommands()}>
+                <SpeechBroker
+                  registrationList={this.registerCommands()}
+                  wsBroker={wsBroker}>
                 <div>
                   <h1>Hi {this.props.spotify.display_name} 👋</h1>
                   <h1>You said {speech.result.transcript} </h1>

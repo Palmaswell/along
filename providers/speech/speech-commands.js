@@ -1,5 +1,5 @@
 import Rx from 'rxjs';
-export const cmdGrammar = '#JSGF V1.0; grammar commands; public  = go home | show mixtapes | pause | play | stop;'
+import { sanatizedIntent } from '../../utils/sanatized-intent';
 
 
 function CallBackableIntent(intent) {
@@ -25,7 +25,6 @@ class AbstractCommandFactory {
     speechObservers = [];
 
     grammarStream = new Rx.Observable(observer => {
-      this.speechObservers.push(observer);
       observer.next(this.generateGrammar(this.speechCallableIntents));
     });
 
@@ -34,7 +33,7 @@ class AbstractCommandFactory {
     }
 
     generateGrammar(speechIntents) {
-      return `#JSGF V1.0; grammar commands; public  = ${speechIntents.map(cbIntent => cbIntent.intent).join(" | ")}`
+      return `#JSGF V1.0; grammar commands; public  = ${speechIntents.map(cbIntent => sanatizedIntent(cbIntent.intent)).join(" | ")}`
     }
 
     match(speechResult) {
@@ -45,18 +44,17 @@ class AbstractCommandFactory {
 
       console.log(`
       > 🎙 Intent ${speechResult.transcript} was heard!
-      > We heard with confidence score of ${speechResult.confidence.toFixed(2)}.
+      > We heard with a confidence score of ${speechResult.confidence.toFixed(2)}.
       `);
 
       return filteredCallBackableIntents;
     }
 
     register(intent) {
-      const callBackableIntent = CallBackableIntent(intent);
+      const callBackableIntent = CallBackableIntent(sanatizedIntent(intent));
       this.speechCallableIntents.push(callBackableIntent);
 
       const grammars = this.generateGrammar(this.speechCallableIntents);
-      this.speechObservers.forEach(obs => obs.next(grammars));
       return callBackableIntent;
     }
 
