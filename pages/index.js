@@ -1,6 +1,6 @@
 import Router from 'next/router';
 import fetch, { Headers }  from 'node-fetch';
-import { hydrate, injectGlobal } from 'react-emotion';
+import styled, { hydrate, injectGlobal } from 'react-emotion';
 
 import { getCookie } from '../utils/cookies';
 import { safeParse } from '../utils/safe-parse';
@@ -15,6 +15,7 @@ import { WSContext, WSProvider } from '../providers/connection-provider';
 import SpeechBroker from '../providers/speech/speech-broker';
 
 import ActiveLink from '../components/active-link';
+import Headline from '../components/headline';
 
 export default class Index extends React.Component {
 
@@ -54,7 +55,15 @@ export default class Index extends React.Component {
                   registrationList={this.registerCommands()}
                   wsBroker={wsBroker}>
                 <div>
-                  <h1>Hi {this.props.spotify.display_name} 👋</h1>
+                  <Headline order="h1">
+                    Glad to see you
+                  </Headline>
+                  {this.props.spotify &&
+                    <Headline order="h2">
+                    {this.props.spotify.display_name}! 👋
+                  </Headline>
+                  }
+                  <h1>Hi {this.props.spotify.display_name} </h1>
                   <h1>You said {speech.result.transcript} </h1>
                   <ActiveLink
                     href={`/playlists/${this.props.spotify.id}`}>
