@@ -20,12 +20,20 @@ export default class PlayLists extends React.Component {
     const registrations = this.props.playlist.items.map(playlist => {
       // console.log(playlist.name.toString());
       return {
-        callableIntent: abstractCommandFactory.register(playlist.name.toLowerCase()),
+        callableIntent: abstractCommandFactory.register(`show me ${playlist.name}`),
+        action: props => handleRouter(`/tracks/${playlist.id}`, playlist.id)
+      };
+      return {
+        callableIntent: abstractCommandFactory.register(`go to ${playlist.name}`),
         action: props => handleRouter(`/tracks/${playlist.id}`, playlist.id)
       };
     })
     registrations.push({
       callableIntent: abstractCommandFactory.register('go home'),
+      action: props => handleRouter(`/`)
+    })
+    registrations.push({
+      callableIntent: abstractCommandFactory.register('go back'),
       action: props => handleRouter(`/`)
     })
 

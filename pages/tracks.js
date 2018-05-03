@@ -16,9 +16,9 @@ import SpeechBroker from '../providers/speech/speech-broker';
 import ActiveLink from '../components/active-link';
 
 export default class Tracks extends React.Component {
-
-  componentWillMount() {
+  getDerivedStateFromProps(props) {
     this.fetchDevices();
+    return {};
   }
 
   fetchDevices = async () => {
@@ -72,17 +72,36 @@ export default class Tracks extends React.Component {
 
   registerCommands = () => {
     const registrations = this.props.tracks.map(playlist => {
-      console.log(playlist, '*((*(*(*((**(');
       return {
-        callableIntent: abstractCommandFactory.register(`play ${playlist.track.name.toLowerCase()}`),
+        callableIntent: abstractCommandFactory.register(`play ${playlist.track.name}`),
         action: props => this.playTrack(playlist.track.album.uri)
       };
-    })
+      return {
+        callableIntent: abstractCommandFactory.register(`please play ${playlist.track.name.toLowerCase()}`),
+        action: props => this.playTrack(playlist.track.album.uri)
+      };
+    });
 
     registrations.push({
-      callableIntent: abstractCommandFactory.register('go back to playlists'),
+      callableIntent: abstractCommandFactory.register('pause'),
+      action: props => this.pauseTrack()
+    });
+    registrations.push({
+      callableIntent: abstractCommandFactory.register('stop'),
+      action: props => this.pauseTrack()
+    });
+    registrations.push({
+      callableIntent: abstractCommandFactory.register('continue'),
+      action: props => this.resumeTrack()
+    });
+    registrations.push({
+      callableIntent: abstractCommandFactory.register('go back to playlist'),
       action: props => handleRouter(`/playlists/${this.props.userId}`, this.props.userId)
-    })
+    });
+    registrations.push({
+      callableIntent: abstractCommandFactory.register('go back'),
+      action: props => handleRouter(`/playlists/${this.props.userId}`, this.props.userId)
+    });
 
     return registrations;
   }

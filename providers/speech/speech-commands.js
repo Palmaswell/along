@@ -1,5 +1,5 @@
 import Rx from 'rxjs';
-export const cmdGrammar = '#JSGF V1.0; grammar commands; public  = go home | show mixtapes | pause | play | stop;'
+import { sanatizedIntent } from '../../utils/sanatized-intent';
 
 
 function CallBackableIntent(intent) {
@@ -34,7 +34,7 @@ class AbstractCommandFactory {
     }
 
     generateGrammar(speechIntents) {
-      return `#JSGF V1.0; grammar commands; public  = ${speechIntents.map(cbIntent => cbIntent.intent).join(" | ")}`
+      return `#JSGF V1.0; grammar commands; public  = ${speechIntents.map(cbIntent => sanatizedIntent(cbIntent.intent)).join(" | ")}`
     }
 
     match(speechResult) {
@@ -52,7 +52,7 @@ class AbstractCommandFactory {
     }
 
     register(intent) {
-      const callBackableIntent = CallBackableIntent(intent);
+      const callBackableIntent = CallBackableIntent(sanatizedIntent(intent));
       this.speechCallableIntents.push(callBackableIntent);
 
       const grammars = this.generateGrammar(this.speechCallableIntents);
