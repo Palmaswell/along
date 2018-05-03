@@ -18,7 +18,6 @@ import ActiveLink from '../components/active-link';
 export default class PlayLists extends React.Component {
   registerCommands = () => {
     const registrations = this.props.playlist.items.map(playlist => {
-      // console.log(playlist.name.toString());
       return {
         callableIntent: abstractCommandFactory.register(`show me ${playlist.name}`),
         action: props => handleRouter(`/tracks/${playlist.id}`, playlist.id)

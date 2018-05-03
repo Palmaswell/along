@@ -25,7 +25,6 @@ class AbstractCommandFactory {
     speechObservers = [];
 
     grammarStream = new Rx.Observable(observer => {
-      this.speechObservers.push(observer);
       observer.next(this.generateGrammar(this.speechCallableIntents));
     });
 
@@ -45,7 +44,7 @@ class AbstractCommandFactory {
 
       console.log(`
       > 🎙 Intent ${speechResult.transcript} was heard!
-      > We heard with confidence score of ${speechResult.confidence.toFixed(2)}.
+      > We heard with a confidence score of ${speechResult.confidence.toFixed(2)}.
       `);
 
       return filteredCallBackableIntents;
@@ -56,7 +55,6 @@ class AbstractCommandFactory {
       this.speechCallableIntents.push(callBackableIntent);
 
       const grammars = this.generateGrammar(this.speechCallableIntents);
-      this.speechObservers.forEach(obs => obs.next(grammars));
       return callBackableIntent;
     }
 

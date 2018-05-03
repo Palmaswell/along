@@ -16,9 +16,8 @@ import SpeechBroker from '../providers/speech/speech-broker';
 import ActiveLink from '../components/active-link';
 
 export default class Tracks extends React.Component {
-  getDerivedStateFromProps(props) {
+  componentDidMount() {
     this.fetchDevices();
-    return {};
   }
 
   fetchDevices = async () => {

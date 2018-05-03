@@ -17,23 +17,44 @@ export class SpeechProvider extends React.Component {
     wsBroker: propTypes.instanceOf(WSProviderSingleton).isRequired
   }
 
-  state = {
-    recognizing: false,
-    speechResult: {
-      transcript: '',
-      confidence: 0
+  constructor(props) {
+    super(props);
+    this.state = {
+      recognizing: false,
+      speechResult: {
+        transcript: '',
+        confidence: 0
+      }
     }
+    this.ws = this.props.wsBroker.ws;
   }
 
-  ws = this.props.wsBroker.ws
-
-  speechRecognition = Rx.Observable.create(observer => {
+  componentDidMount() {
     const  SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
     if (!SpeechRecognition) {
       return;
     }
-    observer.next(new SpeechRecognition());
-  })
+    this.speechRecognition = new SpeechRecognition();
+    this.speechRecognition.maxAlternatives = 1; // which is actually default
+    this.speechRecognition.interimResults = false;
+    this.speechRecognition.lang = 'en-US';
+
+    const SpeechGrammarList = window.SpeechGrammarList ||window.webkitSpeechGrammarList;
+    const recognitionList = new SpeechGrammarList();
+
+    const grammarStream = abstractCommandFactory.getGrammarStream();
+    grammarStream.subscribe(grammars => {
+      console.log(`
+      > ⚡️ This is our currently registered grammar stream:
+      >    It uses the JSpeech Grammar Format (JSGF.)
+      > 📚 ${grammars}
+      `)
+      return recognitionList.addFromString(grammars, 1);
+    })
+    this.speechRecognition.grammar = recognitionList;
+  }
+
 
   handleRecognition = recognition => {
     recognition.onerror = e => {
@@ -76,29 +97,13 @@ export class SpeechProvider extends React.Component {
 
   start = e => {
     e.persist();
+    if (this.state.recognizing) {
+      recognition.stop();
+    }
 
-    this.speechRecognition.subscribe(recognition => {
-      if (this.state.recognizing) {
-        recognition.stop();
-      }
+    this.speechRecognition.start();
+    this.handleRecognition(this.speechRecognition);
 
-      const SpeechGrammarList = window.SpeechGrammarList ||window.webkitSpeechGrammarList;
-      const recognitionList = new SpeechGrammarList();
-
-      const grammarStream = abstractCommandFactory.getGrammarStream();
-
-      grammarStream.subscribe(grammars => {
-        console.log(grammars, '%%% grammars stream');
-        return recognitionList.addFromString(grammars, 1);
-      })
-
-      recognition.maxAlternatives = 1; // which is actually default
-      recognition.interimResults = false;
-      recognition.lang = 'en-US';
-      recognition.grammar = recognitionList;
-      recognition.start();
-      this.handleRecognition(recognition);
-    });
   }
 
   updateState = result => {
@@ -109,7 +114,6 @@ export class SpeechProvider extends React.Component {
   }
 
   render () {
-    // console.log('speech provider 🎤 results', this.state.speechResult)
     return (
       <SpeechContext.Provider
         id={this.props.id}
