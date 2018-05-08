@@ -17,6 +17,7 @@ import SpeechBroker from '../providers/speech/speech-broker';
 import ActiveLink from '../components/active-link';
 import Layout from '../components/layout';
 import Headline from '../components/headline';
+import Nav from '../components/nav';
 
 export default class Index extends React.Component {
 
@@ -65,16 +66,19 @@ export default class Index extends React.Component {
                     </Headline>
                     }
                     <h1>You said {speech.result.transcript} </h1>
-                    <ActiveLink
-                      href={`/playlists/${this.props.spotify.id}`}>
-                      Playlists
-                    </ActiveLink>
+
                     <button
                       name="Start Speech"
                       onClick={speech.start}
                       type="button">
                       Talk !
                     </button>
+                    <Nav>
+                      <ActiveLink
+                        href={`/playlists/${this.props.spotify.id}`}>
+                        Playlists
+                      </ActiveLink>
+                    </Nav>
                   </Layout>
               </SpeechBroker>
               )}
