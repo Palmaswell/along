@@ -1,4 +1,4 @@
-import styled, { hydrate, injectGlobal } from 'react-emotion';
+import styled from 'react-emotion';
 
 import colors from './colors';
 import fontHind from './fonts';
