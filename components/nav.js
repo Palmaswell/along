@@ -1,15 +1,16 @@
 import styled from 'react-emotion';
+import { size } from './sizes'
 
 const StyledNav = styled.nav`
   display: block;
   width: 100%;
-  height: 65px;
+  height: ${size.m}px;
+  line-height: ${size.m}px;
 
 `
-
-export const Nav = props => (
+export const Nav = ({ children }) => (
   <StyledNav>
-    {props.children}
+    {children}
   </StyledNav>
 )
 

@@ -9,9 +9,9 @@ const StyledSVG = styled.svg`
   cursor: pointer;
 `;
 
-export const SpeechButton = props => {
+export const SpeechButton = ({ handleClick }) => {
   return (
-    <StyledSVG onClick={props.handleClick} viewBox="0 0 50 50">
+    <StyledSVG onClick={handleClick} viewBox="0 0 50 50">
       <title>Speech Button</title>
       <path d="M25,0.5C11.469,0.5,0.5,11.469,0.5,25c0,13.531,10.969,24.5,24.5,24.5S49.5,38.531,49.5,25C49.5,11.469,38.531,0.5,25,0.5z
         M18.206,14.294c0-3.752,3.042-6.794,6.794-6.794s6.794,3.042,6.794,6.794v9.965c0,3.752-3.042,6.794-6.794,6.794

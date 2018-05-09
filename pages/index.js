@@ -17,10 +17,14 @@ import SpeechBroker from '../providers/speech/speech-broker';
 import ActiveLink from '../components/active-link';
 import Layout from '../components/layout';
 import Headline from '../components/headline';
+import Thumbnail from '../components/thumbnail';
 import SpeechButton from '../components/speech-button';
 import Nav from '../components/nav';
 
 export default class Index extends React.Component {
+  componentDidMount() {
+    this.userName = this.props.spotify.display_name.replace(/\s(.*)/g, '');
+  }
 
   registerCommands = () => {
     const registrations = [];
@@ -44,7 +48,6 @@ export default class Index extends React.Component {
   }
 
   render() {
-    console.log(this.props.spotify)
     return (
     <WSProvider
       channel="Home">
@@ -64,6 +67,14 @@ export default class Index extends React.Component {
                       href={`/playlists/${this.props.spotify.id}`}>
                       Playlists
                     </ActiveLink>
+                    <a
+                      href={this.props.spotify.external_urls.spotify}
+                      target="_blank">
+                      <Thumbnail
+                        alt={`Spotify profile image from ${this.props.spotify.display_name}`}
+                        caption={this.userName}
+                        src={this.props.spotify.images[0].url}/>
+                    </a>
                   </Nav>
                     {/* <Headline order="h1">
                       Glad to see you

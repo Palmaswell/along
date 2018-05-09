@@ -45,7 +45,7 @@ const StyledHeadline = styled.h1`
   }
 `;
 
-export const Headline = props => {
+export const Headline = ({ children, order }) => {
   const Component = StyledHeadline.withComponent(props.order);
   return (
     <Component

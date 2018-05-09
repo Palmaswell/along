@@ -8,9 +8,9 @@ const StyledLayout = styled.div`
   background-color: ${colors.floralWhite()};
 `
 
-export const Layout = props => (
+export const Layout = ({ children }) => (
   <StyledLayout>
-    {props.children}
+    {children}
   </StyledLayout>
 );
 
