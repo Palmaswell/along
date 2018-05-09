@@ -17,6 +17,7 @@ import SpeechBroker from '../providers/speech/speech-broker';
 import ActiveLink from '../components/active-link';
 import Layout from '../components/layout';
 import Headline from '../components/headline';
+import SpeechButton from '../components/speech-button';
 import Nav from '../components/nav';
 
 export default class Index extends React.Component {
@@ -43,6 +44,7 @@ export default class Index extends React.Component {
   }
 
   render() {
+    console.log(this.props.spotify)
     return (
     <WSProvider
       channel="Home">
@@ -57,28 +59,22 @@ export default class Index extends React.Component {
                   registrationList={this.registerCommands()}
                   wsBroker={wsBroker}>
                   <Layout>
-                    <Headline order="h1">
+                  <Nav>
+                    <ActiveLink
+                      href={`/playlists/${this.props.spotify.id}`}>
+                      Playlists
+                    </ActiveLink>
+                  </Nav>
+                    {/* <Headline order="h1">
                       Glad to see you
                     </Headline>
                     {this.props.spotify &&
                       <Headline order="h2">
                       {this.props.spotify.display_name}! 👋
                     </Headline>
-                    }
+                    } */}
                     <h1>You said {speech.result.transcript} </h1>
-
-                    <button
-                      name="Start Speech"
-                      onClick={speech.start}
-                      type="button">
-                      Talk !
-                    </button>
-                    <Nav>
-                      <ActiveLink
-                        href={`/playlists/${this.props.spotify.id}`}>
-                        Playlists
-                      </ActiveLink>
-                    </Nav>
+                    <SpeechButton handleClick={speech.start} />
                   </Layout>
               </SpeechBroker>
               )}
