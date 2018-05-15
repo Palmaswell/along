@@ -15,6 +15,8 @@ import SpeechBroker from '../providers/speech/speech-broker';
 
 import ActiveLink from '../components/active-link';
 
+import Cookie from 'js-cookie';
+
 export default class Tracks extends React.Component {
   componentDidMount() {
     this.fetchDevices();
@@ -75,10 +77,6 @@ export default class Tracks extends React.Component {
         callableIntent: abstractCommandFactory.register(`play ${playlist.track.name}`),
         action: props => this.playTrack(playlist.track.album.uri)
       };
-      return {
-        callableIntent: abstractCommandFactory.register(`please play ${playlist.track.name.toLowerCase()}`),
-        action: props => this.playTrack(playlist.track.album.uri)
-      };
     });
 
     registrations.push({
@@ -106,6 +104,7 @@ export default class Tracks extends React.Component {
   }
 
   render() {
+    // console.log('what is going on', this.props)
     return (
       <main>
         <WSProvider
@@ -156,7 +155,7 @@ export default class Tracks extends React.Component {
 }
 
 Tracks.getInitialProps = async ctx => {
-  const { play_id, user_id } = ctx.query;
+  const { play_id } = ctx.query;
   const res = await fetch(`https://api.spotify.com/v1/users/${getCookie('user_id', ctx)}/playlists/${play_id}/tracks`, {
     method: 'GET',
     headers: new Headers({
@@ -165,9 +164,8 @@ Tracks.getInitialProps = async ctx => {
     })
   });
   const tracks = await res.json();
-
   return {
     tracks: tracks.items || [],
-    userId: user_id
+    userId: getCookie('user_id', ctx)
   }
 }

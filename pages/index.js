@@ -107,6 +107,8 @@ Index.getInitialProps =  async ctx => {
     })
   });
   const data = await res.json();
+
+  console.log(data, '@@@ the initial data');
   return {
     spotify: data ? data : null
   }
