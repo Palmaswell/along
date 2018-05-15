@@ -1,5 +1,6 @@
 import styled from 'react-emotion';
 import { withRouter } from 'next/router';
+import { StyledLink } from './link';
 
 const ActiveLink = ({ children, router, href }) => {
 
@@ -9,9 +10,9 @@ const ActiveLink = ({ children, router, href }) => {
   }
 
   return (
-    <a href={href} onClick={handleClick}>
+    <StyledLink href={href} onClick={handleClick}>
       {children}
-    </a>
+    </StyledLink>
   )
 }
 

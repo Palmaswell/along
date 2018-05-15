@@ -16,10 +16,13 @@ import SpeechBroker from '../providers/speech/speech-broker';
 
 import ActiveLink from '../components/active-link';
 import Layout from '../components/layout';
+import Link from '../components/link';
 import Headline from '../components/headline';
 import Thumbnail from '../components/thumbnail';
 import SpeechButton from '../components/speech-button';
+import Space from '../components/space';
 import Nav from '../components/nav';
+import { size } from '../components/sizes';
 
 export default class Index extends React.Component {
   componentDidMount() {
@@ -67,14 +70,16 @@ export default class Index extends React.Component {
                       href={`/playlists/${this.props.spotify.id}`}>
                       Playlists
                     </ActiveLink>
-                    <a
+                    <Space size={[0, 0, 0, size.xs]}>
+                    <Link
                       href={this.props.spotify.external_urls.spotify}
                       target="_blank">
                       <Thumbnail
                         alt={`Spotify profile image from ${this.props.spotify.display_name}`}
                         caption={this.userName}
                         src={this.props.spotify.images[0].url}/>
-                    </a>
+                    </Link>
+                    </Space>
                   </Nav>
                     {/* <Headline order="h1">
                       Glad to see you
@@ -108,7 +113,6 @@ Index.getInitialProps =  async ctx => {
   });
   const data = await res.json();
 
-  console.log(data, '@@@ the initial data');
   return {
     spotify: data ? data : null
   }
