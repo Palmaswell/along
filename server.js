@@ -128,7 +128,7 @@ nextApp.prepare().then(() => {
   });
 
   app.get('/', (req, res) => {
-    if (!req.cookies.access || Object.keys(req.cookies).length === 0 ) {
+    if (!req.cookies.access) {
       res.redirect('/login')
     }
     nextApp.render(req, res, '/', req.params);

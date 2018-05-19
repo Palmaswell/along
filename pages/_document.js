@@ -25,9 +25,12 @@ export default class MyDocument extends Document {
       }
     `;
     return (
-      <html>
+      <html lang="en-US">
         <Head>
-          <title>Along</title>
+          <meta charset="utf-8"/>
+          <title>Along - Spotify playlist with the Web Speech API</title>
+          <meta name="description" content="Universal React app using NextJS, RxJs and the Web Speech API. Listen to your Spotify playlists" />
+          <meta name="viewport" content="width=device-width, user-scalable=no" />
           <link
             rel="preload"
             href="https://fonts.googleapis.com/css?family=Hind:400,700" rel="stylesheet" />

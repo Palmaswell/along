@@ -19,7 +19,7 @@ import Layout from '../components/layout';
 import Link from '../components/link';
 import Headline from '../components/headline';
 import Thumbnail from '../components/thumbnail';
-import SpeechButton from '../components/speech-button';
+import SpeechControl from '../components/speech-controls';
 import Space from '../components/space';
 import Nav from '../components/nav';
 import { size } from '../components/sizes';
@@ -90,7 +90,7 @@ export default class Index extends React.Component {
                     </Headline>
                     } */}
                     <h1>You said {speech.result.transcript} </h1>
-                    <SpeechButton handleClick={speech.start} />
+                    <SpeechControl handleClick={speech.start} />
                   </Layout>
               </SpeechBroker>
               )}

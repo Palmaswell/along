@@ -4,13 +4,13 @@ import fontHind from './fonts';
 import { size } from './sizes';
 
 export const StyledLink = styled.a`
-  color: ${color.independence()};
+  color: ${color.lightCyan()};
   text-decoration: none;
   transition: color .33s ease-in-out;
   ${fontHind()}
 
   :hover {
-    color: ${color.celestialBlue()};
+    color: ${color.navajoWhite()};
     text-decoration: underline;
   }
 `
