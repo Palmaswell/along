@@ -19,6 +19,7 @@ import Layout from '../components/layout';
 import Link from '../components/link';
 import Headline from '../components/headline';
 import Thumbnail from '../components/thumbnail';
+import CommandPanel from '../components/command-panel';
 import SpeechControl from '../components/speech-controls';
 import Space from '../components/space';
 import Nav from '../components/nav';
@@ -65,31 +66,23 @@ export default class Index extends React.Component {
                   registrationList={this.registerCommands()}
                   wsBroker={wsBroker}>
                   <Layout>
-                  <Nav>
-                    <ActiveLink
-                      href={`/playlists/${this.props.spotify.id}`}>
-                      Playlists
-                    </ActiveLink>
-                    <Space size={[0, 0, 0, size.xs]}>
-                    <Link
-                      href={this.props.spotify.external_urls.spotify}
-                      target="_blank">
-                      <Thumbnail
-                        alt={`Spotify profile image from ${this.props.spotify.display_name}`}
-                        caption={this.userName}
-                        src={this.props.spotify.images[0].url}/>
-                    </Link>
-                    </Space>
-                  </Nav>
-                    {/* <Headline order="h1">
-                      Glad to see you
-                    </Headline>
-                    {this.props.spotify &&
-                      <Headline order="h2">
-                      {this.props.spotify.display_name}! 👋
-                    </Headline>
-                    } */}
-                    <h1>You said {speech.result.transcript} </h1>
+                    <Nav>
+                      <ActiveLink
+                        href={`/playlists/${this.props.spotify.id}`}>
+                        Playlists
+                      </ActiveLink>
+                      <Space size={[0, 0, 0, size.xs]}>
+                        <Link
+                          href={this.props.spotify.external_urls.spotify}
+                          target="_blank">
+                          <Thumbnail
+                            alt={`Spotify profile image from ${this.props.spotify.display_name}`}
+                            caption={this.userName}
+                            src={this.props.spotify.images[0].url}/>
+                        </Link>
+                      </Space>
+                    </Nav>
+                    <CommandPanel transcript={speech.result.transcript} />
                     <SpeechControl handleClick={speech.start} />
                   </Layout>
               </SpeechBroker>

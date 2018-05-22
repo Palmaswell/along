@@ -21,7 +21,7 @@ const StyledHeadline = styled.h1`
     }
   };
   line-height: 1.5;
-  color: ${colors.independence()};
+  color: ${colors.lightCyan()};
   text-align: center;
   ${fontHind()}
 
@@ -46,11 +46,10 @@ const StyledHeadline = styled.h1`
 `;
 
 export const Headline = ({ children, order }) => {
-  const Component = StyledHeadline.withComponent(props.order);
+  const Component = StyledHeadline.withComponent(order);
   return (
-    <Component
-      order={props.order}>
-        {props.children}
+    <Component order={order}>
+        {children}
     </Component>
   )
 }
