@@ -5,11 +5,11 @@ import { size } from './sizes'
 const StyledNav = styled.nav`
   display: flex;
   justify-content: flex-end;
+  align-items: center;
   box-sizing: border-box;
   width: 100%;
-  height: ${size.m}px;
-  padding: ${size.xs}px;
-  line-height: ${size.m}px;
+  min-height: ${size.m}px;
+  padding: ${size.xxxs}px;
 `
 export const Nav = ({ children }) => (
   <StyledNav>
