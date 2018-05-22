@@ -1,16 +1,15 @@
 import Document, { Head, Main, NextScript } from 'next/document';
 import { extractCritical } from 'emotion-server';
+import { injectGlobal } from 'react-emotion';
+
+
+// Adds server generated styles to emotion cache.
+// '__NEXT_DATA__.ids' is set in '_document.js'
+if (typeof window !== 'undefined') {
+  hydrate(window.__NEXT_DATA__.ids)
+}
 
 export default class MyDocument extends Document {
-  static getInitialProps ({ renderPage }) {
-    const page = renderPage();
-    const styles = extractCritical(page.html);
-    return {
-      ...page,
-      ...styles
-     };
-  }
-
   constructor (props) {
     super(props);
     const { __NEXT_DATA__, ids } = props;
@@ -20,10 +19,18 @@ export default class MyDocument extends Document {
   }
 
   render () {
+    injectGlobal`
+      body {
+       margin: 0;
+      }
+    `;
     return (
-      <html>
+      <html lang="en-US">
         <Head>
-          <title>Along</title>
+          <meta charSet="utf-8"/>
+          <title>Along - Spotify playlist with the Web Speech API</title>
+          <meta name="description" content="Universal React app using NextJS, RxJs and the Web Speech API. Listen to your Spotify playlists" />
+          <meta name="viewport" content="width=device-width, user-scalable=no" />
           <link
             rel="preload"
             href="https://fonts.googleapis.com/css?family=Hind:400,700" rel="stylesheet" />
@@ -37,4 +44,13 @@ export default class MyDocument extends Document {
       </html>
     )
   }
+}
+
+MyDocument.getInitialProps = ({ renderPage }) => {
+  const page = renderPage();
+  const styles = extractCritical(page.html);
+  return {
+    ...page,
+    ...styles
+   };
 }

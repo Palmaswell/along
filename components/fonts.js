@@ -7,3 +7,5 @@ export const fontHind = () => (
     -webkit-font-smoothing: antialiased;
   `
 );
+
+export default fontHind;

@@ -1,6 +1,54 @@
 import tinycolor from 'tinycolor2';
 
 const colors = {
+  yankeesBlue: () => tinycolor(
+    {
+      r: 30,
+      g: 40,
+      b: 58,
+      a: 1
+    }
+  ).toRgbString(),
+  yankeesBlueLight: () => tinycolor(
+    {
+      r: 37,
+      g: 43,
+      b: 68,
+      a: 1
+    }
+  ).toRgbString(),
+  begonia: () => tinycolor(
+    {
+      r: 255,
+      g: 105,
+      b: 120,
+      a: 1
+    }
+  ).toRgbString(),
+  lightCyan: () => tinycolor(
+    {
+      r: 222,
+      g: 255,
+      b: 252,
+      a: 1
+    }
+  ).toRgbString(),
+  paleAqua: () => tinycolor(
+    {
+      r: 194,
+      g: 211,
+      b: 239,
+      a: 1
+    }
+  ).toRgbString(),
+  unitedNationsBlue: () => tinycolor(
+    {
+      r: 99,
+      g: 121,
+      b: 223,
+      a: 1
+    }
+  ).toRgbString(),
   independence: () => tinycolor(
     {
       r: 75,

@@ -19,10 +19,6 @@ export default class PlayLists extends React.Component {
   registerCommands = () => {
     const registrations = this.props.playlist.items.map(playlist => {
       return {
-        callableIntent: abstractCommandFactory.register(`show me ${playlist.name}`),
-        action: props => handleRouter(`/tracks/${playlist.id}`, playlist.id)
-      };
-      return {
         callableIntent: abstractCommandFactory.register(`go to ${playlist.name}`),
         action: props => handleRouter(`/tracks/${playlist.id}`, playlist.id)
       };
@@ -40,6 +36,7 @@ export default class PlayLists extends React.Component {
   }
 
   render() {
+    console.log(this.props.id, 'user ids')
     return (
       <main>
         <WSProvider
@@ -96,7 +93,6 @@ PlayLists.getInitialProps = async ctx => {
     })
   });
   const data = await res.json();
-  Cookie.set('user_id', id);
   return {
     id: id,
     playlist: data

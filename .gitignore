@@ -5,3 +5,5 @@ dump.rdb
 .env
 gcloud.json
 now.json
+.DS_Store
+./**/*/.DS_Store

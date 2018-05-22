@@ -115,19 +115,20 @@ nextApp.prepare().then(() => {
 
   app.get('/playlists/:id', (req, res) => {
     const queryParams = { id: req.params.id }
+    res.cookie('user_id', req.params.id);
     nextApp.render(req, res, '/playlists', queryParams);
   });
 
   app.get('/tracks/:play_id', (req, res) => {
     const queryParams = {
-      play_id: req.params.play_id,
-      user_id: req.cookies.user_id
+      play_id: req.params.play_id
     };
+
     nextApp.render(req, res, '/tracks', queryParams);
   });
 
   app.get('/', (req, res) => {
-    if (!req.cookies.access || Object.keys(req.cookies).length === 0 ) {
+    if (!req.cookies.access) {
       res.redirect('/login')
     }
     nextApp.render(req, res, '/', req.params);
