@@ -2,7 +2,7 @@ import ActiveLink from '../components/active-link';
 
 const CallBack = (props) => (
   <main>
-    <h1>You are now successfully loged in with your Spotify account</h1>
+    <h1>You are now successfully logged in with your Spotify account</h1>
     <ActiveLink href='/' >
       Go back Home
     </ActiveLink>
