@@ -14,6 +14,15 @@ import { WSContext, WSProvider } from '../providers/connection-provider';
 import SpeechBroker from '../providers/speech/speech-broker';
 
 import ActiveLink from '../components/active-link';
+import Layout from '../components/layout';
+import Link from '../components/link';
+import Headline from '../components/headline';
+import Thumbnail from '../components/thumbnail';
+import CommandPanel from '../components/command-panel';
+import SpeechControl from '../components/speech-controls';
+import Space from '../components/space';
+import Nav from '../components/nav';
+import { size } from '../components/sizes';
 
 export default class PlayLists extends React.Component {
   registerCommands = () => {
@@ -51,26 +60,42 @@ export default class PlayLists extends React.Component {
                   <SpeechBroker
                     registrationList={this.registerCommands()}
                     wsBroker={wsBroker}>
-                    <ActiveLink href={`/`}>Back</ActiveLink>
-                    <button
-                      name="Start Speech"
-                      onClick={speech.start}
-                      type="button">
-                      Talk !
-                    </button>
-                    {this.props.playlist.items.map((playlist, i) => {
-                    return (
-                      <div key={playlist.id}>
-                      <ActiveLink
-                      href={`/tracks/${playlist.id}`}>
-                      <img src={playlist.images[0].url} alt={`${playlist.name} cover`} />
-                      </ActiveLink>
-                      <div>{playlist.name}</div>
-                      <div>{playlist.tracks.total} tracks</div>
-                      <div>{playlist.tracks.total} tracks</div>
-                      </div>
-                    );
-                    })}
+                    <Layout>
+                      <Nav>
+                        <ActiveLink href={`/`}>Home</ActiveLink>
+                        {/* <Space size={[0, 0, 0, size.xs]}>
+                          <Link
+                            href={this.props.spotify.external_urls.spotify}
+                            target="_blank">
+                            <Thumbnail
+                              alt={`Spotify profile image from ${this.props.spotify.display_name}`}
+                              caption={this.userName}
+                              src={this.props.spotify.images[0].url}/>
+                          </Link>
+                        </Space> */}
+                      </Nav>
+                      <CommandPanel transcript={speech.result.transcript} />
+                      <button
+                        name="Start Speech"
+                        onClick={speech.start}
+                        type="button">
+                        Talk !
+                      </button>
+                      {this.props.playlist.items.map((playlist, i) => {
+                      return (
+                        <div key={playlist.id}>
+                        <ActiveLink
+                        href={`/tracks/${playlist.id}`}>
+                        <img src={playlist.images[0].url} alt={`${playlist.name} cover`} />
+                        </ActiveLink>
+                        <div>{playlist.name}</div>
+                        <div>{playlist.tracks.total} tracks</div>
+                        <div>{playlist.tracks.total} tracks</div>
+                        </div>
+                      );
+                      })}
+                      <SpeechControl handleClick={speech.start} />
+                    </Layout>
                   </SpeechBroker>
                 )}
               </SpeechContext.Consumer>

@@ -82,6 +82,7 @@ export class SpeechProvider extends React.Component {
       });
 
       const filteredIntents = abstractCommandFactory.match(e.results[0][0]);
+      //-- This might be the place to include in ws
       filteredIntents.forEach(cbIntent => cbIntent.execute());
       return filteredIntents;
     }
