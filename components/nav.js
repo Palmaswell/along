@@ -9,7 +9,11 @@ const StyledNav = styled.nav`
   box-sizing: border-box;
   width: 100%;
   min-height: ${size.m}px;
-  padding: ${size.xxxs}px;
+  padding: ${size.xxs}px ${size.xxxs}px ${size.xs}px;
+
+  @media (min-width: 960px) {
+    padding: ${size.s}px ${size.s}px ${size.m}px;
+  }
 `
 export const Nav = ({ children }) => (
   <StyledNav>

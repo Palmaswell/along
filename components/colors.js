@@ -9,11 +9,11 @@ const colors = {
       a: 1
     }
   ).toRgbString(),
-  yankeesBlueLight: () => tinycolor(
+  deepKoamaru: () => tinycolor(
     {
-      r: 37,
-      g: 43,
-      b: 68,
+      r: 48,
+      g: 56,
+      b: 89,
       a: 1
     }
   ).toRgbString(),
@@ -96,7 +96,6 @@ const colors = {
       b: 239,
       a: 1
     }).toRgbString(),
-
   princetonOrange: () => tinycolor(
     {
       r: 244,
@@ -104,6 +103,13 @@ const colors = {
       b: 49,
       a: 1
     }).toRgbString(),
+    white: () => tinycolor(
+      {
+        r: 255,
+        g: 255,
+        b: 255,
+        a: 1
+      }).toRgbString(),
 }
 
 export default colors;
