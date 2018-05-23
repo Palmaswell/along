@@ -8,7 +8,7 @@ import { size } from './sizes';
 const StyledPanel = styled.section`
   box-sizing: border-box;
   width: 100vw;
-  padding: ${size.xxs}px ${size.xxs}px ${size.s}px;;
+  padding: ${size.xxs}px ${size.xxs}px ${size.s}px;
   text-align: center;
 
   @media (min-width: 960px) {
@@ -29,6 +29,7 @@ const StyledTopLine = styled.div`
 
 const StyledTranscript = styled.h1`
   min-height: 70px;
+  margin: 0;
   line-height: 1.5;
   color: ${colors.lightCyan()};
   font-size: 48px;

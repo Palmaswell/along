@@ -14,9 +14,12 @@ import { WSContext, WSProvider } from '../providers/connection-provider';
 import SpeechBroker from '../providers/speech/speech-broker';
 
 import ActiveLink from '../components/active-link';
+import Copy from '../components/copy';
 import Layout from '../components/layout';
 import Link from '../components/link';
-import Headline from '../components/headline';
+import List from '../components/list';
+import MediaContainer from '../components/media-container';
+import MediaItem from '../components/media-item';
 import Thumbnail from '../components/thumbnail';
 import CommandPanel from '../components/command-panel';
 import SpeechControl from '../components/speech-controls';
@@ -75,25 +78,33 @@ export default class PlayLists extends React.Component {
                         </Space> */}
                       </Nav>
                       <CommandPanel transcript={speech.result.transcript} />
-                      <button
-                        name="Start Speech"
-                        onClick={speech.start}
-                        type="button">
-                        Talk !
-                      </button>
-                      {this.props.playlist.items.map((playlist, i) => {
-                      return (
-                        <div key={playlist.id}>
-                        <ActiveLink
-                        href={`/tracks/${playlist.id}`}>
-                        <img src={playlist.images[0].url} alt={`${playlist.name} cover`} />
-                        </ActiveLink>
-                        <div>{playlist.name}</div>
-                        <div>{playlist.tracks.total} tracks</div>
-                        <div>{playlist.tracks.total} tracks</div>
-                        </div>
-                      );
-                      })}
+                      <List>
+                        {this.props.playlist.items.map((playlist, i) => (
+                          <MediaContainer
+                            href={`/tracks/${playlist.id}`}
+                            index={i}
+                            key={playlist.id}>
+                            <MediaItem align="center">
+                              <Copy tag="span">
+                                {i}
+                              </Copy>
+                            </MediaItem>
+                            <MediaItem>
+                              <Thumbnail
+                                alt={`Playlist: ${playlist.name} cover`}
+                                src={playlist.images[0].url} />
+                            </MediaItem>
+                            <MediaItem>
+                              <Copy tag="span">
+                                {playlist.name}
+                              </Copy>
+                            </MediaItem>
+                            <MediaItem justify="end">
+                              <div>{playlist.tracks.total} tracks</div>
+                            </MediaItem>
+                          </MediaContainer>
+                        ))}
+                      </List>
                       <SpeechControl handleClick={speech.start} />
                     </Layout>
                   </SpeechBroker>
