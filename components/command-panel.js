@@ -1,5 +1,6 @@
 import styled from 'react-emotion';
 
+import { breakpoints } from './breakpoints';
 import colors from './colors';
 import fontHind from './fonts';
 import Headline from './headline';
@@ -22,7 +23,7 @@ const StyledTopLine = styled.div`
   color: ${colors.lightCyan()};
   ${fontHind()}
 
-  @media (min-width: 960px ) {
+  @media (min-width: ${ breakpoints.m }) {
     font-size: 32px;
   }
 `
@@ -35,7 +36,7 @@ const StyledTranscript = styled.h1`
   font-size: 48px;
   ${fontHind()}
 
-  @media (min-width: 960px ) {
+  @media (min-width: ${ breakpoints.m }) {
     font-size: 72px;
   }
 `

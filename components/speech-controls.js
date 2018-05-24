@@ -1,3 +1,4 @@
+import propTypes from 'prop-types';
 import styled from 'react-emotion';
 import colors from './colors';
 
@@ -31,5 +32,10 @@ export const SpeechControl = ({ handleClick }) => {
     </StyledControls>
   )
 };
+
+SpeechControl.propTypes =  {
+  handleClick: () => {}
+}
+
 
 export default SpeechControl;

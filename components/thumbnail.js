@@ -1,6 +1,7 @@
 import propTypes from 'prop-types';
 import styled from 'react-emotion';
 
+import { breakpoints } from './breakpoints';
 import { size } from './sizes';
 import Space from './space';
 
@@ -14,6 +15,10 @@ const StyledImg = styled.img`
   width: ${size.s}px;
   height: ${size.s}px;
   border-radius: 50%;
+  @media (min-width: ${ breakpoints.m }) {
+    width: ${size.xl}px;
+    height: ${size.xl}px;
+  }
 `
 
 export const Thumbnail = ({ alt, caption, src }) => (

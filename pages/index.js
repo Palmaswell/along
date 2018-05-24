@@ -15,7 +15,7 @@ import { WSContext, WSProvider } from '../providers/connection-provider';
 import SpeechBroker from '../providers/speech/speech-broker';
 
 import ActiveLink from '../components/active-link';
-import Layout from '../components/layout';
+import Background from '../components/background';
 import Link from '../components/link';
 import Headline from '../components/headline';
 import Thumbnail from '../components/thumbnail';
@@ -65,7 +65,7 @@ export default class Index extends React.Component {
                 <SpeechBroker
                   registrationList={this.registerCommands()}
                   wsBroker={wsBroker}>
-                  <Layout>
+                  <Background>
                     <Nav>
                       <ActiveLink
                         href={`/playlists/${this.props.spotify.id}`}>
@@ -84,7 +84,7 @@ export default class Index extends React.Component {
                     </Nav>
                     <CommandPanel transcript={speech.result.transcript} />
                     <SpeechControl handleClick={speech.start} />
-                  </Layout>
+                  </Background>
               </SpeechBroker>
               )}
             </SpeechContext.Consumer>

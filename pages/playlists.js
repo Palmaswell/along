@@ -15,11 +15,12 @@ import SpeechBroker from '../providers/speech/speech-broker';
 
 import ActiveLink from '../components/active-link';
 import Copy from '../components/copy';
-import Layout from '../components/layout';
+import colors from '../components/colors';
+import Background from '../components/background';
 import Link from '../components/link';
 import List from '../components/list';
 import MediaContainer from '../components/media-container';
-import MediaItem from '../components/media-item';
+import GridItem from '../components/grid-item';
 import Thumbnail from '../components/thumbnail';
 import CommandPanel from '../components/command-panel';
 import SpeechControl from '../components/speech-controls';
@@ -63,19 +64,9 @@ export default class PlayLists extends React.Component {
                   <SpeechBroker
                     registrationList={this.registerCommands()}
                     wsBroker={wsBroker}>
-                    <Layout>
-                      <Nav>
-                        <ActiveLink href={`/`}>Home</ActiveLink>
-                        {/* <Space size={[0, 0, 0, size.xs]}>
-                          <Link
-                            href={this.props.spotify.external_urls.spotify}
-                            target="_blank">
-                            <Thumbnail
-                              alt={`Spotify profile image from ${this.props.spotify.display_name}`}
-                              caption={this.userName}
-                              src={this.props.spotify.images[0].url}/>
-                          </Link>
-                        </Space> */}
+                    <Background>
+                      <Nav secondary>
+                        <ActiveLink href={`/`}> ⟵ </ActiveLink>
                       </Nav>
                       <CommandPanel transcript={speech.result.transcript} />
                       <List>
@@ -84,29 +75,25 @@ export default class PlayLists extends React.Component {
                             href={`/tracks/${playlist.id}`}
                             index={i}
                             key={playlist.id}>
-                            <MediaItem align="center">
-                              <Copy tag="span">
-                                {i}
-                              </Copy>
-                            </MediaItem>
-                            <MediaItem>
+                            <GridItem align="center">
+                              <Copy color={colors.unitedNationsBlue()} tag="div">{i + 1}</Copy>
+                            </GridItem>
+                            <GridItem>
                               <Thumbnail
                                 alt={`Playlist: ${playlist.name} cover`}
                                 src={playlist.images[0].url} />
-                            </MediaItem>
-                            <MediaItem>
-                              <Copy tag="span">
-                                {playlist.name}
-                              </Copy>
-                            </MediaItem>
-                            <MediaItem justify="end">
-                              <div>{playlist.tracks.total} tracks</div>
-                            </MediaItem>
+                            </GridItem>
+                            <GridItem>
+                              <Copy tag="div">{playlist.name}</Copy>
+                            </GridItem>
+                            <GridItem justify="end">
+                              <Copy tag="div" size="s">{playlist.tracks.total} tracks</Copy>
+                            </GridItem>
                           </MediaContainer>
                         ))}
                       </List>
                       <SpeechControl handleClick={speech.start} />
-                    </Layout>
+                    </Background>
                   </SpeechBroker>
                 )}
               </SpeechContext.Consumer>
