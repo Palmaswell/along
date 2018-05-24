@@ -1,6 +1,4 @@
-import Cookie from 'js-cookie';
 import fetch, { Headers }  from 'node-fetch';
-import { hydrate, injectGlobal } from 'react-emotion';
 
 import { getCookie } from '../utils/cookies';
 import { handleRouter } from '../utils/handle-router';
