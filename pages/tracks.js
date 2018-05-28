@@ -15,10 +15,10 @@ import { WSContext, WSProvider } from '../providers/connection-provider';
 import SpeechBroker from '../providers/speech/speech-broker';
 
 import ActiveLink from '../components/active-link';
+import { ArrowLeft } from '../components/icons';
 import Copy from '../components/copy';
 import colors from '../components/colors';
 import Background from '../components/background';
-// import Link from '../components/link';
 import List from '../components/list';
 import MediaContainer from '../components/media-container';
 import GridItem from '../components/grid-item';
@@ -135,7 +135,7 @@ export default class Tracks extends React.Component {
                       <Nav secondary>
                         <ActiveLink
                         href={`/playlists/${this.props.userId}`}>
-                         ⟵
+                          <ArrowLeft />
                         </ActiveLink>
                       </Nav>
                       <CommandPanel transcript={speech.result.transcript} />

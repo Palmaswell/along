@@ -12,6 +12,7 @@ import { WSContext, WSProvider } from '../providers/connection-provider';
 import SpeechBroker from '../providers/speech/speech-broker';
 
 import ActiveLink from '../components/active-link';
+import { ArrowLeft } from '../components/icons';
 import Copy from '../components/copy';
 import colors from '../components/colors';
 import Background from '../components/background';
@@ -64,7 +65,7 @@ export default class PlayLists extends React.Component {
                     wsBroker={wsBroker}>
                     <Background>
                       <Nav secondary>
-                        <ActiveLink href={`/`}> ⟵ </ActiveLink>
+                        <ActiveLink href={`/`}><ArrowLeft /></ActiveLink>
                       </Nav>
                       <CommandPanel transcript={speech.result.transcript} />
                       <List>
