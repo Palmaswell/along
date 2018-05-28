@@ -4,6 +4,7 @@ import { hydrate, injectGlobal } from 'react-emotion';
 
 import { getCookie } from '../utils/cookies';
 import { handleRouter } from '../utils/handle-router';
+import { formatMilliseconds } from '../utils/readable-time';
 
 import { abstractCommandFactory } from '../providers/speech/speech-commands';
 import {
@@ -158,7 +159,7 @@ export default class Tracks extends React.Component {
                               </Copy>
                             </GridItem>
                             <GridItem justify="end">
-                              <Copy tag="div">{playlist.track.duration_ms}</Copy>
+                              <Copy tag="div">{formatMilliseconds(playlist.track.duration_ms)}</Copy>
                               {playlist.track.explicit &&
                                 <Copy tag="div" size="s">{playlist.track.explicit}</Copy>
                               }
