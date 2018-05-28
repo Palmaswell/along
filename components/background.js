@@ -2,16 +2,16 @@ import styled from 'react-emotion';
 
 import colors from './colors';
 
-const StyledLayout = styled.div`
+const StyledBackground = styled.div`
   min-width: 100vw;
   min-height: 100vh;
   background-color: ${colors.yankeesBlue()};
 `
 
-export const Layout = ({ children }) => (
-  <StyledLayout>
+export const Background = ({ children }) => (
+  <StyledBackground>
     {children}
-  </StyledLayout>
+  </StyledBackground>
 );
 
-export default Layout;
+export default Background;

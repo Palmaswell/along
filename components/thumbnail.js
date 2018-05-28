@@ -1,6 +1,9 @@
 import propTypes from 'prop-types';
 import styled from 'react-emotion';
+
+import { breakpoints } from './breakpoints';
 import { size } from './sizes';
+import Space from './space';
 
 const StyledFigure = styled.figure`
   display: flex;
@@ -12,17 +15,24 @@ const StyledImg = styled.img`
   width: ${size.s}px;
   height: ${size.s}px;
   border-radius: 50%;
-  margin-left: ${size.xs}px;
+  @media (min-width: ${ breakpoints.m }) {
+    width: ${size.xl}px;
+    height: ${size.xl}px;
+  }
 `
 
-export const Thumbnail = ({ alt, caption, src}) => (
+export const Thumbnail = ({ alt, caption, src }) => (
   <StyledFigure>
-    <figcaption>
-      {caption}
-    </figcaption>
+    {caption &&
+      <Space size={[0, size.xxxs, 0, 0]}>
+        <figcaption>
+          {caption}
+        </figcaption>
+      </Space>
+    }
     <StyledImg
-    alt={alt}
-    src={src} />
+      alt={alt}
+      src={src} />
   </StyledFigure>
 );
 

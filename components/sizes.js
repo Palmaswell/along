@@ -3,5 +3,7 @@ export const size = {
   xxs: 20,
   xs: 32,
   s: 52,
-  m: 65
+  m: 65,
+  l: 78,
+  xl: 100
 }

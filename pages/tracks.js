@@ -4,6 +4,7 @@ import { hydrate, injectGlobal } from 'react-emotion';
 
 import { getCookie } from '../utils/cookies';
 import { handleRouter } from '../utils/handle-router';
+import { formatMilliseconds } from '../utils/readable-time';
 
 import { abstractCommandFactory } from '../providers/speech/speech-commands';
 import {
@@ -14,8 +15,19 @@ import { WSContext, WSProvider } from '../providers/connection-provider';
 import SpeechBroker from '../providers/speech/speech-broker';
 
 import ActiveLink from '../components/active-link';
-
-import Cookie from 'js-cookie';
+import { ArrowLeft } from '../components/icons';
+import Copy from '../components/copy';
+import colors from '../components/colors';
+import Background from '../components/background';
+import List from '../components/list';
+import MediaContainer from '../components/media-container';
+import GridItem from '../components/grid-item';
+import Thumbnail from '../components/thumbnail';
+import CommandPanel from '../components/command-panel';
+import SpeechControl from '../components/speech-controls';
+import Space from '../components/space';
+import Nav from '../components/nav';
+import { size } from '../components/sizes';
 
 export default class Tracks extends React.Component {
   componentDidMount() {
@@ -104,7 +116,7 @@ export default class Tracks extends React.Component {
   }
 
   render() {
-    // console.log('what is going on', this.props)
+    console.log('what is going on', this.props)
     return (
       <main>
         <WSProvider
@@ -119,29 +131,48 @@ export default class Tracks extends React.Component {
                   <SpeechBroker
                     registrationList={this.registerCommands()}
                     wsBroker={wsBroker}>
-                    <ActiveLink
-                    href={`/playlists/${this.props.userId}`}>
-                    Back
-                    </ActiveLink>
-                    <button
-                      name="Start Speech"
-                      onClick={speech.start}
-                      type="button">
-                      Talk !
-                    </button>
-                    {this.props.tracks.map(playlist => (
-                      <div key={playlist.track.id}>
-                        <a onClick={() => this.playTrack(playlist.track.album.uri)}>
-                        <img src={playlist.track.album.images[0].url} alt={`${playlist.track.album.name} track name`} />
-                        <div>{playlist.added_at}</div>
-                        <div>{playlist.track.name}</div>
-                        <div>{playlist.track.duration_ms}</div>
-                        <div>{playlist.track.explicit}</div>
-                        </a>
-                        <button onClick={this.pauseTrack}>pause</button>
-                        <button onClick={this.resumeTrack}>resume</button>
-                      </div>
-                    ))}
+                    <Background>
+                      <Nav secondary>
+                        <ActiveLink
+                        href={`/playlists/${this.props.userId}`}>
+                          <ArrowLeft />
+                        </ActiveLink>
+                      </Nav>
+                      <CommandPanel transcript={speech.result.transcript} />
+                      <List>
+                        {this.props.tracks.map((playlist, i) => (
+                          <MediaContainer
+                            handleClick={() => this.playTrack(playlist.track.album.uri)}
+                            key={playlist.track.id}>
+                            <GridItem align="center">
+                              <Copy color={colors.unitedNationsBlue()} tag="div">{i + 1}</Copy>
+                            </GridItem>
+                            <GridItem>
+                              <Thumbnail
+                                alt={`${playlist.track.album.name} track name`}
+                                src={playlist.track.album.images[0].url} />
+                            </GridItem>
+                            <GridItem>
+                              <Copy tag="div" weight={'bold'}>{playlist.track.name}</Copy>
+                              <Copy size="s" tag="div">
+                                {playlist.track.artists[0].name}
+                              </Copy>
+                            </GridItem>
+                            <GridItem justify="end">
+                              <Copy tag="div">{formatMilliseconds(playlist.track.duration_ms)}</Copy>
+                              {playlist.track.explicit &&
+                                <Copy tag="div" size="s">{playlist.track.explicit}</Copy>
+                              }
+                            </GridItem>
+
+                            {/* <button onClick={this.pauseTrack}>pause</button>
+                            <button onClick={this.resumeTrack}>resume</button> */}
+
+                          </MediaContainer>
+                        ))}
+                      </List>
+                      <SpeechControl handleClick={speech.start} />
+                    </Background>
                   </SpeechBroker>
                 )}
               </SpeechContext.Consumer>

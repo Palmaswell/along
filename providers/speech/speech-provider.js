@@ -5,6 +5,7 @@ import Rx from 'rxjs';
 import { abstractCommandFactory, cmdGrammar } from './speech-commands';
 import { WSProviderSingleton } from '../connection-provider';
 
+
 export const SpeechContext = React.createContext({
   transcript: '',
   confidence: 0
@@ -30,17 +31,18 @@ export class SpeechProvider extends React.Component {
   }
 
   componentDidMount() {
-    const  SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    this.instantiateSpeechRecognition();
+  }
 
-    if (!SpeechRecognition) {
-      return;
-    }
+  instantiateSpeechRecognition = () => {
+    const  SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const SpeechGrammarList = window.SpeechGrammarList ||window.webkitSpeechGrammarList;
+
     this.speechRecognition = new SpeechRecognition();
     this.speechRecognition.maxAlternatives = 1; // which is actually default
     this.speechRecognition.interimResults = false;
     this.speechRecognition.lang = 'en-US';
 
-    const SpeechGrammarList = window.SpeechGrammarList ||window.webkitSpeechGrammarList;
     const recognitionList = new SpeechGrammarList();
 
     const grammarStream = abstractCommandFactory.getGrammarStream();
@@ -55,28 +57,32 @@ export class SpeechProvider extends React.Component {
     this.speechRecognition.grammar = recognitionList;
   }
 
-
   handleRecognition = recognition => {
     recognition.onerror = e => {
       switch (e.error) {
         case 'network':
           console.warn(`> 💥 Network recognition error: ${e.error}`);
           break;
-        case 'not-allowed':
         case 'service-not-allowed':
           console.warn(`> 💥 Service-Not-Allowed recognition error: ${e.error}`);
           break;
+        default:
+        console.warn(`> 💥 Not-Allowed recognition error: ${e.error}`);
       }
     }
 
     recognition.onstart = () => {
-      this.setState({recognizing: true });
+      this.setState({...this.state, recognizing: true });
     };
 
     recognition.onresult = e => {
-      this.updateState(e.results);
+      this.setState(({ speechResult }) => {
+        speechResult.transcript = e.results[0][0].transcript;
+        speechResult.confidence = e.results[0][0].confidence;
+      });
 
       const filteredIntents = abstractCommandFactory.match(e.results[0][0]);
+      //-- This might be the place to include in ws
       filteredIntents.forEach(cbIntent => cbIntent.execute());
       return filteredIntents;
     }
@@ -87,7 +93,7 @@ export class SpeechProvider extends React.Component {
         channels:[this.props.channel],
         message: this.state.speechResult.transcript
       });
-      this.setState({recognizing: false});
+      this.setState({...this.state, recognizing: false});
     }
 
     recognition.onspeechend = () => {
@@ -103,14 +109,6 @@ export class SpeechProvider extends React.Component {
 
     this.speechRecognition.start();
     this.handleRecognition(this.speechRecognition);
-
-  }
-
-  updateState = result => {
-    this.setState(({ speechResult }) => {
-      speechResult.transcript = result[0][0].transcript;
-      speechResult.confidence = result[0][0].confidence;
-    });
   }
 
   render () {
