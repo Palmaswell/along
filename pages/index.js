@@ -14,6 +14,8 @@ import {
 import { WSContext, WSProvider } from '../providers/connection-provider';
 import SpeechBroker from '../providers/speech/speech-broker';
 
+import { registerIndexIntents } from '../intents/index';
+
 import ActiveLink from '../components/active-link';
 import Background from '../components/background';
 import Link from '../components/link';
@@ -30,27 +32,6 @@ export default class Index extends React.Component {
     this.userName = this.props.spotify.display_name.replace(/\s(.*)/g, '');
   }
 
-  registerCommands = () => {
-    const registrations = [];
-    registrations.push({
-      callableIntent: abstractCommandFactory.register('go to playlist'),
-      action: props => handleRouter(`/playlists/${this.props.spotify.id}`, this.props.spotify.id)
-    });
-    registrations.push({
-      callableIntent: abstractCommandFactory.register('show playlist'),
-      action: props =>  handleRouter(`/playlists/${this.props.spotify.id}`, this.props.spotify.id)
-    });
-    registrations.push({
-      callableIntent: abstractCommandFactory.register('ok list'),
-      action: props =>  handleRouter(`/playlists/${this.props.spotify.id}`, this.props.spotify.id)
-    });
-    registrations.push({
-      callableIntent: abstractCommandFactory.register('so playlist'),
-      action: props =>  handleRouter(`/playlists/${this.props.spotify.id}`, this.props.spotify.id)
-    });
-    return registrations;
-  }
-
   render() {
     return (
     <WSProvider
@@ -63,7 +44,7 @@ export default class Index extends React.Component {
             <SpeechContext.Consumer>
               {speech => (
                 <SpeechBroker
-                  registrationList={this.registerCommands()}
+                  registrationList={registerIndexIntents(this.props.spotify.id)}
                   wsBroker={wsBroker}>
                   <Background>
                     <Nav>
