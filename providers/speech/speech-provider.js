@@ -60,14 +60,29 @@ export class SpeechProvider extends React.Component {
   handleRecognition = recognition => {
     recognition.onerror = e => {
       switch (e.error) {
+        case 'no-speech':
+          console.warn(`> 💥 No speech was detected: ${e.error}`);
+          break;
+        case 'aborted':
+          console.warn(`> 💥 Speech input was aborted: ${e.error}`);
+          break;
+        case 'audio-capture':
+          console.warn(`> 💥 Audio capture failed: ${e.error}`);
+          break;
         case 'network':
-          console.warn(`> 💥 Network recognition error: ${e.error}`);
+          console.warn(`> 💥 Network communication required: ${e.error}`);
+          break;
+        case 'not-allowed':
+          console.warn(`> 💥 User agent disallowed speech input: ${e.error}`);
           break;
         case 'service-not-allowed':
-          console.warn(`> 💥 Service-Not-Allowed recognition error: ${e.error}`);
+          console.warn(`> 💥 User agent disallowed the requested speech recognition service: ${e.error}`);
+          break;
+        case 'bad-grammar':
+          console.warn(`> 💥 Error in the speech recognition grammar: ${e.error}`);
           break;
         default:
-        console.warn(`> 💥 Not-Allowed recognition error: ${e.error}`);
+          console.warn(`> 💥 The language was not supported: ${e.error}`);
       }
     }
 
