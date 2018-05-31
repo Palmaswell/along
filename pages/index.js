@@ -6,20 +6,16 @@ import { getCookie } from '../utils/cookies';
 import { safeParse } from '../utils/safe-parse';
 import { handleRouter } from '../utils/handle-router';
 
-import { abstractCommandFactory } from '../providers/speech/speech-commands';
-import {
-  SpeechContext,
-  SpeechProvider
-} from '../providers/speech/speech-provider';
+import { SpeechContext, SpeechProvider } from '../providers/speech/speech-provider';
 import { WSContext, WSProvider } from '../providers/connection-provider';
 import SpeechBroker from '../providers/speech/speech-broker';
 
-import { generateIntents, navigateIntent } from '../intents/index';
+import { generateIntents } from '../intents/intent-factory';
+import { navigateIntent } from '../intents/intents';
 
 import ActiveLink from '../components/active-link';
 import Background from '../components/background';
 import Link from '../components/link';
-import Headline from '../components/headline';
 import Thumbnail from '../components/thumbnail';
 import CommandPanel from '../components/command-panel';
 import SpeechControl from '../components/speech-controls';
