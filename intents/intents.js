@@ -16,3 +16,27 @@ export const navigateIntent =  IntentFactory({
   }
 });
 
+export const playlistsIntent =  IntentFactory({
+  type: 'PlaylistsIntent',
+  samples: [
+    'go to',
+    'show me',
+    'show me',
+    'so'
+  ],
+  action(id) {
+    return handleRouter(`/tracks/${id}`, id)
+  }
+});
+
+export const homeIntent = IntentFactory({
+  type: 'HomeIntent',
+  samples: [
+    'go home',
+    'go back',
+    'call back'
+  ],
+  action() {
+    return handleRouter(`/`)
+  }
+});
