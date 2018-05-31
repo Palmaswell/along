@@ -12,15 +12,13 @@ export const intentNavigatePlaylist = {
   action(id) {
     return handleRouter(`/playlists/${id}`, id);
   }
-}
+};
 
-export function generateIntents(intent, spotify) {
-  const intents = intent.samples.map(sample => ({
+export function generateIntents(intent, ...args) {
+  return intent.samples.map(sample => ({
     callableIntent: abstractCommandFactory.register(sample),
-    action: props => intent.action(spotify)
+    action: props => intent.action(...args)
   }))
-
-  return intents;
 };
 
 
