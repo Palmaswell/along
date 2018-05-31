@@ -1,11 +1,36 @@
 import { abstractCommandFactory } from '../providers/speech/speech-commands';
 import { handleRouter } from '../utils/handle-router';
 
+export function IntentFactory({ type, samples, action }) {
+  return {
+    type,
+    samples,
+    action
+  }
+};
+
+export const navigateIntent =  IntentFactory({
+  type: 'NavigateIntent',
+  samples: [
+    'go to playlist',
+    'show my playlists',
+    'show my playlist',
+    'call list',
+    'ok list',
+    'so playlist'
+  ],
+  action(id) {
+    return handleRouter(`/playlists/${id}`, id);
+  }
+});
+
 export const intentNavigatePlaylist = {
   type: 'NavigateIntent',
   samples: [
     'go to playlist',
     'show my playlists',
+    'show my playlist',
+    'call list',
     'ok list',
     'so playlist'
   ],
