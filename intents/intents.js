@@ -1,9 +1,17 @@
-import { IntentFactory } from './intent-factory';
 import { handleRouter } from '../utils/handle-router';
+
+export function IntentFactory({ type, samples, action }) {
+  return {
+    type,
+    samples,
+    action
+  }
+};
 
 export const navigateIntent =  IntentFactory({
   type: 'NavigateIntent',
   samples: [
+    'good playlist',
     'go to playlist',
     'show my playlists',
     'show my playlist',

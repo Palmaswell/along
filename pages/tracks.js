@@ -11,7 +11,7 @@ import { SpeechContext, SpeechProvider } from '../providers/speech/speech-provid
 import { WSContext, WSProvider } from '../providers/connection-provider';
 import SpeechBroker from '../providers/speech/speech-broker';
 
-import { createIntents } from '../intents/intent-factory';
+import { createIntents } from '../intents/create-intents';
 import { tracksIntent } from '../intents/intents';
 
 import ActiveLink from '../components/active-link';
@@ -70,7 +70,6 @@ export default class Tracks extends React.Component {
     const data = await res.json();
   }
 
-
   resumeTrack = async () => {
     const res = await fetch(`https://api.spotify.com/v1/me/player/play`, {
       method: 'PUT',
@@ -80,29 +79,6 @@ export default class Tracks extends React.Component {
       }),
     });
     const data = await res.json();
-  }
-
-  collectIntents = () => {
-    const intents = createIntents(tracksIntent, this.props.tracks, this.playTrack);
-
-    intents.push({
-      callableIntent: abstractCommandFactory.register('pause'),
-      action: props => this.pauseTrack()
-    });
-    intents.push({
-      callableIntent: abstractCommandFactory.register('stop'),
-      action: props => this.pauseTrack()
-    });
-    intents.push({
-      callableIntent: abstractCommandFactory.register('continue'),
-      action: props => this.resumeTrack()
-    });
-    intents.push({
-      callableIntent: abstractCommandFactory.register('go back'),
-      action: props => handleRouter(`/playlists/${this.props.userId}`, this.props.userId)
-    });
-
-    return intents;
   }
 
   render() {
@@ -118,7 +94,13 @@ export default class Tracks extends React.Component {
               <SpeechContext.Consumer>
                 {speech => (
                   <SpeechBroker
-                    registrationList={this.collectIntents()}
+                    registrationList={createIntents(
+                      tracksIntent,
+                      this.props.tracks,
+                      this.playTrack,
+                      this.pauseTrack,
+                      this.resumeTrack,
+                      this.props.userId)}
                     wsBroker={wsBroker}>
                     <Background>
                       <Nav secondary>

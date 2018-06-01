@@ -10,7 +10,7 @@ import { SpeechContext, SpeechProvider } from '../providers/speech/speech-provid
 import { WSContext, WSProvider } from '../providers/connection-provider';
 import SpeechBroker from '../providers/speech/speech-broker';
 
-import { createIntents } from '../intents/intent-factory';
+import { createIntents } from '../intents/create-intents';
 import { navigateIntent } from '../intents/intents';
 
 import ActiveLink from '../components/active-link';

@@ -8,7 +8,7 @@ import { SpeechContext, SpeechProvider } from '../providers/speech/speech-provid
 import { WSContext, WSProvider } from '../providers/connection-provider';
 import SpeechBroker from '../providers/speech/speech-broker';
 
-import { createIntents } from '../intents/intent-factory';
+import { createIntents } from '../intents/create-intents';
 import { playlistsIntent, homeIntent } from '../intents/intents';
 
 import ActiveLink from '../components/active-link';
@@ -29,7 +29,6 @@ import { size } from '../components/sizes';
 
 export default class PlayLists extends React.Component {
   render() {
-    console.log(this.props.id, 'user ids')
     return (
       <main>
         <WSProvider
@@ -42,10 +41,7 @@ export default class PlayLists extends React.Component {
               <SpeechContext.Consumer>
                 {speech => (
                   <SpeechBroker
-                    registrationList={
-                      createIntents(
-                        playlistsIntent,
-                        this.props.playlist.items)}
+                    registrationList={createIntents(playlistsIntent, this.props.playlist.items)}
                     wsBroker={wsBroker}>
                     <Background>
                       <Nav secondary>
