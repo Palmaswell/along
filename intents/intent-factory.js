@@ -31,11 +31,19 @@ export function createIntents(intent, ...args) {
         });
         return playlist;
       }, []);
-    case 'HomeIntent':
-      console.log('show me something')
-      return intent.samples.map(sample => ({
-        callableIntent: abstractCommandFactory.register(sample),
-        action: props => intent.action()
-      }));
+    case 'TracksIntent':
+      /**
+       * @param [...args][0] contains a list of tracks
+       * @param [...args][1] contains a function to play tracks
+       */
+      return [...args][0].reduce((track, item) => {
+        intent.samples.forEach(sample => {
+          track.push({
+            callableIntent: abstractCommandFactory.register(`${sample} ${item.track.name}`),
+            action: props => [...args][1](item.track.album.uri)
+          });
+        })
+        return track;
+      }, []);
   }
 };

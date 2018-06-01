@@ -29,6 +29,17 @@ export const playlistsIntent =  IntentFactory({
   }
 });
 
+export const tracksIntent =  IntentFactory({
+  type: 'TracksIntent',
+  samples: [
+    'play',
+    ''
+  ],
+  action(func, uri) {
+    return func(uri)
+  }
+});
+
 export const homeIntent = IntentFactory({
   type: 'HomeIntent',
   samples: [

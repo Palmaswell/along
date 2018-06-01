@@ -7,12 +7,12 @@ import { handleRouter } from '../utils/handle-router';
 import { formatMilliseconds } from '../utils/readable-time';
 
 import { abstractCommandFactory } from '../providers/speech/speech-commands';
-import {
-  SpeechContext,
-  SpeechProvider
-} from '../providers/speech/speech-provider';
+import { SpeechContext, SpeechProvider } from '../providers/speech/speech-provider';
 import { WSContext, WSProvider } from '../providers/connection-provider';
 import SpeechBroker from '../providers/speech/speech-broker';
+
+import { createIntents } from '../intents/intent-factory';
+import { tracksIntent } from '../intents/intents';
 
 import ActiveLink from '../components/active-link';
 import { ArrowLeft } from '../components/icons';
@@ -43,7 +43,6 @@ export default class Tracks extends React.Component {
       })
     });
     const devices = await res.json();
-    console.log(devices, 'this are the devices')
     return devices;
   }
 
@@ -83,40 +82,30 @@ export default class Tracks extends React.Component {
     const data = await res.json();
   }
 
-  registerCommands = () => {
-    const registrations = this.props.tracks.map(playlist => {
-      return {
-        callableIntent: abstractCommandFactory.register(`play ${playlist.track.name}`),
-        action: props => this.playTrack(playlist.track.album.uri)
-      };
-    });
+  collectIntents = () => {
+    const intents = createIntents(tracksIntent, this.props.tracks, this.playTrack);
 
-    registrations.push({
+    intents.push({
       callableIntent: abstractCommandFactory.register('pause'),
       action: props => this.pauseTrack()
     });
-    registrations.push({
+    intents.push({
       callableIntent: abstractCommandFactory.register('stop'),
       action: props => this.pauseTrack()
     });
-    registrations.push({
+    intents.push({
       callableIntent: abstractCommandFactory.register('continue'),
       action: props => this.resumeTrack()
     });
-    registrations.push({
-      callableIntent: abstractCommandFactory.register('go back to playlist'),
-      action: props => handleRouter(`/playlists/${this.props.userId}`, this.props.userId)
-    });
-    registrations.push({
+    intents.push({
       callableIntent: abstractCommandFactory.register('go back'),
       action: props => handleRouter(`/playlists/${this.props.userId}`, this.props.userId)
     });
 
-    return registrations;
+    return intents;
   }
 
   render() {
-    console.log('what is going on', this.props)
     return (
       <main>
         <WSProvider
@@ -129,7 +118,7 @@ export default class Tracks extends React.Component {
               <SpeechContext.Consumer>
                 {speech => (
                   <SpeechBroker
-                    registrationList={this.registerCommands()}
+                    registrationList={this.collectIntents()}
                     wsBroker={wsBroker}>
                     <Background>
                       <Nav secondary>

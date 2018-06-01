@@ -28,9 +28,6 @@ import Nav from '../components/nav';
 import { size } from '../components/sizes';
 
 export default class PlayLists extends React.Component {
-  componentDidMound() {
-    createIntents(homeIntent);
-  }
   render() {
     console.log(this.props.id, 'user ids')
     return (
