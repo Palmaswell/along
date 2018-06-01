@@ -4,12 +4,12 @@ import { getCookie } from '../utils/cookies';
 import { handleRouter } from '../utils/handle-router';
 
 import { abstractCommandFactory } from '../providers/speech/speech-commands';
-import {
-  SpeechContext,
-  SpeechProvider
-} from '../providers/speech/speech-provider';
+import { SpeechContext, SpeechProvider } from '../providers/speech/speech-provider';
 import { WSContext, WSProvider } from '../providers/connection-provider';
 import SpeechBroker from '../providers/speech/speech-broker';
+
+import { createIntents } from '../intents/create-intents';
+import { playlistsIntent, homeIntent } from '../intents/intents';
 
 import ActiveLink from '../components/active-link';
 import { ArrowLeft } from '../components/icons';
@@ -28,27 +28,7 @@ import Nav from '../components/nav';
 import { size } from '../components/sizes';
 
 export default class PlayLists extends React.Component {
-  registerCommands = () => {
-    const registrations = this.props.playlist.items.map(playlist => {
-      return {
-        callableIntent: abstractCommandFactory.register(`go to ${playlist.name}`),
-        action: props => handleRouter(`/tracks/${playlist.id}`, playlist.id)
-      };
-    })
-    registrations.push({
-      callableIntent: abstractCommandFactory.register('go home'),
-      action: props => handleRouter(`/`)
-    })
-    registrations.push({
-      callableIntent: abstractCommandFactory.register('go back'),
-      action: props => handleRouter(`/`)
-    })
-
-    return registrations;
-  }
-
   render() {
-    console.log(this.props.id, 'user ids')
     return (
       <main>
         <WSProvider
@@ -61,7 +41,7 @@ export default class PlayLists extends React.Component {
               <SpeechContext.Consumer>
                 {speech => (
                   <SpeechBroker
-                    registrationList={this.registerCommands()}
+                    registrationList={createIntents(playlistsIntent, this.props.playlist.items)}
                     wsBroker={wsBroker}>
                     <Background>
                       <Nav secondary>

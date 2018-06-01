@@ -6,18 +6,16 @@ import { getCookie } from '../utils/cookies';
 import { safeParse } from '../utils/safe-parse';
 import { handleRouter } from '../utils/handle-router';
 
-import { abstractCommandFactory } from '../providers/speech/speech-commands';
-import {
-  SpeechContext,
-  SpeechProvider
-} from '../providers/speech/speech-provider';
+import { SpeechContext, SpeechProvider } from '../providers/speech/speech-provider';
 import { WSContext, WSProvider } from '../providers/connection-provider';
 import SpeechBroker from '../providers/speech/speech-broker';
+
+import { createIntents } from '../intents/create-intents';
+import { navigateIntent } from '../intents/intents';
 
 import ActiveLink from '../components/active-link';
 import Background from '../components/background';
 import Link from '../components/link';
-import Headline from '../components/headline';
 import Thumbnail from '../components/thumbnail';
 import CommandPanel from '../components/command-panel';
 import SpeechControl from '../components/speech-controls';
@@ -28,27 +26,6 @@ import { size } from '../components/sizes';
 export default class Index extends React.Component {
   componentDidMount() {
     this.userName = this.props.spotify.display_name.replace(/\s(.*)/g, '');
-  }
-
-  registerCommands = () => {
-    const registrations = [];
-    registrations.push({
-      callableIntent: abstractCommandFactory.register('go to playlist'),
-      action: props => handleRouter(`/playlists/${this.props.spotify.id}`, this.props.spotify.id)
-    });
-    registrations.push({
-      callableIntent: abstractCommandFactory.register('show playlist'),
-      action: props =>  handleRouter(`/playlists/${this.props.spotify.id}`, this.props.spotify.id)
-    });
-    registrations.push({
-      callableIntent: abstractCommandFactory.register('ok list'),
-      action: props =>  handleRouter(`/playlists/${this.props.spotify.id}`, this.props.spotify.id)
-    });
-    registrations.push({
-      callableIntent: abstractCommandFactory.register('so playlist'),
-      action: props =>  handleRouter(`/playlists/${this.props.spotify.id}`, this.props.spotify.id)
-    });
-    return registrations;
   }
 
   render() {
@@ -63,7 +40,7 @@ export default class Index extends React.Component {
             <SpeechContext.Consumer>
               {speech => (
                 <SpeechBroker
-                  registrationList={this.registerCommands()}
+                  registrationList={createIntents(navigateIntent, this.props.spotify.id)}
                   wsBroker={wsBroker}>
                   <Background>
                     <Nav>
