@@ -24,7 +24,7 @@ const StyledImg = styled.img`
 export const Thumbnail = ({ alt, caption, src }) => (
   <StyledFigure>
     {caption &&
-      <Space size={[0, size.xxxs, 0, 0]}>
+      <Space size={[0, size.xs, 0, 0]}>
         <figcaption>
           {caption}
         </figcaption>

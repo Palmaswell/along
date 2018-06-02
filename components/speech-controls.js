@@ -11,14 +11,14 @@ const StyledControls = styled.nav`
   justify-content: center;
   height: 65px;
   width: 100vw;
-  background-color: ${colors.deepKoamaru()};
+  background-color: ${colors.unitedNationsBlue()};
 `;
 
 const StyledSVG = styled.svg`
   align-self: center;
   width: 45px;
   height: 45px;
-  fill: ${colors.lightCyan()};
+  fill: ${colors.whiteSmoke()};
   cursor: pointer;
 `;
 

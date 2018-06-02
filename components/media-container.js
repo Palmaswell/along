@@ -6,16 +6,16 @@ import { breakpoints } from './breakpoints';
 import { size } from './sizes';
 
 const StyledListContainer = styled.li`
-  padding: ${size.xxxs}px 0;
+  padding: ${size.xxxs}px;
   list-style: none;
-  border-bottom: 1px solid ${colors.deepKoamaru()};
+  background-color: ${colors.white()};
 
   :hover {
-    background-color: ${colors.deepKoamaru()};
+    background-color: ${colors.whiteSmoke()};
   }
 
   @media (min-width: ${ breakpoints.m }) {
-    padding: ${size.xs}px 0;
+    padding: ${size.xs}px;
   }
 `;
 

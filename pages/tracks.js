@@ -21,6 +21,7 @@ import colors from '../components/colors';
 import Background from '../components/background';
 import List from '../components/list';
 import MediaContainer from '../components/media-container';
+import Media from '../components/media';
 import GridItem from '../components/grid-item';
 import Thumbnail from '../components/thumbnail';
 import CommandPanel from '../components/command-panel';
@@ -119,7 +120,7 @@ export default class Tracks extends React.Component {
                               <Copy color={colors.unitedNationsBlue()} tag="div">{i + 1}</Copy>
                             </GridItem>
                             <GridItem>
-                              <Thumbnail
+                              <Media
                                 alt={`${playlist.track.album.name} track name`}
                                 src={playlist.track.album.images[0].url} />
                             </GridItem>

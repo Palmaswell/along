@@ -1,38 +1,6 @@
 import tinycolor from 'tinycolor2';
 
 const colors = {
-  yankeesBlue: () => tinycolor(
-    {
-      r: 30,
-      g: 40,
-      b: 58,
-      a: 1
-    }
-  ).toRgbString(),
-  deepKoamaru: () => tinycolor(
-    {
-      r: 48,
-      g: 56,
-      b: 89,
-      a: 1
-    }
-  ).toRgbString(),
-  begonia: () => tinycolor(
-    {
-      r: 255,
-      g: 105,
-      b: 120,
-      a: 1
-    }
-  ).toRgbString(),
-  lightCyan: () => tinycolor(
-    {
-      r: 222,
-      g: 255,
-      b: 252,
-      a: 1
-    }
-  ).toRgbString(),
   paleAqua: () => tinycolor(
     {
       r: 194,
@@ -65,35 +33,11 @@ const colors = {
       a: 1
     }).toRgbString(),
 
-  aero: () => tinycolor(
-    {
-      r: 114,
-      g: 181,
-      b: 236,
-      a: 1
-    }).toRgbString(),
-
   celestialBlue: () => tinycolor(
     {
       r: 69,
       g: 145,
       b: 209,
-      a: 1
-    }).toRgbString(),
-
-  navajoWhite: () => tinycolor(
-    {
-      r: 255,
-      g: 223,
-      b: 166,
-      a: 1
-    }).toRgbString(),
-
-  floralWhite: () => tinycolor(
-    {
-      r: 255,
-      g: 249,
-      b: 239,
       a: 1
     }).toRgbString(),
   princetonOrange: () => tinycolor(
@@ -103,13 +47,43 @@ const colors = {
       b: 49,
       a: 1
     }).toRgbString(),
-    white: () => tinycolor(
-      {
-        r: 255,
-        g: 255,
-        b: 255,
-        a: 1
-      }).toRgbString(),
+  white: () => tinycolor(
+    {
+      r: 251,
+      g: 252,
+      b: 254,
+      a: 1
+    }).toRgbString(),
+  whiteSmoke: () => tinycolor({
+    r: 244,
+    g: 249,
+    b: 248,
+    a: 1
+  }).toRgbString(),
+  paleChestNut: () => tinycolor({
+    r: 222,
+    g: 163,
+    b: 181,
+    a: 1
+  }).toRgbString(),
+  smokyBlack: () => tinycolor({
+    r: 15,
+    g: 11,
+    b: 11,
+    a: 1
+  }).toRgbString(),
+  gunMetal: () => tinycolor({
+    r: 31,
+    g: 55,
+    b: 61,
+    a: 1
+  }).toRgbString(),
+  paynesGrey: () => tinycolor({
+    r: 68,
+    g: 109,
+    b: 119,
+    a: 1
+  }).toRgbString()
 }
 
 export default colors;

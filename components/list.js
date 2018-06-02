@@ -3,7 +3,7 @@ import { size } from './sizes';
 
 const StyledList = styled.ul`
   box-sizing: border-box;
-  padding: 0 ${size.xxs}px ${size.m}px;
+  padding: 0 0 ${size.m}px;
   margin-top: 0;
 
   @media (min-width: 960px) {

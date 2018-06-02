@@ -6,12 +6,7 @@ import { size } from './sizes';
 const StyledSVG = styled.svg`
   width: ${size.xxs}px;
   height: ${size.xxs}px;
-  fill: ${colors.lightCyan()};
-
-  @media(min-width: ${breakpoints.m}) {
-    width: ${size.xs}px;
-    height: ${size.xs}px;
-  }
+  fill: ${colors.gunMetal()};
 `
 
 export const ArrowLeft = () => (

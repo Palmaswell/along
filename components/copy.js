@@ -18,7 +18,7 @@ const StyledCopy = styled.span`
   }};
   color: ${props => props.color
     ? props.color
-    : colors.lightCyan()
+    : colors.smokyBlack()
   };
   text-decoration: none;
   font-weight: ${props => props.weight
