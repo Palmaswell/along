@@ -22,6 +22,7 @@ const StyledTopLine = styled.div`
   font-size: 18px;
   color: ${colors.smokyBlack()};
   ${fontHind()}
+  font-weight: bold;
 
   @media (min-width: ${ breakpoints.m }) {
     font-size: 32px;

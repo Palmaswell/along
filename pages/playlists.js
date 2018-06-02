@@ -18,7 +18,7 @@ import colors from '../components/colors';
 import Background from '../components/background';
 import Link from '../components/link';
 import List from '../components/list';
-import MediaContainer from '../components/media-container';
+import GridContainer from '../components/grid-container';
 import GridItem from '../components/grid-item';
 import Thumbnail from '../components/thumbnail';
 import CommandPanel from '../components/command-panel';
@@ -50,7 +50,7 @@ export default class PlayLists extends React.Component {
                       <CommandPanel transcript={speech.result.transcript} />
                       <List>
                         {this.props.playlist.items.map((playlist, i) => (
-                          <MediaContainer
+                          <GridContainer
                             href={`/tracks/${playlist.id}`}
                             index={i}
                             key={playlist.id}>
@@ -68,7 +68,7 @@ export default class PlayLists extends React.Component {
                             <GridItem justify="end">
                               <Copy tag="div" size="s">{playlist.tracks.total} tracks</Copy>
                             </GridItem>
-                          </MediaContainer>
+                          </GridContainer>
                         ))}
                       </List>
                       <SpeechControl handleClick={speech.start} />

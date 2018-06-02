@@ -20,7 +20,7 @@ import Copy from '../components/copy';
 import colors from '../components/colors';
 import Background from '../components/background';
 import List from '../components/list';
-import MediaContainer from '../components/media-container';
+import GridContainer from '../components/grid-container';
 import Media from '../components/media';
 import GridItem from '../components/grid-item';
 import Thumbnail from '../components/thumbnail';
@@ -31,10 +31,6 @@ import Nav from '../components/nav';
 import { size } from '../components/sizes';
 
 export default class Tracks extends React.Component {
-  componentDidMount() {
-    this.fetchDevices();
-  }
-
   fetchDevices = async () => {
     const res = await fetch('https://api.spotify.com/v1/me/player/devices', {
       method: 'GET',
@@ -83,6 +79,7 @@ export default class Tracks extends React.Component {
   }
 
   render() {
+    console.log(this.props, '***')
     return (
       <main>
         <WSProvider
@@ -113,7 +110,7 @@ export default class Tracks extends React.Component {
                       <CommandPanel transcript={speech.result.transcript} />
                       <List>
                         {this.props.tracks.map((playlist, i) => (
-                          <MediaContainer
+                          <GridContainer
                             handleClick={() => this.playTrack(playlist.track.album.uri)}
                             key={playlist.track.id}>
                             <GridItem align="center">
@@ -140,7 +137,7 @@ export default class Tracks extends React.Component {
                             {/* <button onClick={this.pauseTrack}>pause</button>
                             <button onClick={this.resumeTrack}>resume</button> */}
 
-                          </MediaContainer>
+                          </GridContainer>
                         ))}
                       </List>
                       <SpeechControl handleClick={speech.start} />
@@ -169,6 +166,7 @@ Tracks.getInitialProps = async ctx => {
   const tracks = await res.json();
   return {
     tracks: tracks.items || [],
-    userId: getCookie('user_id', ctx)
+    userId: getCookie('user_id', ctx),
+    foo: tracks
   }
 }

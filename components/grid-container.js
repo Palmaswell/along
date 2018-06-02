@@ -19,7 +19,7 @@ const StyledListContainer = styled.li`
   }
 `;
 
-const StyledMediaContainer = styled.a`
+const StyledGridContainer = styled.a`
   display: grid;
   grid-template-columns: 10px 52px calc(60vw - 62px) auto;
   grid-column-gap: ${size.xxxs}px;
@@ -34,20 +34,20 @@ const StyledMediaContainer = styled.a`
   }
 `;
 
-const MediaContainer = ({ children, handleClick, href }) => (
+const GridContainer = ({ children, handleClick, href }) => (
   <StyledListContainer>
-    <StyledMediaContainer
+    <StyledGridContainer
       onClick={handleClick}
       href={href}>
         { children }
-    </StyledMediaContainer>
+    </StyledGridContainer>
   </StyledListContainer>
 );
 
-MediaContainer.propTypes =  {
+GridContainer.propTypes =  {
   href: propTypes.string,
   handleClick: () => {}
 }
 
 
-export default MediaContainer;
+export default GridContainer;
