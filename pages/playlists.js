@@ -20,6 +20,8 @@ import Link from '../components/link';
 import List from '../components/list';
 import GridContainer from '../components/grid-container';
 import GridItem from '../components/grid-item';
+import Media from '../components/media';
+import ListItem from '../components/list-item';
 import Thumbnail from '../components/thumbnail';
 import CommandPanel from '../components/command-panel';
 import SpeechControl from '../components/speech-controls';
@@ -48,27 +50,20 @@ export default class PlayLists extends React.Component {
                         <ActiveLink href={`/`}><ArrowLeft /></ActiveLink>
                       </Nav>
                       <CommandPanel transcript={speech.result.transcript} />
-                      <List>
+                      <List flex>
                         {this.props.playlist.items.map((playlist, i) => (
-                          <GridContainer
-                            href={`/tracks/${playlist.id}`}
-                            index={i}
-                            key={playlist.id}>
-                            <GridItem align="center">
-                              <Copy color={colors.unitedNationsBlue()} tag="div">{i + 1}</Copy>
-                            </GridItem>
-                            <GridItem>
-                              <Thumbnail
+                          <ListItem flex>
+                            <ActiveLink
+                              href={`/tracks/${playlist.id}`}
+                              index={i}
+                              key={playlist.id}>
+                              <Media
                                 alt={`Playlist: ${playlist.name} cover`}
                                 src={playlist.images[0].url} />
-                            </GridItem>
-                            <GridItem>
                               <Copy tag="div">{playlist.name}</Copy>
-                            </GridItem>
-                            <GridItem justify="end">
                               <Copy tag="div" size="s">{playlist.tracks.total} tracks</Copy>
-                            </GridItem>
-                          </GridContainer>
+                            </ActiveLink>
+                          </ListItem>
                         ))}
                       </List>
                       <SpeechControl handleClick={speech.start} />
