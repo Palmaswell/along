@@ -23,7 +23,7 @@ const StyledNav = styled.nav`
 
 
   @media (min-width: ${ breakpoints.m }) {
-    padding: ${size.xxs}px ${size.s}px 0;
+    padding: ${size.xxs}px;
   }
 `
 export const Nav = ({ children, secondary }) => (

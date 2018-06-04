@@ -5,7 +5,7 @@ import colors from './colors';
 const StyledBackground = styled.div`
   min-width: 100vw;
   min-height: 100vh;
-  background-color: ${colors.yankeesBlue()};
+  background-color: ${colors.whiteSmoke()};
 `
 
 export const Background = ({ children }) => (

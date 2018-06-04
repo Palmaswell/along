@@ -18,7 +18,7 @@ const StyledCopy = styled.span`
   }};
   color: ${props => props.color
     ? props.color
-    : colors.lightCyan()
+    : colors.smokyBlack()
   };
   text-decoration: none;
   font-weight: ${props => props.weight
@@ -35,6 +35,17 @@ const StyledCopy = styled.span`
         break;
       default:
         return '18px';
+    }
+  }};
+  }
+  @media (min-width: ${ breakpoints.l } ) {
+    font-size: ${props => {
+    switch(props.size) {
+      case 's':
+        return '18px';
+        break;
+      default:
+        return '24px';
     }
   }};
   }

@@ -18,9 +18,9 @@ import ActiveLink from '../components/active-link';
 import { ArrowLeft } from '../components/icons';
 import Copy from '../components/copy';
 import colors from '../components/colors';
-import Background from '../components/background';
 import List from '../components/list';
-import MediaContainer from '../components/media-container';
+import GridContainer from '../components/grid-container';
+import Media from '../components/media';
 import GridItem from '../components/grid-item';
 import Thumbnail from '../components/thumbnail';
 import CommandPanel from '../components/command-panel';
@@ -30,10 +30,6 @@ import Nav from '../components/nav';
 import { size } from '../components/sizes';
 
 export default class Tracks extends React.Component {
-  componentDidMount() {
-    this.fetchDevices();
-  }
-
   fetchDevices = async () => {
     const res = await fetch('https://api.spotify.com/v1/me/player/devices', {
       method: 'GET',
@@ -82,6 +78,7 @@ export default class Tracks extends React.Component {
   }
 
   render() {
+    console.log(this.props, '***')
     return (
       <main>
         <WSProvider
@@ -102,49 +99,47 @@ export default class Tracks extends React.Component {
                       this.resumeTrack,
                       this.props.userId)}
                     wsBroker={wsBroker}>
-                    <Background>
-                      <Nav secondary>
-                        <ActiveLink
-                        href={`/playlists/${this.props.userId}`}>
-                          <ArrowLeft />
-                        </ActiveLink>
-                      </Nav>
-                      <CommandPanel transcript={speech.result.transcript} />
-                      <List>
-                        {this.props.tracks.map((playlist, i) => (
-                          <MediaContainer
-                            handleClick={() => this.playTrack(playlist.track.album.uri)}
-                            key={playlist.track.id}>
-                            <GridItem align="center">
-                              <Copy color={colors.unitedNationsBlue()} tag="div">{i + 1}</Copy>
-                            </GridItem>
-                            <GridItem>
-                              <Thumbnail
-                                alt={`${playlist.track.album.name} track name`}
-                                src={playlist.track.album.images[0].url} />
-                            </GridItem>
-                            <GridItem>
-                              <Copy tag="div" weight={'bold'}>{playlist.track.name}</Copy>
-                              <Copy size="s" tag="div">
-                                {playlist.track.artists[0].name}
-                              </Copy>
-                            </GridItem>
-                            <GridItem justify="end">
-                              <Copy tag="div">{formatMilliseconds(playlist.track.duration_ms)}</Copy>
-                              {playlist.track.explicit &&
-                                <Copy tag="div" size="s">{playlist.track.explicit}</Copy>
-                              }
-                            </GridItem>
+                    <Nav secondary>
+                      <ActiveLink
+                      href={`/playlists/${this.props.userId}`}>
+                        <ArrowLeft />
+                      </ActiveLink>
+                    </Nav>
+                    <CommandPanel transcript={speech.result.transcript} />
+                    <List>
+                      {this.props.tracks.map((playlist, i) => (
+                        <GridContainer
+                          handleClick={() => this.playTrack(playlist.track.album.uri)}
+                          key={playlist.track.id}>
+                          <GridItem align="center">
+                            <Copy color={colors.unitedNationsBlue()} tag="div">{i + 1}</Copy>
+                          </GridItem>
+                          <GridItem>
+                            <Media
+                              alt={`${playlist.track.album.name} track name`}
+                              src={playlist.track.album.images[0].url} />
+                          </GridItem>
+                          <GridItem>
+                            <Copy tag="div" weight={'bold'}>{playlist.track.name}</Copy>
+                            <Copy size="s" tag="div">
+                              {playlist.track.artists[0].name}
+                            </Copy>
+                          </GridItem>
+                          <GridItem justify="end">
+                            <Copy tag="div">{formatMilliseconds(playlist.track.duration_ms)}</Copy>
+                            {playlist.track.explicit &&
+                              <Copy tag="div" size="s">{playlist.track.explicit}</Copy>
+                            }
+                          </GridItem>
 
-                            {/* <button onClick={this.pauseTrack}>pause</button>
-                            <button onClick={this.resumeTrack}>resume</button> */}
+                          {/* <button onClick={this.pauseTrack}>pause</button>
+                          <button onClick={this.resumeTrack}>resume</button> */}
 
-                          </MediaContainer>
-                        ))}
-                      </List>
-                      <SpeechControl handleClick={speech.start} />
-                    </Background>
-                  </SpeechBroker>
+                        </GridContainer>
+                      ))}
+                    </List>
+                    <SpeechControl handleClick={speech.start} />
+                </SpeechBroker>
                 )}
               </SpeechContext.Consumer>
             </SpeechProvider>
@@ -168,6 +163,7 @@ Tracks.getInitialProps = async ctx => {
   const tracks = await res.json();
   return {
     tracks: tracks.items || [],
-    userId: getCookie('user_id', ctx)
+    userId: getCookie('user_id', ctx),
+    foo: tracks
   }
 }

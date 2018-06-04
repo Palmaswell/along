@@ -8,11 +8,13 @@ import { size } from './sizes';
 
 const StyledPanel = styled.section`
   box-sizing: border-box;
-  width: 100vw;
-  padding: ${size.xxs}px ${size.xxs}px ${size.s}px;
+  width: 100%;
+  height: 200px;
+  padding: ${size.xs}px ${size.xxs}px ${size.s}px;
   text-align: center;
 
-  @media (min-width: 960px) {
+  @media (min-width: ${breakpoints.l}) {
+    height: 250px;
     padding: ${size.s}px ${size.s}px ${size.m}px;
   };
 `;
@@ -20,10 +22,10 @@ const StyledPanel = styled.section`
 const StyledTopLine = styled.div`
   margin: 0;
   font-size: 18px;
-  color: ${colors.lightCyan()};
+  color: ${colors.smokyBlack()};
   ${fontHind()}
 
-  @media (min-width: ${ breakpoints.m }) {
+  @media (min-width: ${breakpoints.m}) {
     font-size: 32px;
   }
 `
@@ -32,11 +34,11 @@ const StyledTranscript = styled.h1`
   min-height: 70px;
   margin: 0;
   line-height: 1.5;
-  color: ${colors.lightCyan()};
+  color: ${colors.smokyBlack()};
   font-size: 48px;
   ${fontHind()}
 
-  @media (min-width: ${ breakpoints.m }) {
+  @media (min-width: ${breakpoints.m }) {
     font-size: 72px;
   }
 `
@@ -44,7 +46,7 @@ const StyledTranscript = styled.h1`
 export const CommandPanel = ({ transcript }) => {
   return (
     <StyledPanel>
-      <StyledTopLine>transcript:</StyledTopLine>
+      <StyledTopLine>transcript</StyledTopLine>
       <StyledTranscript order="h1">
         {transcript}
       </StyledTranscript>

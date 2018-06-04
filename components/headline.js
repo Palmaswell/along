@@ -21,7 +21,7 @@ const StyledHeadline = styled.h1`
     }
   };
   line-height: 1.5;
-  color: ${colors.lightCyan()};
+  color: ${colors.smokyBlack()};
   text-align: center;
   ${fontHind()}
 

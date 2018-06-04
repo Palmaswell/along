@@ -14,7 +14,6 @@ import { createIntents } from '../intents/create-intents';
 import { navigateIntent } from '../intents/intents';
 
 import ActiveLink from '../components/active-link';
-import Background from '../components/background';
 import Link from '../components/link';
 import Thumbnail from '../components/thumbnail';
 import CommandPanel from '../components/command-panel';
@@ -42,26 +41,24 @@ export default class Index extends React.Component {
                 <SpeechBroker
                   registrationList={createIntents(navigateIntent, this.props.spotify.id)}
                   wsBroker={wsBroker}>
-                  <Background>
-                    <Nav>
-                      <ActiveLink
-                        href={`/playlists/${this.props.spotify.id}`}>
-                        Playlists
-                      </ActiveLink>
-                      <Space size={[0, 0, 0, size.xs]}>
-                        <Link
-                          href={this.props.spotify.external_urls.spotify}
-                          target="_blank">
-                          <Thumbnail
-                            alt={`Spotify profile image from ${this.props.spotify.display_name}`}
-                            caption={this.userName}
-                            src={this.props.spotify.images[0].url}/>
-                        </Link>
-                      </Space>
-                    </Nav>
-                    <CommandPanel transcript={speech.result.transcript} />
-                    <SpeechControl handleClick={speech.start} />
-                  </Background>
+                  <Nav>
+                    <ActiveLink
+                      href={`/playlists/${this.props.spotify.id}`}>
+                      Playlists
+                    </ActiveLink>
+                    <Space size={[0, 0, 0, size.xs]}>
+                      <Link
+                        href={this.props.spotify.external_urls.spotify}
+                        target="_blank">
+                        <Thumbnail
+                          alt={`Spotify profile image from ${this.props.spotify.display_name}`}
+                          caption={this.userName}
+                          src={this.props.spotify.images[0].url}/>
+                      </Link>
+                    </Space>
+                  </Nav>
+                  <CommandPanel transcript={speech.result.transcript} />
+                  <SpeechControl handleClick={speech.start} />
               </SpeechBroker>
               )}
             </SpeechContext.Consumer>

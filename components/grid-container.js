@@ -6,20 +6,20 @@ import { breakpoints } from './breakpoints';
 import { size } from './sizes';
 
 const StyledListContainer = styled.li`
-  padding: ${size.xxxs}px 0;
+  padding: ${size.xxxs}px;
   list-style: none;
-  border-bottom: 1px solid ${colors.deepKoamaru()};
+  background-color: ${colors.white()};
 
   :hover {
-    background-color: ${colors.deepKoamaru()};
+    background-color: ${colors.whiteSmoke()};
   }
 
   @media (min-width: ${ breakpoints.m }) {
-    padding: ${size.xs}px 0;
+    padding: ${size.xs}px;
   }
 `;
 
-const StyledMediaContainer = styled.a`
+const StyledGridContainer = styled.a`
   display: grid;
   grid-template-columns: 10px 52px calc(60vw - 62px) auto;
   grid-column-gap: ${size.xxxs}px;
@@ -32,22 +32,25 @@ const StyledMediaContainer = styled.a`
     grid-column-gap: ${size.xxs}px;
     padding: 0 ${size.xss}px;
   }
+  @media (min-width: ${ breakpoints.l }) {
+    grid-template-columns: 20px 150px calc(60vw - 120px) auto;
+  }
 `;
 
-const MediaContainer = ({ children, handleClick, href }) => (
+const GridContainer = ({ children, handleClick, href }) => (
   <StyledListContainer>
-    <StyledMediaContainer
+    <StyledGridContainer
       onClick={handleClick}
       href={href}>
         { children }
-    </StyledMediaContainer>
+    </StyledGridContainer>
   </StyledListContainer>
 );
 
-MediaContainer.propTypes =  {
+GridContainer.propTypes =  {
   href: propTypes.string,
   handleClick: () => {}
 }
 
 
-export default MediaContainer;
+export default GridContainer;
