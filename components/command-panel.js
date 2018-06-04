@@ -8,11 +8,13 @@ import { size } from './sizes';
 
 const StyledPanel = styled.section`
   box-sizing: border-box;
-  width: 100vw;
+  width: 100%;
+  height: 200px;
   padding: ${size.xs}px ${size.xxs}px ${size.s}px;
   text-align: center;
 
-  @media (min-width: 960px) {
+  @media (min-width: ${breakpoints.l}) {
+    height: 250px;
     padding: ${size.s}px ${size.s}px ${size.m}px;
   };
 `;
@@ -22,9 +24,8 @@ const StyledTopLine = styled.div`
   font-size: 18px;
   color: ${colors.smokyBlack()};
   ${fontHind()}
-  font-weight: bold;
 
-  @media (min-width: ${ breakpoints.m }) {
+  @media (min-width: ${breakpoints.m}) {
     font-size: 32px;
   }
 `
@@ -37,7 +38,7 @@ const StyledTranscript = styled.h1`
   font-size: 48px;
   ${fontHind()}
 
-  @media (min-width: ${ breakpoints.m }) {
+  @media (min-width: ${breakpoints.m }) {
     font-size: 72px;
   }
 `

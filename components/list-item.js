@@ -9,11 +9,13 @@ const StyledListItem = styled.li`
 
 const StyledFlexListItem = styled(StyledListItem)`
   box-sizing: border-box;
-  width: calc(100vw / 3);
   text-align: center;
+  margin-bottom: ${size.xs}px;
 
   @media(min-width: ${breakpoints.m}) {
-    min-width: calc(100vw / 2.5);
+    width: calc(100vw / 3);
+    max-width: 400px;
+    margin-right: ${size.xs}px;
   }
 `;
 

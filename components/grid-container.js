@@ -32,6 +32,9 @@ const StyledGridContainer = styled.a`
     grid-column-gap: ${size.xxs}px;
     padding: 0 ${size.xss}px;
   }
+  @media (min-width: ${ breakpoints.l }) {
+    grid-template-columns: 20px 150px calc(60vw - 120px) auto;
+  }
 `;
 
 const GridContainer = ({ children, handleClick, href }) => (

@@ -15,7 +15,6 @@ import ActiveLink from '../components/active-link';
 import { ArrowLeft } from '../components/icons';
 import Copy from '../components/copy';
 import colors from '../components/colors';
-import Background from '../components/background';
 import Link from '../components/link';
 import List from '../components/list';
 import GridContainer from '../components/grid-container';
@@ -45,29 +44,34 @@ export default class PlayLists extends React.Component {
                   <SpeechBroker
                     registrationList={createIntents(playlistsIntent, this.props.playlist.items)}
                     wsBroker={wsBroker}>
-                    <Background>
-                      <Nav secondary>
-                        <ActiveLink href={`/`}><ArrowLeft /></ActiveLink>
-                      </Nav>
-                      <CommandPanel transcript={speech.result.transcript} />
-                      <List flex>
-                        {this.props.playlist.items.map((playlist, i) => (
-                          <ListItem flex>
-                            <ActiveLink
-                              href={`/tracks/${playlist.id}`}
-                              index={i}
-                              key={playlist.id}>
-                              <Media
-                                alt={`Playlist: ${playlist.name} cover`}
-                                src={playlist.images[0].url} />
+                    <Nav secondary>
+                      <ActiveLink href={`/`}><ArrowLeft /></ActiveLink>
+                    </Nav>
+                    <CommandPanel transcript={speech.result.transcript} />
+                    <List flex>
+                      {this.props.playlist.items.map((playlist, i) => (
+                        <ListItem key={playlist.id} flex>
+                          <ActiveLink
+                            href={`/tracks/${playlist.id}`}
+                            index={i}
+                            key={playlist.id}>
+                            <Media
+                              alt={`Playlist: ${playlist.name} cover`}
+                              src={playlist.images[0].url}
+                              large />
+                            <Space size={[size.xxxs, 0, 0]}>
                               <Copy tag="div">{playlist.name}</Copy>
-                              <Copy tag="div" size="s">{playlist.tracks.total} tracks</Copy>
-                            </ActiveLink>
-                          </ListItem>
-                        ))}
-                      </List>
-                      <SpeechControl handleClick={speech.start} />
-                    </Background>
+                            </Space>
+                            <Space>
+                              <Copy tag="div" size="s">
+                                {playlist.tracks.total} tracks
+                              </Copy>
+                            </Space>
+                          </ActiveLink>
+                        </ListItem>
+                      ))}
+                    </List>
+                    <SpeechControl handleClick={speech.start} />
                   </SpeechBroker>
                 )}
               </SpeechContext.Consumer>

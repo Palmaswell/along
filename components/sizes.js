@@ -5,5 +5,6 @@ export const size = {
   s: 52,
   m: 65,
   l: 78,
-  xl: 100
+  xl: 100,
+  xxl: 140
 }

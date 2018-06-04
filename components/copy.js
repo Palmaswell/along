@@ -38,6 +38,17 @@ const StyledCopy = styled.span`
     }
   }};
   }
+  @media (min-width: ${ breakpoints.l } ) {
+    font-size: ${props => {
+    switch(props.size) {
+      case 's':
+        return '18px';
+        break;
+      default:
+        return '24px';
+    }
+  }};
+  }
 `;
 
 export const Copy = ({ children, color, size, tag, weight }) => {

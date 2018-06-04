@@ -1,7 +1,7 @@
 import Document, { Head, Main, NextScript } from 'next/document';
 import { extractCritical } from 'emotion-server';
 import { injectGlobal } from 'react-emotion';
-
+import colors from '../components/colors';
 
 // Adds server generated styles to emotion cache.
 // '__NEXT_DATA__.ids' is set in '_document.js'
@@ -22,6 +22,7 @@ export default class MyDocument extends Document {
     injectGlobal`
       body {
        margin: 0;
+       background-color: ${colors.whiteSmoke()};
       }
     `;
     return (
