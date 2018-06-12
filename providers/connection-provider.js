@@ -1,8 +1,8 @@
 import propTypes from 'prop-types';
 import React from 'react';
 import Rx from 'rxjs';
-
-import { SpeechProvider } from './speech/speech-provider';
+import { TransitionGroup } from 'react-transition-group';
+import { TransitionComponent } from '../components/transition';
 
 
 export class WSProviderSingleton {
@@ -50,10 +50,11 @@ export class WSProvider extends React.Component {
   state = {
     wsSingleton: null,
     wsmessages: new Set(),
-    wsopen: false
+    wsopen: false,
+    isTransitioning: false
   };
 
-  componentDidMount () {
+  componentDidMount() {
     const locationOrigin = window.location.origin.replace(/(http:\/\/)/g, '');
     const hostName = locationOrigin.match(/(:1337)/)
       ? locationOrigin.replace(/(:1337)/g, '')
@@ -75,21 +76,40 @@ export class WSProvider extends React.Component {
           wsSingleton.webSock.send(JSON.stringify(message));
       }
     });
-    this.setState({...this.state, wsSingleton});
+    this.setState({...this.state, wsSingleton, isTransitioning: true });
+  }
+
+  componentWillUnmount() {
+    this.setState({...this.state, isTransitioning: false });
   }
 
   renderChildren = () => {
     if (this.state.wsopen) {
-      return this.props.children;
+      return (
+        <TransitionComponent
+          isTransitioning={this.state.isTransitioning}>
+          { this.props.children }
+        </TransitionComponent>
+      );
     }
-    return <div>📺  Waiting for Websocket client</div>
+    return (
+      <TransitionComponent
+        isTransitioning={this.state.isTransitioning}>
+        <div>📺  Waiting for Websocket client</div>
+      </TransitionComponent>
+    )
   }
 
   render() {
     return (
-      <WSContext.Provider value={this.state.wsSingleton}>
-        {this.renderChildren()}
-      </WSContext.Provider>
+      <TransitionGroup
+        component={null}
+        enter={true}
+        exit={true}>
+        <WSContext.Provider value={this.state.wsSingleton}>
+          {this.renderChildren()}
+        </WSContext.Provider>
+      </TransitionGroup>
     );
   }
 }
