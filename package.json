@@ -30,6 +30,7 @@
     "react": "^16.3.0-alpha.2",
     "react-dom": "^16.3.0-alpha.2",
     "react-emotion": "^8.0.5",
+    "react-transition-group": "^2.3.1",
     "redis": "^2.8.0",
     "redis-server": "^1.2.0",
     "rxjs": "^5.5.7",

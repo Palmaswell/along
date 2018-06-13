@@ -17,7 +17,9 @@ export const navigateIntent =  IntentFactory({
     'show my playlist',
     'call list',
     'ok list',
-    'so playlist'
+    'so playlist',
+    'musica',
+    'mi musica'
   ],
   action(id) {
     return handleRouter(`/playlists/${id}`, id);
@@ -30,7 +32,9 @@ export const playlistsIntent =  IntentFactory({
     'go to',
     'show me',
     'show me',
-    'so'
+    'so',
+    've',
+    've a'
   ],
   action(id) {
     return handleRouter(`/tracks/${id}`, id)
@@ -41,7 +45,8 @@ export const tracksIntent =  IntentFactory({
   type: 'TracksIntent',
   samples: [
     'play',
-    ''
+    '',
+    'toca'
   ],
   action(func, uri) {
     return func(uri)
@@ -53,7 +58,8 @@ export const homeIntent = IntentFactory({
   samples: [
     'go home',
     'go back',
-    'call back'
+    'call back',
+    'regresa'
   ],
   action() {
     return handleRouter(`/`)

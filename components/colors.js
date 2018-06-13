@@ -1,6 +1,6 @@
 import tinycolor from 'tinycolor2';
 
-const colors = {
+export const colors = {
   paleAqua: () => tinycolor(
     {
       r: 194,

@@ -2,32 +2,41 @@ import propTypes from 'prop-types';
 import styled from 'react-emotion';
 import colors from './colors';
 
+import { breakpoints } from './breakpoints';
+import { size } from './sizes'
+
 const StyledControls = styled.nav`
   position: fixed;
-  bottom: 0;
+  bottom: ${size.xs}px;;
   right: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  height: 65px;
   width: 100vw;
-  background-color: ${colors.unitedNationsBlue()};
 `;
 
 const StyledSVG = styled.svg`
   align-self: center;
-  width: 45px;
-  height: 45px;
-  fill: ${colors.whiteSmoke()};
+  width: 60px;
+  fill: ${colors.unitedNationsBlue()};
   cursor: pointer;
+  transition: fill .666s ease;
+
+  :hover {
+    fill: ${colors.paleChestNut()};
+  }
+
+  @media (min-width: ${breakpoints.l}) {
+    width: 100px;
+  }
 `;
 
 export const SpeechControl = ({ handleClick }) => {
   return (
     <StyledControls onClick={handleClick}>
-      <StyledSVG viewBox="0 0 500 500">
+      <StyledSVG viewBox="0 0 50 50">
         <title>Speech control button</title>
-        <rect x="156.61" width="198.78" height="344.56" rx="99.39" ry="99.39"/><path d="M426.35,240.47a16.57,16.57,0,1,0-33.13,0c0,75.66-61.56,137.22-137.22,137.22S118.78,316.13,118.78,240.47a16.57,16.57,0,1,0-33.13,0c0,88.34,67.6,161.19,153.78,169.54v68.86H173.17a16.57,16.57,0,0,0,0,33.13H338.83a16.57,16.57,0,0,0,0-33.13H272.57V410C358.75,401.65,426.35,328.81,426.35,240.47Z"/>
+        <path d="M25 .5C11.469.5.5 11.469.5 25S11.469 49.5 25 49.5 49.5 38.531 49.5 25 38.531.5 25 .5zm-6.794 13.794a6.794 6.794 0 0 1 13.588 0v9.965a6.794 6.794 0 0 1-13.588 0v-9.965zm7.927 21.233v4.708h4.53a1.133 1.133 0 0 1 0 2.265H19.338a1.133 1.133 0 0 1 0-2.265h4.53v-4.707c-5.891-.571-10.512-5.551-10.512-11.59v-.056a1.133 1.133 0 0 1 2.265.055c0 5.172 4.208 9.38 9.38 9.38s9.38-4.208 9.38-9.38v-.056a1.133 1.133 0 0 1 2.265.055c-.001 6.041-4.622 11.021-10.513 11.591z"/>
       </StyledSVG>
     </StyledControls>
   )

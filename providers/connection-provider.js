@@ -1,9 +1,7 @@
 import propTypes from 'prop-types';
 import React from 'react';
 import Rx from 'rxjs';
-
-import { SpeechProvider } from './speech/speech-provider';
-
+import { Loading } from '../components/loading';
 
 export class WSProviderSingleton {
   constructor(hostName, channel) {
@@ -50,10 +48,11 @@ export class WSProvider extends React.Component {
   state = {
     wsSingleton: null,
     wsmessages: new Set(),
-    wsopen: false
+    wsopen: false,
+    isTransitioning: false
   };
 
-  componentDidMount () {
+  componentDidMount() {
     const locationOrigin = window.location.origin.replace(/(http:\/\/)/g, '');
     const hostName = locationOrigin.match(/(:1337)/)
       ? locationOrigin.replace(/(:1337)/g, '')
@@ -75,14 +74,18 @@ export class WSProvider extends React.Component {
           wsSingleton.webSock.send(JSON.stringify(message));
       }
     });
-    this.setState({...this.state, wsSingleton});
+    this.setState({...this.state, wsSingleton, isTransitioning: true });
+  }
+
+  componentWillUnmount() {
+    this.setState({...this.state, isTransitioning: false });
   }
 
   renderChildren = () => {
     if (this.state.wsopen) {
       return this.props.children;
     }
-    return <div>📺  Waiting for Websocket client</div>
+    return <Loading isTransitioning={this.state.isTransitioning}/>;
   }
 
   render() {

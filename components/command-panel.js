@@ -10,12 +10,12 @@ const StyledPanel = styled.section`
   box-sizing: border-box;
   width: 100%;
   height: 200px;
-  padding: ${size.xs}px ${size.xxs}px ${size.s}px;
+  padding: ${size.xxs}px ${size.xxs}px ${size.s}px;
   text-align: center;
 
   @media (min-width: ${breakpoints.l}) {
     height: 250px;
-    padding: ${size.s}px ${size.s}px ${size.m}px;
+    padding: ${size.xs}px ${size.s}px ${size.m}px;
   };
 `;
 

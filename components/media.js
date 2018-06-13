@@ -25,8 +25,8 @@ const StyledMediaWrapper = styled.div`
       ? 'calc(33vw - 25px)'
       : `${size.l}px`
     };
-    max-width: 400px;
-    max-height: 400px;
+    max-width: 370px;
+    max-height: 370px;
   }
   @media (min-width: ${breakpoints.l}) {
     width: ${props => props.large

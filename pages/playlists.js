@@ -1,4 +1,5 @@
 import fetch, { Headers }  from 'node-fetch';
+import { TransitionGroup } from 'react-transition-group';
 
 import { getCookie } from '../utils/cookies';
 import { handleRouter } from '../utils/handle-router';
@@ -11,26 +12,35 @@ import SpeechBroker from '../providers/speech/speech-broker';
 import { createIntents } from '../intents/create-intents';
 import { playlistsIntent, homeIntent } from '../intents/intents';
 
-import ActiveLink from '../components/active-link';
 import { ArrowLeft } from '../components/icons';
+import ActiveLink from '../components/active-link';
 import Copy from '../components/copy';
-import colors from '../components/colors';
-import Link from '../components/link';
-import List from '../components/list';
-import GridContainer from '../components/grid-container';
-import GridItem from '../components/grid-item';
-import Media from '../components/media';
-import ListItem from '../components/list-item';
-import Thumbnail from '../components/thumbnail';
 import CommandPanel from '../components/command-panel';
+import List from '../components/list';
+import ListItem from '../components/list-item';
+import Media from '../components/media';
+import Nav from '../components/nav';
 import SpeechControl from '../components/speech-controls';
 import Space from '../components/space';
-import Nav from '../components/nav';
+import TransitionComponent from '../components/transition';
 import { size } from '../components/sizes';
 
 export default class PlayLists extends React.Component {
+  state = {
+    isTransitioning: false
+  }
+  componentDidMount() {
+    this.setState({...this.state, isTransitioning: true });
+  }
+  componentWillUnmount() {
+    this.setState({...this.state, isTransitioning: false });
+  }
   render() {
     return (
+      <TransitionGroup
+        component={null}
+        enter={true}
+        exit={true}>
       <main>
         <WSProvider
         channel="Home">
@@ -48,29 +58,32 @@ export default class PlayLists extends React.Component {
                       <ActiveLink href={`/`}><ArrowLeft /></ActiveLink>
                     </Nav>
                     <CommandPanel transcript={speech.result.transcript} />
-                    <List flex>
-                      {this.props.playlist.items.map((playlist, i) => (
-                        <ListItem key={playlist.id} flex>
-                          <ActiveLink
-                            href={`/tracks/${playlist.id}`}
-                            index={i}
-                            key={playlist.id}>
-                            <Media
-                              alt={`Playlist: ${playlist.name} cover`}
-                              src={playlist.images[0].url}
-                              large />
-                            <Space size={[size.xxxs, 0, 0]}>
-                              <Copy tag="div">{playlist.name}</Copy>
-                            </Space>
-                            <Space>
-                              <Copy tag="div" size="s">
-                                {playlist.tracks.total} tracks
-                              </Copy>
-                            </Space>
-                          </ActiveLink>
-                        </ListItem>
-                      ))}
-                    </List>
+                    <TransitionComponent
+                        isTransitioning={this.state.isTransitioning}>
+                      <List flex>
+                          {this.props.playlist.items.map((playlist, i) => (
+                            <ListItem key={playlist.id} flex>
+                              <ActiveLink
+                                href={`/tracks/${playlist.id}`}
+                                index={i}
+                                key={playlist.id}>
+                                <Media
+                                  alt={`Playlist: ${playlist.name} cover`}
+                                  src={playlist.images[0].url}
+                                  large />
+                                <Space size={[size.xxxs, 0, 0]}>
+                                  <Copy tag="div">{playlist.name}</Copy>
+                                </Space>
+                                <Space>
+                                  <Copy tag="div" size="s">
+                                    {playlist.tracks.total} tracks
+                                  </Copy>
+                                </Space>
+                              </ActiveLink>
+                            </ListItem>
+                          ))}
+                      </List>
+                    </TransitionComponent>
                     <SpeechControl handleClick={speech.start} />
                   </SpeechBroker>
                 )}
@@ -80,6 +93,7 @@ export default class PlayLists extends React.Component {
         </WSContext.Consumer>
         </WSProvider>
       </main>
+      </TransitionGroup>
     );
   }
 }

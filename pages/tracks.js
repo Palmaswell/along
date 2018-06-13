@@ -1,12 +1,10 @@
 import fetch, { Headers }  from 'node-fetch';
 import Link from 'next/link';
-import { hydrate, injectGlobal } from 'react-emotion';
+import { TransitionGroup } from 'react-transition-group';
 
 import { getCookie } from '../utils/cookies';
-import { handleRouter } from '../utils/handle-router';
 import { formatMilliseconds } from '../utils/readable-time';
 
-import { abstractCommandFactory } from '../providers/speech/speech-commands';
 import { SpeechContext, SpeechProvider } from '../providers/speech/speech-provider';
 import { WSContext, WSProvider } from '../providers/connection-provider';
 import SpeechBroker from '../providers/speech/speech-broker';
@@ -22,14 +20,24 @@ import List from '../components/list';
 import GridContainer from '../components/grid-container';
 import Media from '../components/media';
 import GridItem from '../components/grid-item';
-import Thumbnail from '../components/thumbnail';
 import CommandPanel from '../components/command-panel';
 import SpeechControl from '../components/speech-controls';
-import Space from '../components/space';
+import TransitionComponent from '../components/transition';
 import Nav from '../components/nav';
-import { size } from '../components/sizes';
 
 export default class Tracks extends React.Component {
+  state = {
+    isTransitioning: false
+  }
+
+  componentDidMount() {
+    this.setState({...this.state, isTransitioning: true });
+  }
+
+  componentWillUnmount() {
+    this.setState({...this.state, isTransitioning: false });
+  }
+
   fetchDevices = async () => {
     const res = await fetch('https://api.spotify.com/v1/me/player/devices', {
       method: 'GET',
@@ -78,8 +86,11 @@ export default class Tracks extends React.Component {
   }
 
   render() {
-    console.log(this.props, '***')
     return (
+      <TransitionGroup
+        component={null}
+        enter={true}
+        exit={true}>
       <main>
         <WSProvider
         channel="Home">
@@ -106,38 +117,41 @@ export default class Tracks extends React.Component {
                       </ActiveLink>
                     </Nav>
                     <CommandPanel transcript={speech.result.transcript} />
-                    <List>
-                      {this.props.tracks.map((playlist, i) => (
-                        <GridContainer
-                          handleClick={() => this.playTrack(playlist.track.album.uri)}
-                          key={playlist.track.id}>
-                          <GridItem align="center">
-                            <Copy color={colors.unitedNationsBlue()} tag="div">{i + 1}</Copy>
-                          </GridItem>
-                          <GridItem>
-                            <Media
-                              alt={`${playlist.track.album.name} track name`}
-                              src={playlist.track.album.images[0].url} />
-                          </GridItem>
-                          <GridItem>
-                            <Copy tag="div" weight={'bold'}>{playlist.track.name}</Copy>
-                            <Copy size="s" tag="div">
-                              {playlist.track.artists[0].name}
-                            </Copy>
-                          </GridItem>
-                          <GridItem justify="end">
-                            <Copy tag="div">{formatMilliseconds(playlist.track.duration_ms)}</Copy>
-                            {playlist.track.explicit &&
-                              <Copy tag="div" size="s">{playlist.track.explicit}</Copy>
-                            }
-                          </GridItem>
+                    <TransitionComponent
+                        isTransitioning={this.state.isTransitioning}>
+                      <List>
+                        {this.props.tracks.map((playlist, i) => (
+                          <GridContainer
+                            handleClick={() => this.playTrack(playlist.track.album.uri)}
+                            key={playlist.track.id}>
+                            <GridItem align="center">
+                              <Copy color={colors.unitedNationsBlue()} tag="div">{i + 1}</Copy>
+                            </GridItem>
+                            <GridItem>
+                              <Media
+                                alt={`${playlist.track.album.name} track name`}
+                                src={playlist.track.album.images[0].url} />
+                            </GridItem>
+                            <GridItem>
+                              <Copy tag="div" weight={'bold'}>{playlist.track.name}</Copy>
+                              <Copy size="s" tag="div">
+                                {playlist.track.artists[0].name}
+                              </Copy>
+                            </GridItem>
+                            <GridItem justify="end">
+                              <Copy tag="div">{formatMilliseconds(playlist.track.duration_ms)}</Copy>
+                              {playlist.track.explicit &&
+                                <Copy tag="div" size="s">{playlist.track.explicit}</Copy>
+                              }
+                            </GridItem>
 
-                          {/* <button onClick={this.pauseTrack}>pause</button>
-                          <button onClick={this.resumeTrack}>resume</button> */}
+                            {/* <button onClick={this.pauseTrack}>pause</button>
+                            <button onClick={this.resumeTrack}>resume</button> */}
 
-                        </GridContainer>
-                      ))}
-                    </List>
+                          </GridContainer>
+                        ))}
+                      </List>
+                    </TransitionComponent>
                     <SpeechControl handleClick={speech.start} />
                 </SpeechBroker>
                 )}
@@ -147,6 +161,7 @@ export default class Tracks extends React.Component {
         </WSContext.Consumer>
         </WSProvider>
       </main>
+      </TransitionGroup>
     )
   }
 }
