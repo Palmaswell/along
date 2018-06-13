@@ -2,17 +2,23 @@ import propTypes from 'prop-types';
 import styled from 'react-emotion';
 import { Transition } from 'react-transition-group';
 
+import { breakpoints } from './breakpoints';
+
 const StyledTransition = styled.div`
   opacity: 1;
-  transition: opacity ease-in-out;
-  transition-duration: .5s;
+  transition: transform ease;
+  transition-duration: .333s;
+  transform: translate3d(0, 0, 0);
 
   ${props => {
     switch(props.transitionState) {
       case 'entering':
       case 'exiting':
         return`
-          opacity: 0;
+          transform: translate3d(0, 100vh, 0);
+          @media (min-width: ${breakpoints.m}) {
+            transform: translate3d(-100vw, 0, 0);
+          }
         `;
     }
   }}
@@ -21,12 +27,7 @@ const StyledTransition = styled.div`
 export const TransitionComponent = ({ children, isTransitioning }) => (
   <Transition
     in={isTransitioning}
-    mountOnEnter={true}
-    unmountOnExit={true}
-    timeout={{
-      enter: 500,
-      exit: 500,
-    }}>
+    timeout={0}>
     {status => (
       <StyledTransition
         transitionState={status}>

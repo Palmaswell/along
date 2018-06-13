@@ -1,9 +1,7 @@
 import propTypes from 'prop-types';
 import React from 'react';
 import Rx from 'rxjs';
-import { TransitionGroup } from 'react-transition-group';
-import { TransitionComponent } from '../components/transition';
-
+import { Loading } from '../components/loading';
 
 export class WSProviderSingleton {
   constructor(hostName, channel) {
@@ -85,31 +83,16 @@ export class WSProvider extends React.Component {
 
   renderChildren = () => {
     if (this.state.wsopen) {
-      return (
-        <TransitionComponent
-          isTransitioning={this.state.isTransitioning}>
-          { this.props.children }
-        </TransitionComponent>
-      );
+      return this.props.children;
     }
-    return (
-      <TransitionComponent
-        isTransitioning={this.state.isTransitioning}>
-        <div>📺  Waiting for Websocket client</div>
-      </TransitionComponent>
-    )
+    return <Loading isTransitioning={this.state.isTransitioning}/>;
   }
 
   render() {
     return (
-      <TransitionGroup
-        component={null}
-        enter={true}
-        exit={true}>
-        <WSContext.Provider value={this.state.wsSingleton}>
-          {this.renderChildren()}
-        </WSContext.Provider>
-      </TransitionGroup>
+      <WSContext.Provider value={this.state.wsSingleton}>
+        {this.renderChildren()}
+      </WSContext.Provider>
     );
   }
 }
