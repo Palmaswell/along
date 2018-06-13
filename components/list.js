@@ -21,7 +21,7 @@ const StyledFlexList = styled(StyledList)`
   grid-template-columns: 1fr 1fr 1fr;
   grid-column-gap: ${size.xxs}px;
   justify-items: center;
-  padding: ${size.xxs}px;
+  padding: 0 ${size.xxs}px;
 
   @media(min-width: ${breakpoints.m}) {
     display: flex;

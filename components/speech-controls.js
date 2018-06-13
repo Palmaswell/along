@@ -7,7 +7,7 @@ import { size } from './sizes'
 
 const StyledControls = styled.nav`
   position: fixed;
-  bottom: ${size.m}px;;
+  bottom: ${size.xs}px;;
   right: 0;
   display: flex;
   flex-direction: column;
