@@ -21,7 +21,6 @@ const StyledNav = styled.nav`
     : '16px'
   };
 
-
   @media (min-width: ${ breakpoints.m }) {
     padding: ${size.xxs}px;
   }
