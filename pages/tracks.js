@@ -58,7 +58,13 @@ export default class Tracks extends React.Component {
         'Content-Type': 'application/json',
       }),
     });
-    const data = await res.json();
+    try {
+      const data = await res.json();
+    } catch (err) {
+      console.log(`
+        > 💥 Spotify pause track: ${err}
+      `)
+    }
 }
 
   playTrack = async uri => {
@@ -71,7 +77,13 @@ export default class Tracks extends React.Component {
       }),
       body: JSON.stringify({'context_uri': `${uri}`})
     });
-    const data = await res.json();
+    try {
+      const data = await res.json();
+    } catch (err) {
+      console.log(`
+        > 💥 Spotify play track: ${err}
+      `)
+    }
   }
 
   resumeTrack = async () => {
@@ -82,86 +94,90 @@ export default class Tracks extends React.Component {
         'Content-Type': 'application/json',
       }),
     });
-    const data = await res.json();
+    try {
+      const data = await res.json();
+    } catch (err) {
+      console.log(`
+        > 💥 Spotify resume track: ${err}
+      `)
+    }
   }
 
   render() {
     return (
-      <TransitionGroup
-        component={null}
-        enter={true}
-        exit={true}>
       <main>
-        <WSProvider
-        channel="Home">
-        <WSContext.Consumer>
-          {wsBroker => (
-            <SpeechProvider
-              channel="Home"
-              wsBroker={wsBroker}>
-              <SpeechContext.Consumer>
-                {speech => (
-                  <SpeechBroker
-                    registrationList={createIntents(
-                      tracksIntent,
-                      this.props.tracks,
-                      this.playTrack,
-                      this.pauseTrack,
-                      this.resumeTrack,
-                      this.props.userId)}
-                    wsBroker={wsBroker}>
-                    <Nav secondary>
-                      <ActiveLink
-                      href={`/playlists/${this.props.userId}`}>
-                        <ArrowLeft />
-                      </ActiveLink>
-                    </Nav>
-                    <CommandPanel transcript={speech.result.transcript} />
-                    <TransitionComponent
-                        isTransitioning={this.state.isTransitioning}>
-                      <List>
-                        {this.props.tracks.map((playlist, i) => (
-                          <GridContainer
-                            handleClick={() => this.playTrack(playlist.track.album.uri)}
-                            key={playlist.track.id}>
-                            <GridItem align="center">
-                              <Copy color={colors.unitedNationsBlue()} tag="div">{i + 1}</Copy>
-                            </GridItem>
-                            <GridItem>
-                              <Media
-                                alt={`${playlist.track.album.name} track name`}
-                                src={playlist.track.album.images[0].url} />
-                            </GridItem>
-                            <GridItem>
-                              <Copy tag="div" weight={'bold'}>{playlist.track.name}</Copy>
-                              <Copy size="s" tag="div">
-                                {playlist.track.artists[0].name}
-                              </Copy>
-                            </GridItem>
-                            <GridItem justify="end">
-                              <Copy tag="div">{formatMilliseconds(playlist.track.duration_ms)}</Copy>
-                              {playlist.track.explicit &&
-                                <Copy tag="div" size="s">{playlist.track.explicit}</Copy>
-                              }
-                            </GridItem>
+        <TransitionGroup
+          component={null}>
+          <WSProvider
+          channel="Home">
+          <WSContext.Consumer>
+            {wsBroker => (
+              <SpeechProvider
+                channel="Home"
+                wsBroker={wsBroker}>
+                <SpeechContext.Consumer>
+                  {speech => (
+                    <SpeechBroker
+                      registrationList={createIntents(
+                        tracksIntent,
+                        this.props.tracks,
+                        this.playTrack,
+                        this.pauseTrack,
+                        this.resumeTrack,
+                        this.props.userId)}
+                      wsBroker={wsBroker}>
+                      <Nav secondary>
+                        <ActiveLink
+                        href={`/playlists/${this.props.userId}`}>
+                          <ArrowLeft />
+                        </ActiveLink>
+                      </Nav>
+                      <CommandPanel transcript={speech.result.transcript} />
+                      <TransitionComponent
+                          isTransitioning={this.state.isTransitioning}>
+                        <List>
+                          {this.props.tracks.map((playlist, i) => (
+                            <GridContainer
+                              handleClick={() => this.playTrack(playlist.track.album.uri)}
+                              key={playlist.track.id}>
+                              <GridItem align="center">
+                                <Copy color={colors.unitedNationsBlue()} tag="div">{i + 1}</Copy>
+                              </GridItem>
+                              <GridItem>
+                                <Media
+                                  alt={`${playlist.track.album.name} track name`}
+                                  src={playlist.track.album.images[0].url} />
+                              </GridItem>
+                              <GridItem>
+                                <Copy tag="div" weight={'bold'}>{playlist.track.name}</Copy>
+                                <Copy size="s" tag="div">
+                                  {playlist.track.artists[0].name}
+                                </Copy>
+                              </GridItem>
+                              <GridItem justify="end">
+                                <Copy tag="div">{formatMilliseconds(playlist.track.duration_ms)}</Copy>
+                                {playlist.track.explicit &&
+                                  <Copy tag="div" size="s">{playlist.track.explicit}</Copy>
+                                }
+                              </GridItem>
 
-                            {/* <button onClick={this.pauseTrack}>pause</button>
-                            <button onClick={this.resumeTrack}>resume</button> */}
+                              {/* <button onClick={this.pauseTrack}>pause</button>
+                              <button onClick={this.resumeTrack}>resume</button> */}
 
-                          </GridContainer>
-                        ))}
-                      </List>
-                    </TransitionComponent>
-                    <SpeechControl handleClick={speech.start} />
-                </SpeechBroker>
-                )}
-              </SpeechContext.Consumer>
-            </SpeechProvider>
-          )}
-        </WSContext.Consumer>
-        </WSProvider>
+                            </GridContainer>
+                          ))}
+                        </List>
+                      </TransitionComponent>
+                      <SpeechControl handleClick={speech.start} />
+                  </SpeechBroker>
+                  )}
+                </SpeechContext.Consumer>
+              </SpeechProvider>
+            )}
+          </WSContext.Consumer>
+          </WSProvider>
+        </TransitionGroup>
       </main>
-      </TransitionGroup>
     )
   }
 }

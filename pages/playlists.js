@@ -37,63 +37,63 @@ export default class PlayLists extends React.Component {
   }
   render() {
     return (
-      <TransitionGroup
-        component={null}
-        enter={true}
-        exit={true}>
       <main>
-        <WSProvider
-        channel="Home">
-        <WSContext.Consumer>
-          {wsBroker => (
-            <SpeechProvider
-              channel="Home"
-              wsBroker={wsBroker}>
-              <SpeechContext.Consumer>
-                {speech => (
-                  <SpeechBroker
-                    registrationList={createIntents(playlistsIntent, this.props.playlist.items)}
-                    wsBroker={wsBroker}>
-                    <Nav secondary>
-                      <ActiveLink href={`/`}><ArrowLeft /></ActiveLink>
-                    </Nav>
-                    <CommandPanel transcript={speech.result.transcript} />
-                    <TransitionComponent
-                        isTransitioning={this.state.isTransitioning}>
-                      <List flex>
-                          {this.props.playlist.items.map((playlist, i) => (
-                            <ListItem key={playlist.id} flex>
-                              <ActiveLink
-                                href={`/tracks/${playlist.id}`}
-                                index={i}
-                                key={playlist.id}>
-                                <Media
-                                  alt={`Playlist: ${playlist.name} cover`}
-                                  src={playlist.images[0].url}
-                                  large />
-                                <Space size={[size.xxxs, 0, 0]}>
-                                  <Copy tag="div">{playlist.name}</Copy>
-                                </Space>
-                                <Space>
-                                  <Copy tag="div" size="s">
-                                    {playlist.tracks.total} tracks
-                                  </Copy>
-                                </Space>
-                              </ActiveLink>
-                            </ListItem>
-                          ))}
-                      </List>
-                    </TransitionComponent>
-                    <SpeechControl handleClick={speech.start} />
-                  </SpeechBroker>
-                )}
-              </SpeechContext.Consumer>
-            </SpeechProvider>
-          )}
-        </WSContext.Consumer>
+        <TransitionGroup
+          component={null}>
+          <WSProvider
+          channel="Home">
+          <WSContext.Consumer>
+            {wsBroker => (
+              <SpeechProvider
+                channel="Home"
+                wsBroker={wsBroker}>
+                <SpeechContext.Consumer>
+                  {speech => (
+                    <SpeechBroker
+                      registrationList={createIntents(playlistsIntent, this.props.playlist.items)}
+                      wsBroker={wsBroker}>
+                      <Nav secondary>
+                        <ActiveLink href={`/`}><ArrowLeft /></ActiveLink>
+                      </Nav>
+                      <CommandPanel transcript={speech.result.transcript} />
+
+                      <TransitionComponent
+                          isTransitioning={this.state.isTransitioning}>
+                        <List flex>
+                            {this.props.playlist.items.map((playlist, i) => (
+                              <ListItem key={playlist.id} flex>
+                                <ActiveLink
+                                  href={`/tracks/${playlist.id}`}
+                                  index={i}
+                                  key={playlist.id}>
+                                  <Media
+                                    alt={`Playlist: ${playlist.name} cover`}
+                                    src={playlist.images[0].url}
+                                    large />
+                                  <Space size={[size.xxxs, 0, 0]}>
+                                    <Copy tag="div">{playlist.name}</Copy>
+                                  </Space>
+                                  <Space>
+                                    <Copy tag="div" size="s">
+                                      {playlist.tracks.total} tracks
+                                    </Copy>
+                                  </Space>
+                                </ActiveLink>
+                              </ListItem>
+                            ))}
+                        </List>
+                      </TransitionComponent>
+
+                      <SpeechControl handleClick={speech.start} />
+                    </SpeechBroker>
+                  )}
+                </SpeechContext.Consumer>
+              </SpeechProvider>
+            )}
+          </WSContext.Consumer>
         </WSProvider>
+        </TransitionGroup>
       </main>
-      </TransitionGroup>
     );
   }
 }
