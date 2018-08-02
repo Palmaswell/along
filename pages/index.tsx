@@ -65,7 +65,7 @@ export default class Index extends React.Component<IndexProps, {}> {
         {wsBroker => (
           <SpeechProvider
             channel="Home"
-            wsBroker={wsBroker}>
+            wsBroker={wsBroker as any}>
             <SpeechContext.Consumer>
               {speech => (
                 <SpeechBroker
