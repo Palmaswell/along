@@ -1,12 +1,12 @@
 import Document, { Head, Main, NextScript } from 'next/document';
-import { extractCritical } from 'emotion-server';
+import { extractCritical, hydrate } from 'emotion-server';
 import { injectGlobal } from 'react-emotion';
 import colors from '../components/colors';
 
 // Adds server generated styles to emotion cache.
 // '__NEXT_DATA__.ids' is set in '_document.js'
 if (typeof window !== 'undefined') {
-  hydrate(window.__NEXT_DATA__.ids)
+  hydrate((window as any).__NEXT_DATA__.ids)
 }
 
 export default class MyDocument extends Document {
@@ -34,7 +34,8 @@ export default class MyDocument extends Document {
           <meta name="viewport" content="width=device-width, user-scalable=no" />
           <link
             rel="preload"
-            href="https://fonts.googleapis.com/css?family=Hind:400,700" rel="stylesheet" />
+            as="font"
+            href="https://fonts.googleapis.com/css?family=Hind:400,700" />
 
           <style dangerouslySetInnerHTML={{ __html: this.props.css }} />
         </Head>

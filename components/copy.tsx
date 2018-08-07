@@ -10,7 +10,7 @@ export type CopyWeight = 'bold' | 'normal';
 export interface CopyProps {
   color?: string;
   size?: CopySize;
-  tag: string;
+  tag: 'p' | 'div' | 'span';
   weight?: CopyWeight;
 }
 

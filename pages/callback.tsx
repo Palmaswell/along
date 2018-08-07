@@ -1,3 +1,4 @@
+import * as React from 'react';
 import ActiveLink from '../components/active-link';
 import { ArrowLeft } from '../components/icons';
 import Background from '../components/background';
@@ -6,8 +7,12 @@ import Nav from '../components/nav';
 import Space from '../components/space';
 import { size } from '../components/sizes';
 
+interface StatelessPage<P = {}> extends React.SFC<P> {
+  getInitialProps?: (ctx: any) => Promise<P>
+}
 
-const CallBack = (props) => (
+
+const CallBack: StatelessPage<{}> = () => (
   <Background>
      <Nav secondary>
       <ActiveLink
@@ -23,7 +28,7 @@ const CallBack = (props) => (
   </Background>
 );
 
-CallBack.getInitialProps = ctx => {
+CallBack.getInitialProps = async ctx => {
   return {
     access: ctx.query.access
   }
