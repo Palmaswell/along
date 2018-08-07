@@ -1,5 +1,5 @@
-import { SpeechContext } from '../providers/speech/speech-provider';
-import { WSContext } from '../providers/connection-provider';
+import { SpeechContext } from '../providers/speech/provider';
+import { WSContext } from '../providers/provider';
 
 const Consumers = ({ children }) => (
   <SpeechContext.Consumer>

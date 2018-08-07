@@ -1,14 +1,11 @@
-import Router from 'next/router';
+import * as React from 'react';
 import fetch, { Headers }  from 'node-fetch';
-import { hydrate, injectGlobal } from 'react-emotion';
 
 import { getCookie } from '../utils/cookies';
-import { safeParse } from '../utils/safe-parse';
-import { handleRouter } from '../utils/handle-router';
 
-import { SpeechContext, SpeechProvider } from '../providers/speech/speech-provider';
-import { WSContext, WSProvider } from '../providers/connection-provider';
-import SpeechBroker from '../providers/speech/speech-broker';
+import { SpeechContext, SpeechProvider } from '../providers/speech/provider';
+import { WSContext, WSProvider } from '../providers/websocket/provider';
+import SpeechBroker from '../providers/speech/broker';
 
 import { createIntents } from '../intents/create-intents';
 import { navigateIntent } from '../intents/intents';
@@ -22,9 +19,42 @@ import Space from '../components/space';
 import Nav from '../components/nav';
 import { size } from '../components/sizes';
 
-export default class Index extends React.Component {
-  componentDidMount() {
-    this.userName = this.props.spotify.display_name.replace(/\s(.*)/g, '');
+export interface IndexProps {
+  userName: string;
+  spotify: {
+    display_name: string;
+    external_urls: {
+      spotify: string;
+    };
+    id: string;
+    images: [
+      {
+        url: string;
+      }
+    ]
+  }
+}
+
+interface SpotifyProps {
+  spotify: any;
+}
+
+export default class Index extends React.Component<IndexProps, {}> {
+  private userName = this.props.spotify.display_name.replace(/\s(.*)/g, '');
+
+  public static async getInitialProps(ctx): Promise<SpotifyProps> {
+    const res = await fetch(`https://api.spotify.com/v1/me`, {
+    method: 'GET',
+    headers: new Headers({
+      'Authorization': `Bearer ${getCookie('access', ctx)}`,
+      'Content-Type': 'application/json',
+    })
+  });
+
+  const data = await res.json();
+    return {
+      spotify: data ? data : null
+    }
   }
 
   render() {
@@ -41,7 +71,7 @@ export default class Index extends React.Component {
                 <SpeechBroker
                   registrationList={createIntents(navigateIntent, this.props.spotify.id)}
                   wsBroker={wsBroker}>
-                  <Nav>
+                  <Nav secondary={false}>
                     <ActiveLink
                       href={`/playlists/${this.props.spotify.id}`}>
                       Playlists
@@ -67,20 +97,5 @@ export default class Index extends React.Component {
       </WSContext.Consumer>
     </WSProvider>
     );
-  }
-}
-
-Index.getInitialProps =  async ctx => {
-  const res = await fetch(`https://api.spotify.com/v1/me`, {
-    method: 'GET',
-    headers: new Headers({
-      'Authorization': `Bearer ${getCookie('access', ctx)}`,
-      'Content-Type': 'application/json',
-    })
-  });
-  const data = await res.json();
-
-  return {
-    spotify: data ? data : null
   }
 }

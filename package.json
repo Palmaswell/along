@@ -13,8 +13,6 @@
   },
   "dependencies": {
     "babel-plugin-emotion": "^8.0.4",
-    "body-parser": "^1.18.2",
-    "bufferutil": "^3.0.3",
     "cookie-parser": "^1.4.3",
     "emotion": "^8.0.5",
     "emotion-server": "^8.0.5",
@@ -26,13 +24,11 @@
     "node-fetch": "^2.1.2",
     "now": "^10.2.1",
     "prop-types": "^15.6.1",
-    "pubnub": "^4.20.2",
     "react": "^16.3.0-alpha.2",
     "react-dom": "^16.3.0-alpha.2",
     "react-emotion": "^8.0.5",
     "react-transition-group": "^2.3.1",
     "redis": "^2.8.0",
-    "redis-server": "^1.2.0",
     "rxjs": "^5.5.7",
     "tinycolor2": "^1.4.1",
     "unfetch": "^3.0.0",
@@ -41,10 +37,14 @@
     "ws": "^5.0.0"
   },
   "devDependencies": {
-    "@google-cloud/speech": "^1.4.0",
+    "@types/cookie-parser": "^1.4.1",
+    "@types/js-cookie": "^2.1.0",
+    "@types/next": "^6.0.4",
+    "@types/react": "^16.4.6",
+    "@types/react-transition-group": "^2.0.11",
+    "@zeit/next-typescript": "^1.1.0",
     "concurrently": "^3.5.1",
-    "dotenv": "^5.0.1",
-    "fs": "^0.0.1-security"
+    "dotenv": "^5.0.1"
   },
   "license": "ISC",
   "author": "Mauricio Palma <mauricio.palma@sinnerschrader.com>",

@@ -1,15 +1,24 @@
-import propTypes from 'prop-types';
 import styled from 'react-emotion';
 
 import { breakpoints } from './breakpoints';
 import { size } from './sizes';
 
+export interface MediaProps {
+  alt: string;
+  large?: boolean;
+  src: string;
+}
+
+interface StyledMediaProps {
+  large: boolean;
+}
+
 const StyledMediaWrapper = styled.div`
-  width: ${props => props.large
+  width: ${(props: StyledMediaProps) => props.large
     ? 'auto'
     : `${size.s}px`
   };
-  height: ${props => props.large
+  height: ${(props: StyledMediaProps) => props.large
     ? 'calc(33vw - 25px)'
     : `${size.s}px`
   };
@@ -17,11 +26,11 @@ const StyledMediaWrapper = styled.div`
   overflow: hidden;
 
   @media (min-width: ${breakpoints.m}) {
-    width: ${props => props.large
+    width: ${(props: StyledMediaProps) => props.large
       ? 'calc(33vw - 25px)'
       : `${size.l}px`
     };
-    height: ${props => props.large
+    height: ${(props: StyledMediaProps) => props.large
       ? 'calc(33vw - 25px)'
       : `${size.l}px`
     };
@@ -29,11 +38,11 @@ const StyledMediaWrapper = styled.div`
     max-height: 370px;
   }
   @media (min-width: ${breakpoints.l}) {
-    width: ${props => props.large
+    width: ${(props: StyledMediaProps) => props.large
       ? 'calc(33vw - 25px)'
       : `${size.xxl}px`
     };
-    height: ${props => props.large
+    height: ${(props: StyledMediaProps) => props.large
       ? 'calc(33vw - 25px)'
       : `${size.xxl}px`
     };
@@ -47,15 +56,10 @@ const StyledMedia = styled.img`
   object-position: 50% 50%; /* Which is default ;) */
 `
 
-export const Media = ({ alt, large, src }) => (
+export const Media: React.SFC<MediaProps> = ({ alt, large, src }) => (
   <StyledMediaWrapper large={large}>
     <StyledMedia alt={alt}  src={src} />
   </StyledMediaWrapper>
 );
-
-Media.propTypes =  {
-  alt: propTypes.string.isRequired,
-  src: propTypes.string.isRequired
-}
 
 export default Media;

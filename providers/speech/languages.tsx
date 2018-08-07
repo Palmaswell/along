@@ -1,7 +1,7 @@
-import Rx from 'rxjs';
+import { Observable } from 'rxjs';
 
 //-- $todo: language selection
-const languages = Rx.Observable.from(
+export const languages = Observable.from(
   [
     {
       lang: 'English',
@@ -37,3 +37,5 @@ const languages = Rx.Observable.from(
     }
   ]
 );
+
+export default languages;

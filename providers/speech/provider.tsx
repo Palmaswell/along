@@ -1,42 +1,57 @@
-import propTypes from 'prop-types';
-import React from 'react';
-import Rx from 'rxjs';
+import * as React from 'react';
+import { abstractCommandFactory } from './commands';
+import { WSSingletonProps } from '../websocket/singleton';
 
-import { abstractCommandFactory, cmdGrammar } from './speech-commands';
-import { WSProviderSingleton } from '../connection-provider';
+export interface SpeechProviderProps {
+  channel: string;
+  wsBroker: {
+    wsSingleton: WSSingletonProps;
+  };
+}
 
+export interface SpeechResult {
+    transcript: string;
+    confidence: number;
+}
+
+export interface SpeechContextProps {
+  result: SpeechResult;
+  start: (e: Event) => void;
+
+}
 
 export const SpeechContext = React.createContext({
-  transcript: '',
-  confidence: 0
-});
+  result: {
+    confidence: 0,
+    transcript: '',
+  },
+} as SpeechContextProps);
 
-export class SpeechProvider extends React.Component {
-  static propTypes = {
-    id: propTypes.string,
-    channel: propTypes.string.isRequired,
-    wsBroker: propTypes.instanceOf(WSProviderSingleton).isRequired
-  }
+export class SpeechProvider extends React.Component<SpeechProviderProps, SpeechResult> {
+  private isRecognizing;
+  private speechRecognition;
+  private ws;
 
-  constructor(props) {
+
+  public constructor(props) {
     super(props);
+
     this.state = {
-      recognizing: false,
-      speechResult: {
-        transcript: '',
-        confidence: 0
-      }
+      transcript: '',
+      confidence: 0
     }
-    this.ws = this.props.wsBroker.ws;
+    this.ws = this.props.wsBroker;
   }
 
-  componentDidMount() {
+  public componentDidMount() {
     this.instantiateSpeechRecognition();
   }
 
-  instantiateSpeechRecognition = () => {
-    const  SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    const SpeechGrammarList = window.SpeechGrammarList ||window.webkitSpeechGrammarList;
+  private instantiateSpeechRecognition = () => {
+    const  SpeechRecognition  = (window as any).SpeechRecognition
+      || (window as any).webkitSpeechRecognition;
+    const SpeechGrammarList = (window as any).SpeechGrammarList
+      || (window as any).webkitSpeechGrammarList;
 
     this.speechRecognition = new SpeechRecognition();
     this.speechRecognition.maxAlternatives = 1; // which is actually default
@@ -57,7 +72,7 @@ export class SpeechProvider extends React.Component {
     this.speechRecognition.grammar = recognitionList;
   }
 
-  handleRecognition = recognition => {
+  private handleRecognition = (recognition): void => {
     recognition.onerror = e => {
       switch (e.error) {
         case 'no-speech':
@@ -87,28 +102,31 @@ export class SpeechProvider extends React.Component {
     }
 
     recognition.onstart = () => {
-      this.setState({...this.state, recognizing: true });
+      this.isRecognizing = true;
+      console.log(`
+        > Speech Recognition has begun listening 👂🏼
+      `);
     };
 
     recognition.onresult = e => {
-      this.setState(({ speechResult }) => {
-        speechResult.transcript = e.results[0][0].transcript;
-        speechResult.confidence = e.results[0][0].confidence;
-      });
+      this.setState({
+        ...this.state,
+        transcript: e.results[0][0].transcript,
+        confidence: e.results[0][0].confidence
+      })
 
       const filteredIntents = abstractCommandFactory.match(e.results[0][0]);
-      //-- This might be the place to include in ws
       filteredIntents.forEach(cbIntent => cbIntent.execute());
       return filteredIntents;
     }
 
-    recognition.onend = e => {
-      this.ws.next({
+    recognition.onend = () => {
+      this.ws.subject.next({
         action: 'PUBLISH',
         channels:[this.props.channel],
-        message: this.state.speechResult.transcript
+        message: this.state.transcript
       });
-      this.setState({...this.state, recognizing: false});
+      this.isRecognizing = false;
     }
 
     recognition.onspeechend = () => {
@@ -116,26 +134,23 @@ export class SpeechProvider extends React.Component {
     }
   }
 
-  start = e => {
+  private start = e => {
     e.persist();
-    if (this.state.recognizing) {
-      recognition.stop();
+    if (this.isRecognizing) {
+      this.speechRecognition.stop();
     }
 
     this.speechRecognition.start();
     this.handleRecognition(this.speechRecognition);
   }
 
-  render () {
+  public render(): JSX.Element {
     return (
       <SpeechContext.Provider
-        id={this.props.id}
         value={{
-          recognizing: this.state.recognizing,
-          result: this.state.speechResult,
+          result: this.state,
           start: e => this.start(e)
-        }}
-        wsBroker={this.props.wsBroker}>
+        }}>
         {this.props.children}
       </SpeechContext.Provider>
     );

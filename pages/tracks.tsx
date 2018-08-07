@@ -1,13 +1,13 @@
+import * as React from 'react';
 import fetch, { Headers }  from 'node-fetch';
-import Link from 'next/link';
 import { TransitionGroup } from 'react-transition-group';
 
 import { getCookie } from '../utils/cookies';
 import { formatMilliseconds } from '../utils/readable-time';
 
-import { SpeechContext, SpeechProvider } from '../providers/speech/speech-provider';
-import { WSContext, WSProvider } from '../providers/connection-provider';
-import SpeechBroker from '../providers/speech/speech-broker';
+import { SpeechContext, SpeechProvider } from '../providers/speech/provider';
+import { WSContext, WSProvider } from '../providers/websocket/provider';
+import SpeechBroker from '../providers/speech/broker';
 
 import { createIntents } from '../intents/create-intents';
 import { tracksIntent } from '../intents/intents';
@@ -25,8 +25,30 @@ import SpeechControl from '../components/speech-controls';
 import TransitionComponent from '../components/transition';
 import Nav from '../components/nav';
 
-export default class Tracks extends React.Component {
-  state = {
+export interface TracksProps {
+  devices: any;
+  tracks: any[];
+  userId: number;
+}
+
+export default class Tracks extends React.Component<TracksProps> {
+  public devices: string;
+  public static async getInitialProps(ctx) {
+    const { play_id } = ctx.query;
+    const res = await fetch(`https://api.spotify.com/v1/users/${getCookie('user_id', ctx)}/playlists/${play_id}/tracks`, {
+      method: 'GET',
+      headers: new Headers({
+        'Authorization': `Bearer ${getCookie('access', ctx)}`,
+        'Content-Type': 'application/json',
+      })
+    });
+    const tracks = await res.json();
+    return {
+      tracks: tracks.items || [],
+      userId: getCookie('user_id', ctx)
+    }
+  }
+  public state = {
     isTransitioning: false
   }
 
@@ -59,7 +81,7 @@ export default class Tracks extends React.Component {
       }),
     });
     try {
-      const data = await res.json();
+      await res.json();
     } catch (err) {
       console.log(`
         > 💥 Spotify pause track: ${err}
@@ -78,7 +100,7 @@ export default class Tracks extends React.Component {
       body: JSON.stringify({'context_uri': `${uri}`})
     });
     try {
-      const data = await res.json();
+      await res.json();
     } catch (err) {
       console.log(`
         > 💥 Spotify play track: ${err}
@@ -95,7 +117,7 @@ export default class Tracks extends React.Component {
       }),
     });
     try {
-      const data = await res.json();
+      await res.json();
     } catch (err) {
       console.log(`
         > 💥 Spotify resume track: ${err}
@@ -179,22 +201,5 @@ export default class Tracks extends React.Component {
         </TransitionGroup>
       </main>
     )
-  }
-}
-
-Tracks.getInitialProps = async ctx => {
-  const { play_id } = ctx.query;
-  const res = await fetch(`https://api.spotify.com/v1/users/${getCookie('user_id', ctx)}/playlists/${play_id}/tracks`, {
-    method: 'GET',
-    headers: new Headers({
-      'Authorization': `Bearer ${getCookie('access', ctx)}`,
-      'Content-Type': 'application/json',
-    })
-  });
-  const tracks = await res.json();
-  return {
-    tracks: tracks.items || [],
-    userId: getCookie('user_id', ctx),
-    foo: tracks
   }
 }
