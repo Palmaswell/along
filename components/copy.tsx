@@ -3,11 +3,19 @@ import styled from 'react-emotion';
 import colors from './colors';
 import { breakpoints } from './breakpoints';
 import fontHind from './fonts';
-import { size } from './sizes';
-import { normalize } from 'path';
+
+export type CopySize = 's' | 'm';
+export type CopyWeight = 'bold' | 'normal';
+
+export interface CopyProps {
+  color?: string;
+  size?: CopySize;
+  tag: string;
+  weight?: CopyWeight;
+}
 
 const StyledCopy = styled.span`
-  font-size: ${props => {
+  font-size: ${(props: CopyProps) => {
     switch(props.size) {
       case 's':
         return '14px';
@@ -21,14 +29,14 @@ const StyledCopy = styled.span`
     : colors.smokyBlack()
   };
   text-decoration: none;
-  font-weight: ${props => props.weight
+  font-weight: ${(props: CopyProps) => props.weight
     ? props.weight
     : 'normal'
   };
   ${fontHind()};
 
   @media (min-width: ${ breakpoints.m } ) {
-    font-size: ${props => {
+    font-size: ${(props: CopyProps) => {
     switch(props.size) {
       case 's':
         return '16px';
@@ -39,7 +47,7 @@ const StyledCopy = styled.span`
   }};
   }
   @media (min-width: ${ breakpoints.l } ) {
-    font-size: ${props => {
+    font-size: ${(props: CopyProps) => {
     switch(props.size) {
       case 's':
         return '18px';
@@ -51,7 +59,7 @@ const StyledCopy = styled.span`
   }
 `;
 
-export const Copy = ({ children, color, size, tag, weight }) => {
+export const Copy: React.StatelessComponent<CopyProps> = ({ children, color, size, tag, weight }) => {
   const Component = StyledCopy.withComponent(tag);
   return (
     <Component

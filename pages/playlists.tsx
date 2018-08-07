@@ -1,16 +1,15 @@
+import * as React from 'react';
 import fetch, { Headers }  from 'node-fetch';
 import { TransitionGroup } from 'react-transition-group';
 
 import { getCookie } from '../utils/cookies';
-import { handleRouter } from '../utils/handle-router';
 
-import { abstractCommandFactory } from '../providers/speech/commands';
 import { SpeechContext, SpeechProvider } from '../providers/speech/provider';
 import { WSContext, WSProvider } from '../providers/websocket/provider';
 import SpeechBroker from '../providers/speech/broker';
 
 import { createIntents } from '../intents/create-intents';
-import { playlistsIntent, homeIntent } from '../intents/intents';
+import { playlistsIntent } from '../intents/intents';
 
 import { ArrowLeft } from '../components/icons';
 import ActiveLink from '../components/active-link';
@@ -25,17 +24,38 @@ import Space from '../components/space';
 import TransitionComponent from '../components/transition';
 import { size } from '../components/sizes';
 
-export default class PlayLists extends React.Component {
-  state = {
+export interface PlayListsProps {
+  playlist: {
+    items: any[]
+  };
+}
+
+export default class PlayLists extends React.Component<PlayListsProps> {
+  public static async getInitialProps(ctx) {
+    const { id } = ctx.query;
+    const res = await fetch(`https://api.spotify.com/v1/users/${id}/playlists`, {
+      method: 'GET',
+      headers: new Headers({
+        'Authorization': `Bearer ${getCookie('access', ctx)}`,
+        'Content-Type': 'application/json',
+      })
+    });
+    const data = await res.json();
+    return {
+      id: id,
+      playlist: data
+    }
+  }
+  public state = {
     isTransitioning: false
   }
-  componentDidMount() {
+  public componentDidMount(): void {
     this.setState({...this.state, isTransitioning: true });
   }
-  componentWillUnmount() {
+  public componentWillUnmount(): void {
     this.setState({...this.state, isTransitioning: false });
   }
-  render() {
+  public render(): JSX.Element {
     return (
       <main>
         <TransitionGroup
@@ -98,20 +118,20 @@ export default class PlayLists extends React.Component {
   }
 }
 
-PlayLists.getInitialProps = async ctx => {
-  const { id } = ctx.query;
-  const res = await fetch(`https://api.spotify.com/v1/users/${id}/playlists`, {
-    method: 'GET',
-    headers: new Headers({
-      'Authorization': `Bearer ${getCookie('access', ctx)}`,
-      'Content-Type': 'application/json',
-    })
-  });
-  const data = await res.json();
-  return {
-    id: id,
-    playlist: data
-  }
-}
+// PlayLists.getInitialProps = async ctx => {
+//   const { id } = ctx.query;
+//   const res = await fetch(`https://api.spotify.com/v1/users/${id}/playlists`, {
+//     method: 'GET',
+//     headers: new Headers({
+//       'Authorization': `Bearer ${getCookie('access', ctx)}`,
+//       'Content-Type': 'application/json',
+//     })
+//   });
+//   const data = await res.json();
+//   return {
+//     id: id,
+//     playlist: data
+//   }
+// }
 
 

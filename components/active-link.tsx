@@ -3,6 +3,7 @@ import { StyledLink } from './link';
 
 export interface ActiveLinkProps {
   href?: string;
+  index?: number;
   router?: any;
   onClick?: React.MouseEventHandler<HTMLAnchorElement>;
 }
