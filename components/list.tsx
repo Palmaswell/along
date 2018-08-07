@@ -3,6 +3,10 @@ import styled from 'react-emotion';
 import { breakpoints } from './breakpoints';
 import { size } from './sizes';
 
+export interface ListProps {
+  flex?: boolean;
+}
+
 const StyledList = styled.ul`
   box-sizing: border-box;
 
@@ -14,7 +18,6 @@ const StyledList = styled.ul`
     margin: 0 auto;
   }
 `
-
 
 const StyledFlexList = styled(StyledList)`
   display: grid;
@@ -32,7 +35,7 @@ const StyledFlexList = styled(StyledList)`
   }
 `;
 
-export const List = ({ children, flex }) => (
+export const List: React.SFC<ListProps> = ({ children, flex }) => (
   flex
     ?
     <StyledFlexList>

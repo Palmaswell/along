@@ -1,9 +1,14 @@
-import propTypes from 'prop-types';
 import styled from 'react-emotion';
 
 import colors from './colors';
 import { breakpoints } from './breakpoints';
 import { size } from './sizes';
+import { MouseEventHandler } from '../node_modules/@types/react';
+
+export interface GridContainerProps {
+  handleClick: MouseEventHandler<HTMLElement>;
+  href?: string;
+}
 
 const StyledListContainer = styled.li`
   padding: ${size.xxxs}px;
@@ -30,14 +35,14 @@ const StyledGridContainer = styled.a`
   @media (min-width: ${ breakpoints.m }) {
     grid-template-columns: 20px 100px calc(60vw - 120px) auto;
     grid-column-gap: ${size.xxs}px;
-    padding: 0 ${size.xss}px;
+    padding: 0 ${size.xxs}px;
   }
   @media (min-width: ${ breakpoints.l }) {
     grid-template-columns: 20px 150px calc(60vw - 120px) auto;
   }
 `;
 
-const GridContainer = ({ children, handleClick, href }) => (
+const GridContainer: React.SFC<GridContainerProps> = ({ children, handleClick, href }) => (
   <StyledListContainer>
     <StyledGridContainer
       onClick={handleClick}
@@ -46,11 +51,6 @@ const GridContainer = ({ children, handleClick, href }) => (
     </StyledGridContainer>
   </StyledListContainer>
 );
-
-GridContainer.propTypes =  {
-  href: propTypes.string,
-  handleClick: () => {}
-}
 
 
 export default GridContainer;
