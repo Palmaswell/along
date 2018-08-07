@@ -1,12 +1,11 @@
-import Rx from 'rxjs';
+import { Observable } from 'rxjs';
 import { sanatizedIntent } from '../../utils/sanatized-intent';
 
-
-function CallBackableIntent(intent) {
+function CallBackableIntent(intent: any) {
   return {
     intent,
     callbacks: [],
-    execute(cb, ...args) {
+    execute(...args) {
       this.callbacks.find(cb => cb === cb)(...args);
     },
     register(cb) {
@@ -24,7 +23,7 @@ class AbstractCommandFactory {
     speechCallableIntents = [];
     speechObservers = [];
 
-    grammarStream = new Rx.Observable(observer => {
+    grammarStream = new Observable(observer => {
       observer.next(this.generateGrammar(this.speechCallableIntents));
     });
 
@@ -54,7 +53,7 @@ class AbstractCommandFactory {
       const callBackableIntent = CallBackableIntent(sanatizedIntent(intent));
       this.speechCallableIntents.push(callBackableIntent);
 
-      const grammars = this.generateGrammar(this.speechCallableIntents);
+      this.generateGrammar(this.speechCallableIntents);
       return callBackableIntent;
     }
 
