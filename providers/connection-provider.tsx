@@ -1,5 +1,6 @@
 import React from 'react';
-import { Subject } from 'rxjs';
+// import { Subject } from 'rxjs';
+import { WSProviderSingleton, WSSingletonProps } from './connection-singleton';
 import { Loading } from '../components/loading';
 
 type MessageAction = 'WSOPEN' | 'WSCLOSE' | 'PUBLISH';
@@ -7,58 +8,29 @@ interface MessageProps {
   action: MessageAction;
 }
 
+
 export interface WSProviderProps {
   channel: string;
 }
 
-export class WSProviderSingleton {
-  public webSock: WebSocket;
-  public ws: Subject<{}>;
-  constructor(hostName, channel) {
-    this.webSock = new WebSocket(`ws://${hostName}:3001`);
-    const ws = this.webSock;
-    this.ws = new Subject();
-    ws.addEventListener('open', () => {
-      ws.send(JSON.stringify({
-        action: 'SUBSCRIBE',
-        channels: [channel]
-      }));
-
-      console.log(`
-      > ⚗️ Reactive - Websocket client is up and running
-      > 📺 Connected to channel: ${channel}
-      `);
-      this.ws.next({
-        action: "WSOPEN",
-        ws
-      })
-    });
-    ws.addEventListener('close', () => this.ws.next({
-      action: "WSCLOSE"
-    }));
-
-    ws.addEventListener('message', message => {
-      const redisMsg = JSON.parse(message.data);
-      if (redisMsg.action === 'SUBSCRIBEMSG') {
-        this.ws.next(message);
-      }
-    });
-  }
+export interface WSProviderState {
+  isTransitioning: boolean;
+  wsopen: boolean;
+  wsSingleton?: WSSingletonProps;
 }
 
 export const WSContext = React.createContext({
-  wsSingleton: null
+  wsSingleton: null as WSSingletonProps
 });
 
 export class WSProvider extends React.Component<WSProviderProps> {
-
-  state = {
-    wsSingleton: null,
+  public state = {
+    isTransitioning: false,
     wsopen: false,
-    isTransitioning: false
+    wsSingleton: null
   };
 
-  componentDidMount() {
+  public componentDidMount(): void {
     const locationOrigin = window.location.origin.replace(/(http:\/\/)/g, '');
     const hostName = locationOrigin.match(/(:1337)/)
       ? locationOrigin.replace(/(:1337)/g, '')
@@ -66,7 +38,7 @@ export class WSProvider extends React.Component<WSProviderProps> {
 
     const wsSingleton = new WSProviderSingleton(hostName, this.props.channel);
 
-    wsSingleton.ws.subscribe((message: MessageProps) => {
+    wsSingleton.subject.subscribe((message: MessageProps) => {
       switch(message.action) {
         case 'WSOPEN':
           this.setState({ ...this.state, wsopen: true });
@@ -75,18 +47,17 @@ export class WSProvider extends React.Component<WSProviderProps> {
           this.setState({ ...this.state, wsopen: false });
           break;
         case 'PUBLISH':
-          wsSingleton.ws.next({message});
-          wsSingleton.webSock.send(JSON.stringify(message));
+          wsSingleton.subject.next({message});
+          wsSingleton.ws.send(JSON.stringify(message));
       }
     });
     this.setState({...this.state, wsSingleton, isTransitioning: true });
   }
 
-  componentWillUnmount() {
+  public componentWillUnmount(): void {
     this.setState({...this.state, isTransitioning: false });
   }
-
-  renderChildren = () => {
+  private renderChildren = (): React.ReactNode | JSX.Element => {
     if (this.state.wsopen) {
       return this.props.children;
     }

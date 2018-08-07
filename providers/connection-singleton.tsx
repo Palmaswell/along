@@ -1,29 +1,23 @@
 import { Subject } from 'rxjs';
 
-type MessageActionType = 'SUBSCRIBE' | 'PUBLISH' | 'SUBSCRIBEMSG';
-interface MessageProps {
-  action: MessageActionType;
-  channel?: string;
-}
-
-export interface WSSingletonProps {
-  subject: Subject<{}>;
+export interface  WSSingletonProps {
   ws: WebSocket;
+  subject: Subject<{}>;
 }
 
 export class WSProviderSingleton {
-  public subject: Subject<{}>;
   public ws: WebSocket;
-  public constructor(hostName: string, channel: string) {
+  public subject: Subject<{}>;
+  constructor(hostName, channel) {
     this.ws = new WebSocket(`ws://${hostName}:3001`);
-    this.subject = new Subject();
     const ws = this.ws;
-
+    this.subject = new Subject();
     ws.addEventListener('open', () => {
       ws.send(JSON.stringify({
         action: 'SUBSCRIBE',
         channels: [channel]
       }));
+
       console.log(`
       > ⚗️ Reactive - Websocket client is up and running
       > 📺 Connected to channel: ${channel}
@@ -38,7 +32,7 @@ export class WSProviderSingleton {
     }));
 
     ws.addEventListener('message', message => {
-      const redisMsg: MessageProps = JSON.parse(message.data);
+      const redisMsg = JSON.parse(message.data);
       if (redisMsg.action === 'SUBSCRIBEMSG') {
         this.subject.next(message);
       }
