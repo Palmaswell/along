@@ -4,7 +4,7 @@ import { abstractCommandFactory } from './speech-commands';
 export interface SpeechProviderProps {
   channel: string;
   wsBroker: {
-    ws: WebSocket;
+    wsSingleton: any;
   };
 }
 
@@ -39,7 +39,7 @@ export class SpeechProvider extends React.Component<SpeechProviderProps, SpeechR
       transcript: '',
       confidence: 0
     }
-    this.ws = this.props.wsBroker.ws;
+    this.ws = this.props.wsBroker;
   }
 
   public componentDidMount() {
@@ -120,7 +120,7 @@ export class SpeechProvider extends React.Component<SpeechProviderProps, SpeechR
     }
 
     recognition.onend = () => {
-      this.ws.next({
+      this.ws.ws.next({
         action: 'PUBLISH',
         channels:[this.props.channel],
         message: this.state.transcript
