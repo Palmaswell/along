@@ -4,10 +4,10 @@ import { TransitionGroup } from 'react-transition-group';
 import { getCookie } from '../utils/cookies';
 import { handleRouter } from '../utils/handle-router';
 
-import { abstractCommandFactory } from '../providers/speech/speech-commands';
-import { SpeechContext, SpeechProvider } from '../providers/speech/speech-provider';
-import { WSContext, WSProvider } from '../providers/connection-provider';
-import SpeechBroker from '../providers/speech/speech-broker';
+import { abstractCommandFactory } from '../providers/speech/commands';
+import { SpeechContext, SpeechProvider } from '../providers/speech/provider';
+import { WSContext, WSProvider } from '../providers/websocket/provider';
+import SpeechBroker from '../providers/speech/broker';
 
 import { createIntents } from '../intents/create-intents';
 import { playlistsIntent, homeIntent } from '../intents/intents';

@@ -1,5 +1,5 @@
-import { SpeechProvider } from '../providers/speech/speech-provider';
-import { WSProvider } from '../providers/connection-provider';
+import { SpeechProvider } from '../providers/speech/provider';
+import { WSProvider } from '../providers/provider';
 
 const Providers = ({ children, channel }) => (
   <SpeechProvider>

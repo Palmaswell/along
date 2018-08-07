@@ -1,13 +1,11 @@
 import React from 'react';
-// import { Subject } from 'rxjs';
-import { WSProviderSingleton, WSSingletonProps } from './connection-singleton';
-import { Loading } from '../components/loading';
+import { WSProviderSingleton, WSSingletonProps } from './singleton';
+import { Loading } from '../../components/loading';
 
 type MessageAction = 'WSOPEN' | 'WSCLOSE' | 'PUBLISH';
 interface MessageProps {
   action: MessageAction;
 }
-
 
 export interface WSProviderProps {
   channel: string;
@@ -64,7 +62,7 @@ export class WSProvider extends React.Component<WSProviderProps> {
     return <Loading isTransitioning={this.state.isTransitioning}/>;
   }
 
-  render() {
+  public render(): JSX.Element {
     return (
       <WSContext.Provider value={this.state.wsSingleton}>
         {this.renderChildren()}

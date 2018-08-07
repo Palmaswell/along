@@ -1,8 +1,8 @@
 import propTypes from 'prop-types';
 import React from 'react';
 
-import abstractCommandFactory from './speech-commands';
-import { WSProviderSingleton } from '../connection-provider';
+import abstractCommandFactory from './commands';
+import { WSProviderSingleton } from '../websocket/singleton';
 
 export default class SpeechBroker extends React.Component {
   static propTypes = {

@@ -5,9 +5,9 @@ import { TransitionGroup } from 'react-transition-group';
 import { getCookie } from '../utils/cookies';
 import { formatMilliseconds } from '../utils/readable-time';
 
-import { SpeechContext, SpeechProvider } from '../providers/speech/speech-provider';
-import { WSContext, WSProvider } from '../providers/connection-provider';
-import SpeechBroker from '../providers/speech/speech-broker';
+import { SpeechContext, SpeechProvider } from '../providers/speech/provider';
+import { WSContext, WSProvider } from '../providers/websocket/provider';
+import SpeechBroker from '../providers/speech/broker';
 
 import { createIntents } from '../intents/create-intents';
 import { tracksIntent } from '../intents/intents';

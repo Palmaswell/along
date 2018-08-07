@@ -1,4 +1,4 @@
-import { abstractCommandFactory } from '../providers/speech/speech-commands';
+import { abstractCommandFactory } from '../providers/speech/commands';
 import { handleRouter } from '../utils/handle-router';
 export function createIntents(intent, ...args) {
   switch(intent.type) {

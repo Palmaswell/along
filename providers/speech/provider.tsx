@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { abstractCommandFactory } from './speech-commands';
+import { abstractCommandFactory } from './commands';
+import { WSSingletonProps } from '../websocket/singleton';
 
 export interface SpeechProviderProps {
   channel: string;
   wsBroker: {
-    wsSingleton: any;
+    wsSingleton: WSSingletonProps;
   };
 }
 
@@ -71,7 +72,7 @@ export class SpeechProvider extends React.Component<SpeechProviderProps, SpeechR
     this.speechRecognition.grammar = recognitionList;
   }
 
-  private handleRecognition = recognition => {
+  private handleRecognition = (recognition): void => {
     recognition.onerror = e => {
       switch (e.error) {
         case 'no-speech':
@@ -120,7 +121,7 @@ export class SpeechProvider extends React.Component<SpeechProviderProps, SpeechR
     }
 
     recognition.onend = () => {
-      this.ws.ws.next({
+      this.ws.subject.next({
         action: 'PUBLISH',
         channels:[this.props.channel],
         message: this.state.transcript
@@ -143,8 +144,8 @@ export class SpeechProvider extends React.Component<SpeechProviderProps, SpeechR
     this.handleRecognition(this.speechRecognition);
   }
 
-  public render() {
-
+  public render(): JSX.Element {
+    console.log(this.ws, '&&&&&&&&')
     return (
       <SpeechContext.Provider
         value={{
