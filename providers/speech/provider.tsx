@@ -145,7 +145,6 @@ export class SpeechProvider extends React.Component<SpeechProviderProps, SpeechR
   }
 
   public render(): JSX.Element {
-    console.log(this.ws, '&&&&&&&&')
     return (
       <SpeechContext.Provider
         value={{
