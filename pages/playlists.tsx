@@ -118,20 +118,3 @@ export default class PlayLists extends React.Component<PlayListsProps> {
   }
 }
 
-// PlayLists.getInitialProps = async ctx => {
-//   const { id } = ctx.query;
-//   const res = await fetch(`https://api.spotify.com/v1/users/${id}/playlists`, {
-//     method: 'GET',
-//     headers: new Headers({
-//       'Authorization': `Bearer ${getCookie('access', ctx)}`,
-//       'Content-Type': 'application/json',
-//     })
-//   });
-//   const data = await res.json();
-//   return {
-//     id: id,
-//     playlist: data
-//   }
-// }
-
-
