@@ -4,7 +4,7 @@ import { Transition } from 'react-transition-group';
 
 import { Breakpoint } from './breakpoint';
 import { Copy } from './copy'
-import { colors } from './colors';
+import { Color } from './color';
 
 const PULSE = keyframes`
   from, to {
@@ -24,7 +24,7 @@ const StyledLayer = styled.section`
   justify-content: center;
   width: 100vw;
   height: 100vh;
-  background-color: ${colors.unitedNationsBlue()};
+  background-color: ${Color.UnitedNationsBlue()};
   transition: opacity .666s ease;
 
   ${props => {
@@ -48,7 +48,7 @@ const StyledFigure = styled.figure`
 `
 const StyledSvg = styled.svg`
   width: 200px;
-  fill: ${colors.whiteSmoke()};
+  fill: ${Color.WhiteSmoke()};
   animation: ${PULSE} .666s ease infinite;
 
   @media (min-width: ${Breakpoint.L}) {
@@ -85,7 +85,7 @@ export const Loading = ({ isTransitioning }) => {
             <path d="M74.17 18.13c17.6 13.351 21.05 38.44 7.7 56.04l-8.75-5.05-14.75-8.511-3.37-13.5 22.64 13.08.82 1.211-.15-1.471c5.48-15.631-2.738-32.75-18.368-38.24-.57-.199-1.69-.551-2.271-.689L55 10.311c6.75.839 13.36 3.419 19.17 7.819z"/>
           </StyledSvg>
           <Copy
-            color={colors.whiteSmoke()}
+            color={Color.WhiteSmoke()}
             tag="figcaption">
             ...waiting for WebSockets client
           </Copy>

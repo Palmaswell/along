@@ -1,12 +1,12 @@
 import styled from 'react-emotion';
-import colors from './colors';
+import Color from './color';
 import { Breakpoint } from './breakpoint';
 import { size } from './sizes';
 
 const StyledSVG = styled.svg`
   width: ${size.xxs}px;
   height: ${size.xxs}px;
-  fill: ${colors.gunMetal()};
+  fill: ${Color.GunMetal()};
 `
 
 export const ArrowLeft = () => (

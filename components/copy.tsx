@@ -1,6 +1,6 @@
 import styled from 'react-emotion';
 
-import colors from './colors';
+import Color from './color';
 import { Breakpoint } from './breakpoint';
 import fontHind from './fonts';
 
@@ -26,7 +26,7 @@ const StyledCopy = styled.span`
   }};
   color: ${props => props.color
     ? props.color
-    : colors.smokyBlack()
+    : Color.SmokyBlack()
   };
   text-decoration: none;
   font-weight: ${(props: CopyProps) => props.weight

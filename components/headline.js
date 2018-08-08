@@ -1,6 +1,6 @@
 import styled from 'react-emotion';
 
-import colors from './colors';
+import Color from './color';
 import fontHind from './fonts';
 const StyledHeadline = styled.h1`
   margin: 0;
@@ -21,7 +21,7 @@ const StyledHeadline = styled.h1`
     }
   };
   line-height: 1.5;
-  color: ${colors.smokyBlack()};
+  color: ${Color.SmokyBlack()};
   text-align: center;
   ${fontHind()}
 

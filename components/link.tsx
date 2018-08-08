@@ -1,6 +1,6 @@
 import styled from 'react-emotion';
 
-import color from './colors';
+import color from './color';
 import fontHind from './fonts';
 
 export interface LinkProps {
@@ -10,13 +10,13 @@ export interface LinkProps {
 }
 
 export const StyledLink = styled.a`
-  color: ${color.smokyBlack()};
+  color: ${color.SmokyBlack()};
   text-decoration: none;
   transition: color .33s ease-in-out;
   ${fontHind()};
 
   :hover {
-    color: ${color.unitedNationsBlue()};
+    color: ${color.UnitedNationsBlue()};
   }
 `
 

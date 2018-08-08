@@ -1,9 +1,9 @@
 import styled from 'react-emotion';
 
-import colors from './colors';
+import Color from './color';
 import { Breakpoint } from './breakpoint';
 import { size } from './sizes';
-import { MouseEventHandler } from '../node_modules/@types/react';
+import { MouseEventHandler } from 'react';
 
 export interface GridContainerProps {
   handleClick: MouseEventHandler<HTMLElement>;
@@ -13,10 +13,10 @@ export interface GridContainerProps {
 const StyledListContainer = styled.li`
   padding: ${size.xxxs}px;
   list-style: none;
-  background-color: ${colors.white()};
+  background-color: ${Color.White()};
 
   :hover {
-    background-color: ${colors.whiteSmoke()};
+    background-color: ${Color.WhiteSmoke()};
   }
 
   @media (min-width: ${ Breakpoint.M }) {

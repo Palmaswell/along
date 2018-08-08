@@ -1,6 +1,6 @@
 import propTypes from 'prop-types';
 import styled from 'react-emotion';
-import colors from './colors';
+import Color from './color';
 
 import { Breakpoint } from './breakpoint';
 import { size } from './sizes'
@@ -18,12 +18,12 @@ const StyledControls = styled.nav`
 const StyledSVG = styled.svg`
   align-self: center;
   width: 60px;
-  fill: ${colors.unitedNationsBlue()};
+  fill: ${Color.UnitedNationsBlue()};
   cursor: pointer;
   transition: fill .666s ease;
 
   :hover {
-    fill: ${colors.paleChestNut()};
+    fill: ${Color.PaleChestNut()};
   }
 
   @media (min-width: ${Breakpoint.L}) {
