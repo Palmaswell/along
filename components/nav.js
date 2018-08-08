@@ -2,7 +2,7 @@ import propTypes from 'prop-types';
 import styled from 'react-emotion';
 
 import { Breakpoint } from './breakpoint';
-import fontHind from './fonts';
+import getFontHind from './fonts';
 import { size } from './sizes'
 
 const StyledNav = styled.nav`

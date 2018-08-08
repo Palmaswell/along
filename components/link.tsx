@@ -1,7 +1,7 @@
 import styled from 'react-emotion';
 
 import color from './color';
-import fontHind from './fonts';
+import getFontHind from './fonts';
 
 export interface LinkProps {
   onClick?: React.MouseEventHandler<HTMLAnchorElement>;
@@ -13,7 +13,7 @@ export const StyledLink = styled.a`
   color: ${color.SmokyBlack()};
   text-decoration: none;
   transition: color .33s ease-in-out;
-  ${fontHind()};
+  ${getFontHind()};
 
   :hover {
     color: ${color.UnitedNationsBlue()};

@@ -1,5 +1,5 @@
 import styled from 'react-emotion';
-import fontHind from './fonts';
+import getFontHind from './fonts';
 import { size } from './sizes'
 
 export function getSpace(size) {

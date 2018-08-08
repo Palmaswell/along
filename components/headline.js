@@ -1,7 +1,7 @@
 import styled from 'react-emotion';
 
 import Color from './color';
-import fontHind from './fonts';
+import getFontHind from './fonts';
 const StyledHeadline = styled.h1`
   margin: 0;
   font-size: ${props => {
@@ -23,7 +23,7 @@ const StyledHeadline = styled.h1`
   line-height: 1.5;
   color: ${Color.SmokyBlack()};
   text-align: center;
-  ${fontHind()}
+  ${getFontHind()}
 
   @media (min-width: 960px) {
     font-size: ${props => {

@@ -2,7 +2,7 @@ import styled from 'react-emotion';
 
 import Color from './color';
 import { Breakpoint } from './breakpoint';
-import fontHind from './fonts';
+import getFontHind from './fonts';
 
 export type CopySize = 's' | 'm';
 export type CopyWeight = 'bold' | 'normal';
@@ -33,7 +33,7 @@ const StyledCopy = styled.span`
     ? props.weight
     : 'normal'
   };
-  ${fontHind()};
+  ${getFontHind()};
 
   @media (min-width: ${ Breakpoint.M } ) {
     font-size: ${(props: CopyProps) => {
