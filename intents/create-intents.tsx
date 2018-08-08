@@ -1,5 +1,6 @@
 import { abstractCommandFactory } from '../providers/speech/commands';
 import { handleRouter } from '../utils/handle-router';
+
 export function createIntents(intent, ...args) {
   switch(intent.type) {
     case 'NavigateIntent':
@@ -8,7 +9,7 @@ export function createIntents(intent, ...args) {
        */
       return intent.samples.map(sample => ({
         callableIntent: abstractCommandFactory.register(sample),
-        action: props => intent.action([...args][0])
+        action: () => intent.action([...args][0])
       }));
     case 'PlaylistsIntent':
       /**
@@ -18,16 +19,16 @@ export function createIntents(intent, ...args) {
         intent.samples.forEach(sample => {
           playlist.push({
             callableIntent: abstractCommandFactory.register(`${sample} ${item.name}`),
-            action: props => intent.action(item.id)
+            action: () => intent.action(item.id)
           })
         });
         playlist.push({
           callableIntent: abstractCommandFactory.register('home'),
-          action: props => handleRouter(`/`)
+          action: () => handleRouter(`/`)
         });
         playlist.push({
           callableIntent: abstractCommandFactory.register('go home'),
-          action: props => handleRouter(`/`)
+          action: () => handleRouter(`/`)
         });
         return playlist;
       }, []);
@@ -43,34 +44,34 @@ export function createIntents(intent, ...args) {
         intent.samples.forEach(sample => {
           track.push({
             callableIntent: abstractCommandFactory.register(`${sample} ${item.track.name}`),
-            action: props => [...args][1](item.track.album.uri)
+            action: () => [...args][1](item.track.album.uri)
           });
           track.push({
             callableIntent: abstractCommandFactory.register(`${sample} ${item.track.name.replace(/ /g, '').toLowerCase()}`),
-            action: props => [...args][1](item.track.album.uri)
+            action: () => [...args][1](item.track.album.uri)
           });
         });
         return track;
       }, []);
       tracks.push({
         callableIntent: abstractCommandFactory.register('pause'),
-        action: props => [...args][2]()
+        action: () => [...args][2]()
       });
       tracks.push({
         callableIntent: abstractCommandFactory.register('stop'),
-        action: props => [...args][2]()
+        action: () => [...args][2]()
       });
       tracks.push({
         callableIntent: abstractCommandFactory.register('continue'),
-        action: props => [...args][3]()
+        action: () => [...args][3]()
       });
       tracks.push({
         callableIntent: abstractCommandFactory.register('go back'),
-        action: props => handleRouter(`/playlists/${[...args][4]}`, [...args][4])
+        action: () => handleRouter(`/playlists/${[...args][4]}`, [...args][4])
       });
       tracks.push({
         callableIntent: abstractCommandFactory.register('call back'),
-        action: props => handleRouter(`/playlists/${[...args][4]}`, [...args][4])
+        action: () => handleRouter(`/playlists/${[...args][4]}`, [...args][4])
       });
       return tracks;
   }
