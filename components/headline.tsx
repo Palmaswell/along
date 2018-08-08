@@ -1,10 +1,20 @@
 import styled from 'react-emotion';
-
 import Color from './color';
 import getFontHind from './fonts';
+
+export type OrderType = 'h1' | 'h2'| 'h3';
+
+export interface HeadlineProps {
+  order: OrderType;
+}
+
+export interface StyledHeadlineProps {
+  order: OrderType;
+}
+
 const StyledHeadline = styled.h1`
   margin: 0;
-  font-size: ${props => {
+  font-size: ${(props: StyledHeadlineProps) => {
     switch(props.order) {
       case 'h1':
         return `48px`;
@@ -26,7 +36,7 @@ const StyledHeadline = styled.h1`
   ${getFontHind()}
 
   @media (min-width: 960px) {
-    font-size: ${props => {
+    font-size: ${(props: StyledHeadlineProps) => {
     switch(props.order) {
       case 'h1':
         return `76px`;
@@ -45,7 +55,7 @@ const StyledHeadline = styled.h1`
   }
 `;
 
-export const Headline = ({ children, order }) => {
+export const Headline: React.SFC<HeadlineProps> = ({ children, order }): JSX.Element => {
   const Component = StyledHeadline.withComponent(order);
   return (
     <Component order={order}>
