@@ -8,7 +8,7 @@ export interface ActiveLinkProps {
   onClick?: React.MouseEventHandler<HTMLAnchorElement>;
 }
 
-const ActiveLink: React.SFC<ActiveLinkProps> = ({ children, router, href }) => {
+const ActiveLink: React.SFC<ActiveLinkProps> = ({ children, router, href }): JSX.Element => {
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault()

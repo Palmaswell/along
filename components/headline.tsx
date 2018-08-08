@@ -54,7 +54,6 @@ const StyledHeadline = styled.h1`
   };
   }
 `;
-
 export const Headline: React.SFC<HeadlineProps> = ({ children, order }): JSX.Element => {
   const Component = StyledHeadline.withComponent(order);
   return (

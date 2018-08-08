@@ -7,7 +7,7 @@ import { SpeechContext, SpeechProvider } from '../providers/speech/provider';
 import { WSContext, WSProvider } from '../providers/websocket/provider';
 import SpeechBroker from '../providers/speech/broker';
 
-import { createIntents } from '../intents/create-intents';
+import { registerIntent } from '../intents/register';
 import { navigateIntent } from '../intents/intents';
 
 import ActiveLink from '../components/active-link';
@@ -69,7 +69,7 @@ export default class Index extends React.Component<IndexProps, {}> {
             <SpeechContext.Consumer>
               {speech => (
                 <SpeechBroker
-                  registrationList={createIntents(navigateIntent, this.props.spotify.id)}
+                  registrationList={registerIntent(navigateIntent, this.props.spotify.id)}
                   wsBroker={wsBroker}>
                   <Nav secondary={false}>
                     <ActiveLink

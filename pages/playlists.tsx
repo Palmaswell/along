@@ -8,7 +8,7 @@ import { SpeechContext, SpeechProvider } from '../providers/speech/provider';
 import { WSContext, WSProvider } from '../providers/websocket/provider';
 import SpeechBroker from '../providers/speech/broker';
 
-import { createIntents } from '../intents/create-intents';
+import { registerIntent } from '../intents/register';
 import { playlistsIntent } from '../intents/intents';
 
 import { ArrowLeft } from '../components/icons';
@@ -70,7 +70,7 @@ export default class PlayLists extends React.Component<PlayListsProps> {
                 <SpeechContext.Consumer>
                   {speech => (
                     <SpeechBroker
-                      registrationList={createIntents(playlistsIntent, this.props.playlist.items)}
+                      registrationList={registerIntent(playlistsIntent, this.props.playlist.items)}
                       wsBroker={wsBroker}>
                       <Nav secondary>
                         <ActiveLink href={`/`}><ArrowLeft /></ActiveLink>
@@ -117,21 +117,4 @@ export default class PlayLists extends React.Component<PlayListsProps> {
     );
   }
 }
-
-// PlayLists.getInitialProps = async ctx => {
-//   const { id } = ctx.query;
-//   const res = await fetch(`https://api.spotify.com/v1/users/${id}/playlists`, {
-//     method: 'GET',
-//     headers: new Headers({
-//       'Authorization': `Bearer ${getCookie('access', ctx)}`,
-//       'Content-Type': 'application/json',
-//     })
-//   });
-//   const data = await res.json();
-//   return {
-//     id: id,
-//     playlist: data
-//   }
-// }
-
 

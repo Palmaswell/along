@@ -44,10 +44,10 @@ export class SpeechProvider extends React.Component<SpeechProviderProps, SpeechR
   }
 
   public componentDidMount() {
-    this.instantiateSpeechRecognition();
+    this.initSpeechRecognition();
   }
 
-  private instantiateSpeechRecognition = () => {
+  private initSpeechRecognition = (): void => {
     const  SpeechRecognition  = (window as any).SpeechRecognition
       || (window as any).webkitSpeechRecognition;
     const SpeechGrammarList = (window as any).SpeechGrammarList
@@ -101,7 +101,7 @@ export class SpeechProvider extends React.Component<SpeechProviderProps, SpeechR
       }
     }
 
-    recognition.onstart = () => {
+    recognition.onstart = (): void => {
       this.isRecognizing = true;
       console.log(`
         > Speech Recognition has begun listening 👂🏼

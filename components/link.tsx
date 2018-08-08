@@ -4,9 +4,9 @@ import color from './color';
 import getFontHind from './fonts';
 
 export interface LinkProps {
-  onClick?: React.MouseEventHandler<HTMLAnchorElement>;
   href?: string;
   target?: '_self' | '_blank' | '_parent' | '_top';
+  onClick?: React.MouseEventHandler<HTMLAnchorElement>;
 }
 
 export const StyledLink = styled.a`
@@ -20,7 +20,7 @@ export const StyledLink = styled.a`
   }
 `
 
-export const Link: React.SFC<LinkProps> = ({ children, href, onClick }) => (
+export const Link: React.SFC<LinkProps> = ({ children, href, onClick }): JSX.Element => (
   <StyledLink href={href} onClick={onClick}>
     {children}
   </StyledLink>

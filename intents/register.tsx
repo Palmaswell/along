@@ -1,7 +1,8 @@
 import { abstractCommandFactory } from '../providers/speech/commands';
 import { handleRouter } from '../utils/handle-router';
+import { IntentProps} from './intents';
 
-export function createIntents(intent, ...args) {
+export function registerIntent(intent: IntentProps, ...args) {
   switch(intent.type) {
     case 'NavigateIntent':
       /**

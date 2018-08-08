@@ -15,7 +15,7 @@ const StyledGridItem = styled.div`
 `
 
 
-const GridItem: React.SFC<GridItemProps> = ({ align, justify, children }) => (
+const GridItem: React.SFC<GridItemProps> = ({ align, justify, children }): JSX.Element => (
   <StyledGridItem align={align} justify={justify}>
     { children }
   </StyledGridItem>

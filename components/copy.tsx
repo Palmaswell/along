@@ -59,7 +59,7 @@ const StyledCopy = styled.span`
   }
 `;
 
-export const Copy: React.StatelessComponent<CopyProps> = ({ children, color, size, tag, weight }) => {
+export const Copy: React.StatelessComponent<CopyProps> = ({ children, color, size, tag, weight }): JSX.Element => {
   const Component = StyledCopy.withComponent(tag);
   return (
     <Component
