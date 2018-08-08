@@ -1,6 +1,6 @@
 import styled from 'react-emotion';
 
-import { breakpoints } from './breakpoints';
+import { Breakpoint } from './breakpoint';
 import colors from './colors';
 import fontHind from './fonts';
 import Headline from './headline';
@@ -13,7 +13,7 @@ const StyledPanel = styled.section`
   padding: ${size.xxs}px ${size.xxs}px ${size.s}px;
   text-align: center;
 
-  @media (min-width: ${breakpoints.l}) {
+  @media (min-width: ${Breakpoint.L}) {
     height: 250px;
     padding: ${size.xs}px ${size.s}px ${size.m}px;
   };
@@ -25,7 +25,7 @@ const StyledTopLine = styled.div`
   color: ${colors.smokyBlack()};
   ${fontHind()}
 
-  @media (min-width: ${breakpoints.m}) {
+  @media (min-width: ${Breakpoint.M}) {
     font-size: 32px;
   }
 `
@@ -38,7 +38,7 @@ const StyledTranscript = styled.h1`
   font-size: 48px;
   ${fontHind()}
 
-  @media (min-width: ${breakpoints.m }) {
+  @media (min-width: ${Breakpoint.M }) {
     font-size: 72px;
   }
 `

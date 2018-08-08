@@ -2,7 +2,7 @@ import propTypes from 'prop-types';
 import styled from 'react-emotion';
 import colors from './colors';
 
-import { breakpoints } from './breakpoints';
+import { Breakpoint } from './breakpoint';
 import { size } from './sizes'
 
 const StyledControls = styled.nav`
@@ -26,7 +26,7 @@ const StyledSVG = styled.svg`
     fill: ${colors.paleChestNut()};
   }
 
-  @media (min-width: ${breakpoints.l}) {
+  @media (min-width: ${Breakpoint.L}) {
     width: 100px;
   }
 `;

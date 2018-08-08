@@ -1,6 +1,6 @@
 import styled from 'react-emotion';
 
-import { breakpoints } from './breakpoints';
+import { Breakpoint } from './breakpoint';
 import { size } from './sizes';
 
 export interface MediaProps {
@@ -25,7 +25,7 @@ const StyledMediaWrapper = styled.div`
   border-radius: 10px;
   overflow: hidden;
 
-  @media (min-width: ${breakpoints.m}) {
+  @media (min-width: ${Breakpoint.M}) {
     width: ${(props: StyledMediaProps) => props.large
       ? 'calc(33vw - 25px)'
       : `${size.l}px`
@@ -37,7 +37,7 @@ const StyledMediaWrapper = styled.div`
     max-width: 370px;
     max-height: 370px;
   }
-  @media (min-width: ${breakpoints.l}) {
+  @media (min-width: ${Breakpoint.L}) {
     width: ${(props: StyledMediaProps) => props.large
       ? 'calc(33vw - 25px)'
       : `${size.xxl}px`

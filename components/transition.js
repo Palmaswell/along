@@ -2,7 +2,7 @@ import propTypes from 'prop-types';
 import styled from 'react-emotion';
 import { Transition } from 'react-transition-group';
 
-import { breakpoints } from './breakpoints';
+import { Breakpoint } from './breakpoint';
 
 const StyledTransition = styled.div`
   opacity: 1;
@@ -16,7 +16,7 @@ const StyledTransition = styled.div`
       case 'exiting':
         return`
           transform: translate3d(0, 100vh, 0);
-          @media (min-width: ${breakpoints.m}) {
+          @media (min-width: ${Breakpoint.M}) {
             transform: translate3d(-100vw, 0, 0);
           }
         `;

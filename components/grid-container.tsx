@@ -1,7 +1,7 @@
 import styled from 'react-emotion';
 
 import colors from './colors';
-import { breakpoints } from './breakpoints';
+import { Breakpoint } from './breakpoint';
 import { size } from './sizes';
 import { MouseEventHandler } from '../node_modules/@types/react';
 
@@ -19,7 +19,7 @@ const StyledListContainer = styled.li`
     background-color: ${colors.whiteSmoke()};
   }
 
-  @media (min-width: ${ breakpoints.m }) {
+  @media (min-width: ${ Breakpoint.M }) {
     padding: ${size.xs}px;
   }
 `;
@@ -32,12 +32,12 @@ const StyledGridContainer = styled.a`
   text-decoration: none;
   cursor: pointer;
 
-  @media (min-width: ${ breakpoints.m }) {
+  @media (min-width: ${ Breakpoint.M }) {
     grid-template-columns: 20px 100px calc(60vw - 120px) auto;
     grid-column-gap: ${size.xxs}px;
     padding: 0 ${size.xxs}px;
   }
-  @media (min-width: ${ breakpoints.l }) {
+  @media (min-width: ${ Breakpoint.L }) {
     grid-template-columns: 20px 150px calc(60vw - 120px) auto;
   }
 `;

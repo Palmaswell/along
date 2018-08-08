@@ -1,7 +1,7 @@
 import styled from 'react-emotion';
 
 import colors from './colors';
-import { breakpoints } from './breakpoints';
+import { Breakpoint } from './breakpoint';
 import fontHind from './fonts';
 
 export type CopySize = 's' | 'm';
@@ -35,7 +35,7 @@ const StyledCopy = styled.span`
   };
   ${fontHind()};
 
-  @media (min-width: ${ breakpoints.m } ) {
+  @media (min-width: ${ Breakpoint.M } ) {
     font-size: ${(props: CopyProps) => {
     switch(props.size) {
       case 's':
@@ -46,7 +46,7 @@ const StyledCopy = styled.span`
     }
   }};
   }
-  @media (min-width: ${ breakpoints.l } ) {
+  @media (min-width: ${ Breakpoint.L } ) {
     font-size: ${(props: CopyProps) => {
     switch(props.size) {
       case 's':

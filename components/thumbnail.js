@@ -1,7 +1,7 @@
 import propTypes from 'prop-types';
 import styled from 'react-emotion';
 
-import { breakpoints } from './breakpoints';
+import { Breakpoint } from './breakpoint';
 import { size } from './sizes';
 import Space from './space';
 
@@ -15,7 +15,7 @@ const StyledImg = styled.img`
   width: ${size.s}px;
   height: ${size.s}px;
   border-radius: 50%;
-  @media (min-width: ${ breakpoints.m }) {
+  @media (min-width: ${ Breakpoint.M }) {
     width: ${size.xl}px;
     height: ${size.xl}px;
   }

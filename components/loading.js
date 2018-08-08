@@ -2,7 +2,7 @@ import propTypes from 'prop-types';
 import styled, { keyframes } from 'react-emotion';
 import { Transition } from 'react-transition-group';
 
-import { breakpoints } from './breakpoints';
+import { Breakpoint } from './breakpoint';
 import { Copy } from './copy'
 import { colors } from './colors';
 
@@ -51,7 +51,7 @@ const StyledSvg = styled.svg`
   fill: ${colors.whiteSmoke()};
   animation: ${PULSE} .666s ease infinite;
 
-  @media (min-width: ${breakpoints.l}) {
+  @media (min-width: ${Breakpoint.L}) {
     width: 250px;
   }
 

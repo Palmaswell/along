@@ -1,6 +1,6 @@
 import styled from 'react-emotion';
 import colors from './colors';
-import { breakpoints } from './breakpoints';
+import { Breakpoint } from './breakpoint';
 import { size } from './sizes';
 
 const StyledSVG = styled.svg`
