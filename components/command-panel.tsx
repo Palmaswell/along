@@ -3,8 +3,11 @@ import styled from 'react-emotion';
 import { Breakpoint } from './breakpoint';
 import Color from './color';
 import fontHind from './fonts';
-import Headline from './headline';
 import { size } from './sizes';
+
+export interface CommandPanelProps {
+  transcript: string;
+}
 
 const StyledPanel = styled.section`
   box-sizing: border-box;
@@ -43,11 +46,11 @@ const StyledTranscript = styled.h1`
   }
 `
 
-export const CommandPanel = ({ transcript }) => {
+export const CommandPanel: React.SFC<CommandPanelProps> = ({ transcript }): JSX.Element => {
   return (
     <StyledPanel>
       <StyledTopLine>transcript</StyledTopLine>
-      <StyledTranscript order="h1">
+      <StyledTranscript>
         {transcript}
       </StyledTranscript>
     </StyledPanel>
