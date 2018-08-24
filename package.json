@@ -3,13 +3,13 @@
   "version": "1.0.0",
   "scripts": {
     "build": "next build",
-    "dev": "concurrently \"npm register server:next\" \"npm register server:rx\"",
-    "dev:off": "concurrently \"npm register server:next\" \"npm register server:off\"",
+    "dev": "concurrently \"npm run server:next\" \"npm run server:rx\"",
+    "dev:off": "concurrently \"npm run server:next\" \"npm run server:off\"",
     "deploy": "now -e EXPRESS_PORT=\"3001\" -e NEXT_PORT=\"1313\" -e REDIS_HOST=@redis-host -e REDIS_PASS=@redis-pass -e REDIS_PORT=@redis-port SPOTIFY_CLIENT=@spotify-client",
     "server:next": "node server.js",
     "server:rx": "node rx-server.js",
     "server:off": "node rx-server-offline.js",
-    "start": "NODE_ENV=production concurrently \"npm register server:rx\" \"npm register server:next\""
+    "start": "NODE_ENV=production concurrently \"npm run server:rx\" \"npm run server:next\""
   },
   "dependencies": {
     "babel-plugin-emotion": "^8.0.4",
