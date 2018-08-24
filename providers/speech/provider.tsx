@@ -16,7 +16,7 @@ export interface SpeechResult {
 
 export interface SpeechContextProps {
   result: SpeechResult;
-  start: (e: Event) => void;
+  start: React.MouseEventHandler<HTMLElement>;
 
 }
 
