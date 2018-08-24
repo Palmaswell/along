@@ -1,13 +1,19 @@
-import propTypes from 'prop-types';
 import styled from 'react-emotion';
 
 import { Breakpoint } from './breakpoint';
-import getFontHind from './fonts';
 import { size } from './sizes'
+
+export interface NavProps {
+  secondary: boolean;
+}
+
+interface StyledNavProps {
+  secondary: boolean;
+}
 
 const StyledNav = styled.nav`
   display: flex;
-  justify-content: ${props => props.secondary
+  justify-content: ${(props: StyledNavProps) => props.secondary
     ? 'flex-start'
     : 'flex-end'
   };
@@ -25,15 +31,10 @@ const StyledNav = styled.nav`
     padding: ${size.xxs}px;
   }
 `
-export const Nav = ({ children, secondary }) => (
+export const Nav: React.SFC<NavProps> = ({ children, secondary }): JSX.Element => (
   <StyledNav secondary={secondary}>
     {children}
   </StyledNav>
 );
-
-Nav.propTypes =  {
-  secondary: propTypes.bool
-}
-
 
 export default Nav;
