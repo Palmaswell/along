@@ -1,6 +1,14 @@
 import { handleRouter } from '../utils/handle-router';
 
-export function IntentFactory({ type, samples, action }) {
+export type IntentTypes = 'NavigateIntent' | 'PlaylistsIntent' | 'TracksIntent' | 'HomeIntent';
+
+export interface IntentFactoryProps {
+  type: IntentTypes;
+  samples: string[];
+  action(): any;
+}
+
+export function IntentFactory({ type, samples, action }): IntentFactoryProps {
   return {
     type,
     samples,

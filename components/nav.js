@@ -1,8 +1,8 @@
 import propTypes from 'prop-types';
 import styled from 'react-emotion';
 
-import { breakpoints } from './breakpoints';
-import fontHind from './fonts';
+import { Breakpoint } from './breakpoint';
+import getFontHind from './fonts';
 import { size } from './sizes'
 
 const StyledNav = styled.nav`
@@ -21,7 +21,7 @@ const StyledNav = styled.nav`
     : '16px'
   };
 
-  @media (min-width: ${ breakpoints.m }) {
+  @media (min-width: ${ Breakpoint.M }) {
     padding: ${size.xxs}px;
   }
 `

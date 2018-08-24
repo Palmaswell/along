@@ -1,14 +1,13 @@
 import styled from 'react-emotion';
-
-import colors from './colors';
+import Color from './color';
 
 const StyledBackground = styled.div`
   min-width: 100vw;
   min-height: 100vh;
-  background-color: ${colors.whiteSmoke()};
-`
+  background-color: ${Color.WhiteSmoke()};
+`;
 
-export const Background = ({ children }) => (
+export const Background: React.SFC<{}> = ({ children }) => (
   <StyledBackground>
     {children}
   </StyledBackground>

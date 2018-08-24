@@ -1,8 +1,8 @@
 import styled from 'react-emotion';
 
-import colors from './colors';
-import { breakpoints } from './breakpoints';
-import fontHind from './fonts';
+import Color from './color';
+import { Breakpoint } from './breakpoint';
+import getFontHind from './fonts';
 
 export type CopySize = 's' | 'm';
 export type CopyWeight = 'bold' | 'normal';
@@ -26,16 +26,16 @@ const StyledCopy = styled.span`
   }};
   color: ${props => props.color
     ? props.color
-    : colors.smokyBlack()
+    : Color.SmokyBlack()
   };
   text-decoration: none;
   font-weight: ${(props: CopyProps) => props.weight
     ? props.weight
     : 'normal'
   };
-  ${fontHind()};
+  ${getFontHind()};
 
-  @media (min-width: ${ breakpoints.m } ) {
+  @media (min-width: ${ Breakpoint.M } ) {
     font-size: ${(props: CopyProps) => {
     switch(props.size) {
       case 's':
@@ -46,7 +46,7 @@ const StyledCopy = styled.span`
     }
   }};
   }
-  @media (min-width: ${ breakpoints.l } ) {
+  @media (min-width: ${ Breakpoint.L } ) {
     font-size: ${(props: CopyProps) => {
     switch(props.size) {
       case 's':

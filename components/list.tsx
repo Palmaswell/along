@@ -1,6 +1,6 @@
 import styled from 'react-emotion';
 
-import { breakpoints } from './breakpoints';
+import { Breakpoint } from './breakpoint';
 import { size } from './sizes';
 
 export interface ListProps {
@@ -13,7 +13,7 @@ const StyledList = styled.ul`
   padding: 0 0 ${size.m}px;
   margin-top: 0;
 
-  @media(min-width: ${breakpoints.m}){
+  @media(min-width: ${Breakpoint.M}){
     max-width: 2080px;
     margin: 0 auto;
   }
@@ -26,7 +26,7 @@ const StyledFlexList = styled(StyledList)`
   justify-items: center;
   padding: 0 ${size.xxs}px;
 
-  @media(min-width: ${breakpoints.m}) {
+  @media(min-width: ${Breakpoint.M}) {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;

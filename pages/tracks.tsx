@@ -15,7 +15,7 @@ import { tracksIntent } from '../intents/intents';
 import ActiveLink from '../components/active-link';
 import { ArrowLeft } from '../components/icons';
 import Copy from '../components/copy';
-import colors from '../components/colors';
+import Color from '../components/color';
 import List from '../components/list';
 import GridContainer from '../components/grid-container';
 import Media from '../components/media';
@@ -163,7 +163,7 @@ export default class Tracks extends React.Component<TracksProps> {
                               handleClick={() => this.playTrack(playlist.track.album.uri)}
                               key={playlist.track.id}>
                               <GridItem align="center">
-                                <Copy color={colors.unitedNationsBlue()} tag="div">{i + 1}</Copy>
+                                <Copy color={Color.UnitedNationsBlue()} tag="div">{i + 1}</Copy>
                               </GridItem>
                               <GridItem>
                                 <Media

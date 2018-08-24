@@ -1,6 +1,6 @@
 import styled from 'react-emotion';
 import { size } from './sizes';
-import { breakpoints } from './breakpoints';
+import { Breakpoint } from './breakpoint';
 
 const StyledListItem = styled.li`
   list-style: none;
@@ -12,7 +12,7 @@ const StyledFlexListItem = styled(StyledListItem)`
   text-align: center;
   margin-bottom: ${size.xs}px;
 
-  @media(min-width: ${breakpoints.m}) {
+  @media(min-width: ${Breakpoint.M}) {
     width: calc(100vw / 3);
     max-width: 400px;
     margin-right: ${size.xs}px;
