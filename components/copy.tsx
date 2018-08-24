@@ -7,10 +7,12 @@ import getFontHind from './fonts';
 export type CopySize = 's' | 'm';
 export type CopyWeight = 'bold' | 'normal';
 
+export type CopyTagTypes = 'p' | 'div' | 'span' | 'figcaption';
+
 export interface CopyProps {
   color?: string;
   size?: CopySize;
-  tag: 'p' | 'div' | 'span';
+  tag: CopyTagTypes;
   weight?: CopyWeight;
 }
 

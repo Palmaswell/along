@@ -1,10 +1,23 @@
-import propTypes from 'prop-types';
 import styled, { keyframes } from 'react-emotion';
 import { Transition } from 'react-transition-group';
 
 import { Breakpoint } from './breakpoint';
 import { Copy } from './copy'
 import { Color } from './color';
+
+export type TransitionStatusType = 'entering' | 'exiting' | 'entered' | 'exited';
+
+export interface LoadingProps {
+  isTransitioning: boolean;
+}
+
+interface StyledLayerProps {
+  transitionState: TransitionStatusType;
+}
+
+interface StyledSVGProps {
+  transitionState: TransitionStatusType;
+}
 
 const PULSE = keyframes`
   from, to {
@@ -27,7 +40,7 @@ const StyledLayer = styled.section`
   background-color: ${Color.UnitedNationsBlue()};
   transition: opacity .666s ease;
 
-  ${props => {
+  ${(props: StyledLayerProps) => {
     switch(props.transitionState) {
       case 'entering':
       case 'exiting':
@@ -55,7 +68,7 @@ const StyledSvg = styled.svg`
     width: 250px;
   }
 
-  ${props => {
+  ${(props: StyledSVGProps) => {
     switch(props.transitionState) {
       case 'entering':
       case 'entered':
@@ -70,7 +83,7 @@ const StyledSvg = styled.svg`
   }}
 `;
 
-export const Loading = ({ isTransitioning }) => {
+export const Loading: React.SFC<LoadingProps> = ({ isTransitioning }): JSX.Element => {
   return(
   <Transition
     in={isTransitioning}
@@ -93,9 +106,6 @@ export const Loading = ({ isTransitioning }) => {
     </StyledLayer>
     )}
   </Transition>
-)}
+)};
 
-Loading.propTypes =  {
-  isTransitioning: propTypes.bool
-};
 export default Loading;
