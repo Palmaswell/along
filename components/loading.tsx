@@ -1,11 +1,12 @@
 import styled, { keyframes } from 'react-emotion';
 import { Transition } from 'react-transition-group';
 
+import { TransitionStatusType } from './transition';
 import { Breakpoint } from './breakpoint';
 import { Copy } from './copy'
 import { Color } from './color';
 
-export type TransitionStatusType = 'entering' | 'exiting' | 'entered' | 'exited';
+
 
 export interface LoadingProps {
   isTransitioning: boolean;

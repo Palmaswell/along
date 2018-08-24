@@ -1,8 +1,17 @@
-import propTypes from 'prop-types';
 import styled from 'react-emotion';
 import { Transition } from 'react-transition-group';
 
 import { Breakpoint } from './breakpoint';
+
+export type TransitionStatusType = 'entering' | 'exiting' | 'entered' | 'exited';
+
+export interface TransitionProps {
+  isTransitioning: boolean;
+}
+
+interface StyledTransitionProps {
+  transitionState: TransitionStatusType;
+}
 
 const StyledTransition = styled.div`
   opacity: 1;
@@ -10,7 +19,7 @@ const StyledTransition = styled.div`
   transition-duration: .333s;
   transform: translate3d(0, 0, 0);
 
-  ${props => {
+  ${(props: StyledTransitionProps) => {
     switch(props.transitionState) {
       case 'entering':
       case 'exiting':
@@ -24,7 +33,7 @@ const StyledTransition = styled.div`
   }}
 `;
 
-export const TransitionComponent = ({ children, isTransitioning }) => (
+export const TransitionComponent: React.SFC<TransitionProps> = ({ children, isTransitioning }): JSX.Element => (
   <Transition
     in={isTransitioning}
     timeout={0}>
@@ -36,9 +45,5 @@ export const TransitionComponent = ({ children, isTransitioning }) => (
     )}
   </Transition>
 );
-
-Transition.propTypes =  {
-  isTransitioning: propTypes.bool
-};
 
 export default TransitionComponent;
