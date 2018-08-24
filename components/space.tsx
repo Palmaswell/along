@@ -1,6 +1,22 @@
 import styled from 'react-emotion';
-import getFontHind from './fonts';
-import { size } from './sizes'
+
+export type SizeType = number | number[];
+
+export interface SpaceProps {
+  className?: string;
+  inside?: boolean;
+  spaceSize?: SizeType;
+  size: SizeType;
+  sizeTop?: number;
+  sizeRight?: number;
+  sizeBottom?: number;
+  sizeLeft?: number;
+}
+
+interface StyledSpace {
+  inside: boolean;
+  spaceSize: SizeType;
+}
 
 export function getSpace(size) {
 	if (undefined !== size) {
@@ -37,8 +53,7 @@ function merge(shorthand, top, right, bottom, left) {
 }
 
 function calculate(property, space) {
-	const values = space.map((value, index) => `${getSpace(value)}px`);
-
+	const values = space.map(value => `${getSpace(value)}px`);
 	const result = `${property}: ${values.join(' ')};`;
 
 	return result;
@@ -46,10 +61,14 @@ function calculate(property, space) {
 
 const StyledSpace = styled.div`
 	box-sizing: border-box;
-	${props => calculate(props.inside ? 'padding' : 'margin', props.spaceSize)};
+  ${(props: StyledSpace) => calculate(props.inside
+    ? 'padding'
+    : 'margin',
+    props.spaceSize)
+  };
 `;
 
-const Space = props => {
+const Space: React.SFC<SpaceProps> = (props): JSX.Element => {
 	const size = merge(
 		props.size || 0,
 		props.sizeTop,

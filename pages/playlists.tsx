@@ -93,11 +93,9 @@ export default class PlayLists extends React.Component<PlayListsProps> {
                                   <Space size={[size.xxxs, 0, 0]}>
                                     <Copy tag="div">{playlist.name}</Copy>
                                   </Space>
-                                  <Space>
-                                    <Copy tag="div" size="s">
-                                      {playlist.tracks.total} tracks
-                                    </Copy>
-                                  </Space>
+                                  <Copy tag="div" size="s">
+                                    {playlist.tracks.total} tracks
+                                  </Copy>
                                 </ActiveLink>
                               </ListItem>
                             ))}
