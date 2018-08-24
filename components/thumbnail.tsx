@@ -1,9 +1,14 @@
-import propTypes from 'prop-types';
 import styled from 'react-emotion';
 
 import { Breakpoint } from './breakpoint';
 import { size } from './sizes';
 import Space from './space';
+
+export interface ThumbnailProps {
+  alt: string;
+  caption: string;
+  src: string;
+}
 
 const StyledFigure = styled.figure`
   display: flex;
@@ -21,7 +26,7 @@ const StyledImg = styled.img`
   }
 `
 
-export const Thumbnail = ({ alt, caption, src }) => (
+export const Thumbnail: React.SFC<ThumbnailProps> = ({ alt, caption, src }): JSX.Element => (
   <StyledFigure>
     {caption &&
       <Space size={[0, size.xs, 0, 0]}>
@@ -35,11 +40,5 @@ export const Thumbnail = ({ alt, caption, src }) => (
       src={src} />
   </StyledFigure>
 );
-
-Thumbnail.propTypes =  {
-  alt: propTypes.string.isRequired,
-  caption: propTypes.string,
-  src: propTypes.string.isRequired
-}
 
 export default Thumbnail;

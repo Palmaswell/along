@@ -9,7 +9,7 @@ import { SpeechContext, SpeechProvider } from '../providers/speech/provider';
 import { WSContext, WSProvider } from '../providers/websocket/provider';
 import SpeechBroker from '../providers/speech/broker';
 
-import { createIntents } from '../intents/create-intents';
+import { registerIntent } from '../intents/register';
 import { tracksIntent } from '../intents/intents';
 
 import ActiveLink from '../components/active-link';
@@ -140,7 +140,7 @@ export default class Tracks extends React.Component<TracksProps> {
                 <SpeechContext.Consumer>
                   {speech => (
                     <SpeechBroker
-                      registrationList={createIntents(
+                      registrationList={registerIntent(
                         tracksIntent,
                         this.props.tracks,
                         this.playTrack,

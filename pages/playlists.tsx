@@ -8,7 +8,7 @@ import { SpeechContext, SpeechProvider } from '../providers/speech/provider';
 import { WSContext, WSProvider } from '../providers/websocket/provider';
 import SpeechBroker from '../providers/speech/broker';
 
-import { createIntents } from '../intents/create-intents';
+import { registerIntent } from '../intents/register';
 import { playlistsIntent } from '../intents/intents';
 
 import { ArrowLeft } from '../components/icons';
@@ -70,7 +70,7 @@ export default class PlayLists extends React.Component<PlayListsProps> {
                 <SpeechContext.Consumer>
                   {speech => (
                     <SpeechBroker
-                      registrationList={createIntents(playlistsIntent, this.props.playlist.items)}
+                      registrationList={registerIntent(playlistsIntent, this.props.playlist.items)}
                       wsBroker={wsBroker}>
                       <Nav secondary>
                         <ActiveLink href={`/`}><ArrowLeft /></ActiveLink>
@@ -93,11 +93,9 @@ export default class PlayLists extends React.Component<PlayListsProps> {
                                   <Space size={[size.xxxs, 0, 0]}>
                                     <Copy tag="div">{playlist.name}</Copy>
                                   </Space>
-                                  <Space>
-                                    <Copy tag="div" size="s">
-                                      {playlist.tracks.total} tracks
-                                    </Copy>
-                                  </Space>
+                                  <Copy tag="div" size="s">
+                                    {playlist.tracks.total} tracks
+                                  </Copy>
                                 </ActiveLink>
                               </ListItem>
                             ))}

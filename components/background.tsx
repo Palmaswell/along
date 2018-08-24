@@ -7,7 +7,7 @@ const StyledBackground = styled.div`
   background-color: ${Color.WhiteSmoke()};
 `;
 
-export const Background: React.SFC<{}> = ({ children }) => (
+export const Background: React.SFC<{}> = ({ children }): JSX.Element => (
   <StyledBackground>
     {children}
   </StyledBackground>

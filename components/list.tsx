@@ -35,7 +35,7 @@ const StyledFlexList = styled(StyledList)`
   }
 `;
 
-export const List: React.SFC<ListProps> = ({ children, flex }) => (
+export const List: React.SFC<ListProps> = ({ children, flex }): JSX.Element => (
   flex
     ?
     <StyledFlexList>

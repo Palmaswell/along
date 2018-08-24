@@ -2,6 +2,10 @@ import styled from 'react-emotion';
 import { size } from './sizes';
 import { Breakpoint } from './breakpoint';
 
+export interface ListItemProps {
+  flex: boolean;
+}
+
 const StyledListItem = styled.li`
   list-style: none;
   width: 100%;
@@ -19,7 +23,7 @@ const StyledFlexListItem = styled(StyledListItem)`
   }
 `;
 
-export const ListItem = ({ children, flex }) => (
+export const ListItem: React.SFC<ListItemProps> = ({ children, flex }): JSX.Element => (
   flex
     ?
     <StyledFlexListItem>

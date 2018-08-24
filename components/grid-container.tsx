@@ -42,7 +42,7 @@ const StyledGridContainer = styled.a`
   }
 `;
 
-const GridContainer: React.SFC<GridContainerProps> = ({ children, handleClick, href }) => (
+const GridContainer: React.SFC<GridContainerProps> = ({ children, handleClick, href }): JSX.Element => (
   <StyledListContainer>
     <StyledGridContainer
       onClick={handleClick}
