@@ -2,7 +2,7 @@ import styled from 'react-emotion';
 import Color from './color';
 
 import { Breakpoint } from './breakpoint';
-import { size } from './sizes'
+import { size } from './sizes';
 
 export interface SpeechControlProps {
   handleClick: React.MouseEventHandler<HTMLElement>;
@@ -10,12 +10,15 @@ export interface SpeechControlProps {
 
 const StyledControls = styled.nav`
   position: fixed;
-  bottom: ${size.xs}px;;
+  bottom: 0;
   right: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
   width: 100vw;
+  padding: ${size.xxxs / 2}px 0 ${size.xxxs}px;
+  background-color: ${Color.WhiteSmoke()};
+  box-shadow: 0  ${size.xs}px ${size.xxxs}px ${size.xs}px ${Color.WhiteSmoke()};
 `;
 
 const StyledSVG = styled.svg`
