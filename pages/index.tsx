@@ -71,7 +71,7 @@ export default class Index extends React.Component<IndexProps, {}> {
                 <SpeechBroker
                   registrationList={registerIntent(navigateIntent, this.props.spotify.id)}
                   wsBroker={wsBroker}>
-                  <Nav secondary={false}>
+                  <Nav type="primary">
                     <ActiveLink
                       href={`/playlists/${this.props.spotify.id}`}>
                       Playlists

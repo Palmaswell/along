@@ -14,7 +14,7 @@ interface StatelessPage<P = {}> extends React.SFC<P> {
 
 const CallBack: StatelessPage<{}> = () => (
   <Background>
-     <Nav secondary>
+     <Nav type="secondary">
       <ActiveLink
       href={'/'}>
         <ArrowLeft />

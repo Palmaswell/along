@@ -148,7 +148,7 @@ export default class Tracks extends React.Component<TracksProps> {
                         this.resumeTrack,
                         this.props.userId)}
                       wsBroker={wsBroker}>
-                      <Nav secondary>
+                      <Nav type="secondary">
                         <ActiveLink
                         href={`/playlists/${this.props.userId}`}>
                           <ArrowLeft />

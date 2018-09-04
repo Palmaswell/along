@@ -72,7 +72,7 @@ export default class PlayLists extends React.Component<PlayListsProps> {
                     <SpeechBroker
                       registrationList={registerIntent(playlistsIntent, this.props.playlist.items)}
                       wsBroker={wsBroker}>
-                      <Nav secondary>
+                      <Nav type="secondary">
                         <ActiveLink href={`/`}><ArrowLeft /></ActiveLink>
                       </Nav>
                       <CommandPanel
