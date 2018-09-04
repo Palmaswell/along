@@ -29,16 +29,16 @@ const StyledSVG = styled.svg`
   align-self: center;
   width: 80px;
   fill: ${(props: StyledSVGProps) => props.isRecognizing
-    ? 'red'
+    ? Color.Amethyst()
     : Color.UnitedNationsBlue()
   };
-  filter: ${`drop-shadow(1px 1px 6px ${Color.LavenderGray()})`};
+
+  filter ${(props: StyledSVGProps) => props.isRecognizing
+    ? 'unset'
+    : `drop-shadow(1px 1px 6px ${Color.LavenderGray()})`
+  };
   cursor: pointer;
   transition: fill .333s ease;
-
-  :hover {
-    fill: ${Color.PaleChestNut()};
-  }
 
   @media (min-width: ${Breakpoint.L}) {
     width: 120px;
