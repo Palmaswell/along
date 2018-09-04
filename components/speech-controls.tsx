@@ -41,7 +41,7 @@ const StyledSVG = styled.svg`
   transition: fill .333s ease;
 
   @media (min-width: ${Breakpoint.L}) {
-    width: 120px;
+    width: 100spx;
   }
 `;
 

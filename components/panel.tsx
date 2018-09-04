@@ -18,7 +18,7 @@ const StyledPanel = styled.section`
   box-sizing: border-box;
   width: 100%;
   min-height: 200px;
-  padding: ${size.m}px ${size.xxs}px ${size.s}px;
+  padding: ${size.xs + 2}px ${size.xxs}px ${size.s}px;
   text-align: center;
 
   @media (min-width: ${Breakpoint.L}) {

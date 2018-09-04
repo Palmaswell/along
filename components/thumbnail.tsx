@@ -21,8 +21,8 @@ const StyledImg = styled.img`
   height: ${size.s}px;
   border-radius: 50%;
   @media (min-width: ${ Breakpoint.M }) {
-    width: ${size.xl}px;
-    height: ${size.xl}px;
+    width: ${size.l}px;
+    height: ${size.l}px;
   }
 `
 

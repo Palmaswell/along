@@ -34,8 +34,8 @@ const StyledMediaWrapper = styled.div`
       ? 'calc(33vw - 25px)'
       : `${size.l}px`
     };
-    max-width: 370px;
-    max-height: 370px;
+    max-width: 300px;
+    max-height: 300px;
   }
   @media (min-width: ${Breakpoint.L}) {
     width: ${(props: StyledMediaProps) => props.large
@@ -46,6 +46,8 @@ const StyledMediaWrapper = styled.div`
       ? 'calc(33vw - 25px)'
       : `${size.xxl}px`
     };
+    max-width: 350px;
+    max-height: 350px;
   }
 `;
 

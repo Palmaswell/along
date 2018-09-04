@@ -14,10 +14,11 @@ interface StyledNavProps {
 }
 
 const StyledNav = styled.div`
-  position: fixed;
+  position: sticky;
   top: 0;
   left: 0;
   display: flex;
+  z-index: 2;
   justify-content: ${(props: StyledNavProps) => {
     switch(props.type) {
       case 'secondary':
@@ -41,6 +42,7 @@ const StyledNav = styled.div`
   }};
 
   @media (min-width: ${ Breakpoint.M }) {
+    position: fixed;
     padding: ${size.xxs}px;
   }
 `
