@@ -13,8 +13,8 @@ import { playlistsIntent } from '../intents/intents';
 
 import { ArrowLeft } from '../components/icons';
 import ActiveLink from '../components/active-link';
-import Copy from '../components/copy';
-import CommandPanel from '../components/command-panel';
+import Copy, { CopySize } from '../components/copy';
+import Panel from '../components/panel';
 import List from '../components/list';
 import ListItem from '../components/list-item';
 import Media from '../components/media';
@@ -75,7 +75,7 @@ export default class PlayLists extends React.Component<PlayListsProps> {
                       <Nav type="secondary">
                         <ActiveLink href={`/`}><ArrowLeft /></ActiveLink>
                       </Nav>
-                      <CommandPanel
+                      <Panel
                         isRecognizing={speech.result.isRecognizing}
                         transcript={speech.result.transcript} />
 
@@ -95,7 +95,7 @@ export default class PlayLists extends React.Component<PlayListsProps> {
                                   <Space size={[size.xxxs, 0, 0]}>
                                     <Copy tag="div">{playlist.name}</Copy>
                                   </Space>
-                                  <Copy tag="div" size="s">
+                                  <Copy tag="div" size={CopySize.S}>
                                     {playlist.tracks.total} tracks
                                   </Copy>
                                 </ActiveLink>

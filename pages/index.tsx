@@ -13,7 +13,7 @@ import { navigateIntent } from '../intents/intents';
 import ActiveLink from '../components/active-link';
 import Link from '../components/link';
 import Thumbnail from '../components/thumbnail';
-import CommandPanel from '../components/command-panel';
+import Panel from '../components/panel';
 import SpeechControl from '../components/speech-controls';
 import Space from '../components/space';
 import Nav from '../components/nav';
@@ -87,7 +87,7 @@ export default class Index extends React.Component<IndexProps, {}> {
                       </Link>
                     </Space>
                   </Nav>
-                  <CommandPanel
+                  <Panel
                     isRecognizing={speech.result.isRecognizing}
                     transcript={speech.result.transcript} />
                   <SpeechControl

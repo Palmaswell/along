@@ -14,6 +14,9 @@ interface StyledNavProps {
 }
 
 const StyledNav = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
   display: flex;
   justify-content: ${(props: StyledNavProps) => {
     switch(props.type) {
