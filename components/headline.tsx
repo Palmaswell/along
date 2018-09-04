@@ -30,7 +30,7 @@ const StyledHeadline = styled.h1`
     }
     }
   };
-  line-height: 1.5;
+  line-height: 1.2;
   color: ${Color.SmokyBlack()};
   text-align: center;
   ${getFontHind()}

@@ -89,6 +89,12 @@ export const Color = {
     g: 109,
     b: 119,
     a: 1
+  }).toRgbString(),
+  VividRasberry: () => tinycolor({
+    r: 255,
+    g: 0,
+    b: 110,
+    a: 1
   }).toRgbString()
 }
 

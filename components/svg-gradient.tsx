@@ -7,7 +7,7 @@ export interface SVGGradientProps {
 }
 
 
-export function generateGradient({ id, startOffset, stopOffset, startColor, stopColor }: SVGGradientProps): JSX.Element {
+export function generateSVGGradient({ id, startOffset, stopOffset, startColor, stopColor }: SVGGradientProps): JSX.Element {
   return (
     <linearGradient id={id}>
         <stop offset={`${startOffset}%`} stop-color={startColor} />
@@ -16,4 +16,4 @@ export function generateGradient({ id, startOffset, stopOffset, startColor, stop
   );
 };
 
-export default generateGradient;
+export default generateSVGGradient;
