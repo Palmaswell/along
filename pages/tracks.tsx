@@ -14,13 +14,13 @@ import { tracksIntent } from '../intents/intents';
 
 import ActiveLink from '../components/active-link';
 import { ArrowLeft } from '../components/icons';
-import Copy from '../components/copy';
+import Copy, { CopySize } from '../components/copy';
 import Color from '../components/color';
 import List from '../components/list';
 import GridContainer from '../components/grid-container';
 import Media from '../components/media';
 import GridItem from '../components/grid-item';
-import CommandPanel from '../components/command-panel';
+import Panel from '../components/panel';
 import SpeechControl from '../components/speech-controls';
 import TransitionComponent from '../components/transition';
 import Nav from '../components/nav';
@@ -148,13 +148,13 @@ export default class Tracks extends React.Component<TracksProps> {
                         this.resumeTrack,
                         this.props.userId)}
                       wsBroker={wsBroker}>
-                      <Nav secondary>
+                      <Nav type="secondary">
                         <ActiveLink
                         href={`/playlists/${this.props.userId}`}>
                           <ArrowLeft />
                         </ActiveLink>
                       </Nav>
-                      <CommandPanel
+                      <Panel
                         isRecognizing={speech.result.isRecognizing}
                         transcript={speech.result.transcript} />
                       <TransitionComponent
@@ -174,14 +174,14 @@ export default class Tracks extends React.Component<TracksProps> {
                               </GridItem>
                               <GridItem>
                                 <Copy tag="div" weight={'bold'}>{playlist.track.name}</Copy>
-                                <Copy size="s" tag="div">
+                                <Copy size={CopySize.S} tag="div">
                                   {playlist.track.artists[0].name}
                                 </Copy>
                               </GridItem>
                               <GridItem justify="end">
                                 <Copy tag="div">{formatMilliseconds(playlist.track.duration_ms)}</Copy>
                                 {playlist.track.explicit &&
-                                  <Copy tag="div" size="s">{playlist.track.explicit}</Copy>
+                                  <Copy tag="div" size={CopySize.S}>{playlist.track.explicit}</Copy>
                                 }
                               </GridItem>
 

@@ -106,7 +106,7 @@ export class SpeechProvider extends React.Component<SpeechProviderProps, SpeechR
     recognition.onstart = (): void => {
       this.setState({...this.state, isRecognizing: true});
       console.log(`
-        > Speech Recognition has begun listening 👂🏼
+        > Speech Recognition has begun listening ...
       `);
     };
 

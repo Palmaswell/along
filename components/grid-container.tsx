@@ -11,7 +11,7 @@ export interface GridContainerProps {
 }
 
 const StyledListContainer = styled.li`
-  padding: ${size.xxxs}px;
+  padding: ${size.xxs}px ${size.xxxs}px;
   list-style: none;
   background-color: ${Color.White()};
 
@@ -20,7 +20,10 @@ const StyledListContainer = styled.li`
   }
 
   @media (min-width: ${ Breakpoint.M }) {
-    padding: ${size.xs}px;
+    padding: ${size.xs}px ${size.xxs}px;
+  }
+  @media (min-width: ${ Breakpoint.L }) {
+    padding: ${size.s}px ${size.xs}px;
   }
 `;
 

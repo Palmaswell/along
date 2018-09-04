@@ -16,6 +16,7 @@ const StyledList = styled.ul`
   @media(min-width: ${Breakpoint.M}){
     max-width: 2080px;
     margin: 0 auto;
+    padding-bottom: ${size.xxl}px;
   }
 `
 

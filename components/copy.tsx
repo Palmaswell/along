@@ -4,10 +4,16 @@ import Color from './color';
 import { Breakpoint } from './breakpoint';
 import getFontHind from './fonts';
 
-export type CopySize = 's' | 'm';
 export type CopyWeight = 'bold' | 'normal';
 
 export type CopyTagTypes = 'p' | 'div' | 'span' | 'figcaption';
+
+export enum CopySize {
+  S = 14,
+  M = 16,
+  L = 18,
+  XL = 24
+}
 
 export interface CopyProps {
   color?: string;
@@ -19,11 +25,10 @@ export interface CopyProps {
 const StyledCopy = styled.span`
   font-size: ${(props: CopyProps) => {
     switch(props.size) {
-      case 's':
-        return '14px';
-        break;
+      case CopySize.S:
+        return `${CopySize.S}px`;
       default:
-        return '16px';
+        return `${CopySize.M}px`;
     }
   }};
   color: ${props => props.color
@@ -40,22 +45,20 @@ const StyledCopy = styled.span`
   @media (min-width: ${ Breakpoint.M } ) {
     font-size: ${(props: CopyProps) => {
     switch(props.size) {
-      case 's':
-        return '16px';
-        break;
+      case CopySize.S:
+        return `${CopySize.S}px`;
       default:
-        return '18px';
+        return `${CopySize.M}px`;
     }
   }};
   }
   @media (min-width: ${ Breakpoint.L } ) {
     font-size: ${(props: CopyProps) => {
     switch(props.size) {
-      case 's':
-        return '18px';
-        break;
+      case CopySize.S:
+        return `${CopySize.M}px`;
       default:
-        return '24px';
+        return `${CopySize.L}px`;
     }
   }};
   }

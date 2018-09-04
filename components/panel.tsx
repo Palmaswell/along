@@ -5,7 +5,7 @@ import Color from './color';
 import getFontHind from './fonts';
 import { size } from './sizes';
 
-export interface CommandPanelProps {
+export interface PanelProps {
   isRecognizing: boolean;
   transcript: string;
 }
@@ -17,13 +17,12 @@ interface StyledTopLineProps {
 const StyledPanel = styled.section`
   box-sizing: border-box;
   width: 100%;
-  height: 200px;
-  padding: ${size.xxs}px ${size.xxs}px ${size.s}px;
+  min-height: 200px;
+  padding: ${size.xs + 2}px ${size.xxs}px ${size.s}px;
   text-align: center;
 
   @media (min-width: ${Breakpoint.L}) {
-    height: 250px;
-    padding: ${size.xs}px ${size.s}px ${size.m}px;
+    min-height: 250px;
   };
 `;
 
@@ -55,7 +54,7 @@ const StyledTranscript = styled.h1`
   }
 `
 
-export const CommandPanel: React.SFC<CommandPanelProps> = ({ isRecognizing, transcript }): JSX.Element => {
+export const Panel: React.SFC<PanelProps> = ({ isRecognizing, transcript }): JSX.Element => {
   return (
     <StyledPanel>
       <StyledTopLine isRecognizing={isRecognizing}>transcript</StyledTopLine>
@@ -68,4 +67,4 @@ export const CommandPanel: React.SFC<CommandPanelProps> = ({ isRecognizing, tran
   )
 }
 
-export default CommandPanel;
+export default Panel;
