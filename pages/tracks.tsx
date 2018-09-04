@@ -190,7 +190,7 @@ export default class Tracks extends React.Component<TracksProps> {
                           ))}
                         </List>
                       </TransitionComponent>
-                      <SpeechControl handleClick={speech.start} />
+                      <SpeechControl isRecognizing={false} handleClick={speech.start} />
                   </SpeechBroker>
                   )}
                 </SpeechContext.Consumer>

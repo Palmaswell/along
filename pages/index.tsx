@@ -88,7 +88,7 @@ export default class Index extends React.Component<IndexProps, {}> {
                     </Space>
                   </Nav>
                   <CommandPanel transcript={speech.result.transcript} />
-                  <SpeechControl handleClick={speech.start} />
+                  <SpeechControl isRecognizing={false} handleClick={speech.start} />
               </SpeechBroker>
               )}
             </SpeechContext.Consumer>

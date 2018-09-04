@@ -102,7 +102,7 @@ export default class PlayLists extends React.Component<PlayListsProps> {
                         </List>
                       </TransitionComponent>
 
-                      <SpeechControl handleClick={speech.start} />
+                      <SpeechControl isRecognizing={false} handleClick={speech.start} />
                     </SpeechBroker>
                   )}
                 </SpeechContext.Consumer>

@@ -31,7 +31,6 @@ export const Color = {
       b: 198,
       a: 1
     }).toRgbString(),
-
   CelestialBlue: () => tinycolor(
     {
       r: 69,
