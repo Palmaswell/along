@@ -11,7 +11,7 @@ interface StyledNavProps {
   secondary: boolean;
 }
 
-const StyledNav = styled.nav`
+const StyledNav = styled.div`
   display: flex;
   justify-content: ${(props: StyledNavProps) => props.secondary
     ? 'flex-start'

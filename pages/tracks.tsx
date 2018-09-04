@@ -154,7 +154,9 @@ export default class Tracks extends React.Component<TracksProps> {
                           <ArrowLeft />
                         </ActiveLink>
                       </Nav>
-                      <CommandPanel transcript={speech.result.transcript} />
+                      <CommandPanel
+                        isRecognizing={speech.result.isRecognizing}
+                        transcript={speech.result.transcript} />
                       <TransitionComponent
                           isTransitioning={this.state.isTransitioning}>
                         <List>

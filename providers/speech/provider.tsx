@@ -10,7 +10,7 @@ export interface SpeechProviderProps {
 }
 
 export interface SpeechResult {
-    transcript: string;
+    transcript: string | null;
     confidence: number;
     isRecognizing: boolean;
 }
@@ -24,7 +24,7 @@ export interface SpeechContextProps {
 export const SpeechContext = React.createContext({
   result: {
     confidence: 0,
-    transcript: '',
+    transcript: null,
   }
 } as SpeechContextProps);
 
@@ -38,7 +38,7 @@ export class SpeechProvider extends React.Component<SpeechProviderProps, SpeechR
     super(props);
 
     this.state = {
-      transcript: '',
+      transcript: null,
       confidence: 0,
       isRecognizing: false
     }

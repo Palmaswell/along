@@ -29,14 +29,13 @@ export default class MyDocument extends Document {
       <html lang="en-US">
         <Head>
           <meta charSet="utf-8"/>
-          <title>Along - Spotify playlist with the Web Speech API</title>
-          <meta name="description" content="Universal React app using NextJS, RxJs and the Web Speech API. Listen to your Spotify playlists" />
+          <title>Along - Spotify playlists with the Web Speech Recognition API</title>
+          <meta name="description" content="Universal React app using NextJS, RxJs and the Web Speech Recognition API. Listen to your Spotify playlists" />
           <meta name="viewport" content="width=device-width, user-scalable=no" />
           <link
             rel="preload"
             as="font"
             href="https://fonts.googleapis.com/css?family=Hind:400,700" />
-
           <style dangerouslySetInnerHTML={{ __html: this.props.css }} />
         </Head>
         <body>
