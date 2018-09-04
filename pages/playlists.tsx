@@ -75,7 +75,9 @@ export default class PlayLists extends React.Component<PlayListsProps> {
                       <Nav secondary>
                         <ActiveLink href={`/`}><ArrowLeft /></ActiveLink>
                       </Nav>
-                      <CommandPanel transcript={speech.result.transcript} />
+                      <CommandPanel
+                        isRecognizing={speech.result.isRecognizing}
+                        transcript={speech.result.transcript} />
 
                       <TransitionComponent
                           isTransitioning={this.state.isTransitioning}>
@@ -102,7 +104,9 @@ export default class PlayLists extends React.Component<PlayListsProps> {
                         </List>
                       </TransitionComponent>
 
-                      <SpeechControl handleClick={speech.start} />
+                      <SpeechControl
+                        isRecognizing={speech.result.isRecognizing}
+                        handleClick={speech.start}/>
                     </SpeechBroker>
                   )}
                 </SpeechContext.Consumer>

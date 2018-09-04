@@ -6,7 +6,12 @@ import getFontHind from './fonts';
 import { size } from './sizes';
 
 export interface CommandPanelProps {
+  isRecognizing: boolean;
   transcript: string;
+}
+
+interface StyledTopLineProps {
+  isRecognizing: boolean;
 }
 
 const StyledPanel = styled.section`
@@ -25,8 +30,12 @@ const StyledPanel = styled.section`
 const StyledTopLine = styled.div`
   margin: 0;
   font-size: 18px;
-  color: ${Color.SmokyBlack()};
+  color: ${(props: StyledTopLineProps) => props.isRecognizing
+    ? Color.Amethyst()
+    : Color.SmokyBlack()
+  };
   ${getFontHind()}
+  transition: color .333s ease-in-out;
 
   @media (min-width: ${Breakpoint.M}) {
     font-size: 32px;
@@ -46,13 +55,15 @@ const StyledTranscript = styled.h1`
   }
 `
 
-export const CommandPanel: React.SFC<CommandPanelProps> = ({ transcript }): JSX.Element => {
+export const CommandPanel: React.SFC<CommandPanelProps> = ({ isRecognizing, transcript }): JSX.Element => {
   return (
     <StyledPanel>
-      <StyledTopLine>transcript</StyledTopLine>
-      <StyledTranscript>
+      <StyledTopLine isRecognizing={isRecognizing}>transcript</StyledTopLine>
+      {transcript &&
+        <StyledTranscript>
         {transcript}
-      </StyledTranscript>
+        </StyledTranscript>
+      }
     </StyledPanel>
   )
 }

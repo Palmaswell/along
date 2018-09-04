@@ -10,8 +10,9 @@ export interface SpeechProviderProps {
 }
 
 export interface SpeechResult {
-    transcript: string;
+    transcript: string | null;
     confidence: number;
+    isRecognizing: boolean;
 }
 
 export interface SpeechContextProps {
@@ -23,12 +24,12 @@ export interface SpeechContextProps {
 export const SpeechContext = React.createContext({
   result: {
     confidence: 0,
-    transcript: '',
-  },
+    transcript: null,
+  }
 } as SpeechContextProps);
 
 export class SpeechProvider extends React.Component<SpeechProviderProps, SpeechResult> {
-  private isRecognizing;
+
   private speechRecognition;
   private ws;
 
@@ -37,8 +38,9 @@ export class SpeechProvider extends React.Component<SpeechProviderProps, SpeechR
     super(props);
 
     this.state = {
-      transcript: '',
-      confidence: 0
+      transcript: null,
+      confidence: 0,
+      isRecognizing: false
     }
     this.ws = this.props.wsBroker;
   }
@@ -102,7 +104,7 @@ export class SpeechProvider extends React.Component<SpeechProviderProps, SpeechR
     }
 
     recognition.onstart = (): void => {
-      this.isRecognizing = true;
+      this.setState({...this.state, isRecognizing: true});
       console.log(`
         > Speech Recognition has begun listening 👂🏼
       `);
@@ -126,7 +128,7 @@ export class SpeechProvider extends React.Component<SpeechProviderProps, SpeechR
         channels:[this.props.channel],
         message: this.state.transcript
       });
-      this.isRecognizing = false;
+      this.setState({...this.state, isRecognizing: false});
     }
 
     recognition.onspeechend = () => {
@@ -136,10 +138,9 @@ export class SpeechProvider extends React.Component<SpeechProviderProps, SpeechR
 
   private start = e => {
     e.persist();
-    if (this.isRecognizing) {
+    if (this.state.isRecognizing) {
       this.speechRecognition.stop();
     }
-
     this.speechRecognition.start();
     this.handleRecognition(this.speechRecognition);
   }

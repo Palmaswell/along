@@ -1,6 +1,14 @@
 import tinycolor from 'tinycolor2';
 
 export const Color = {
+  Amethyst: () => tinycolor(
+    {
+      r: 149,
+      g: 94,
+      b: 209,
+      a: 1
+    }
+  ).toRgbString(),
   PaleAqua: () => tinycolor(
     {
       r: 194,
@@ -31,7 +39,6 @@ export const Color = {
       b: 198,
       a: 1
     }).toRgbString(),
-
   CelestialBlue: () => tinycolor(
     {
       r: 69,
@@ -81,6 +88,12 @@ export const Color = {
     r: 68,
     g: 109,
     b: 119,
+    a: 1
+  }).toRgbString(),
+  VividRasberry: () => tinycolor({
+    r: 255,
+    g: 0,
+    b: 110,
     a: 1
   }).toRgbString()
 }

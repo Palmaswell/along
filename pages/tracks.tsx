@@ -154,7 +154,9 @@ export default class Tracks extends React.Component<TracksProps> {
                           <ArrowLeft />
                         </ActiveLink>
                       </Nav>
-                      <CommandPanel transcript={speech.result.transcript} />
+                      <CommandPanel
+                        isRecognizing={speech.result.isRecognizing}
+                        transcript={speech.result.transcript} />
                       <TransitionComponent
                           isTransitioning={this.state.isTransitioning}>
                         <List>
@@ -190,7 +192,9 @@ export default class Tracks extends React.Component<TracksProps> {
                           ))}
                         </List>
                       </TransitionComponent>
-                      <SpeechControl handleClick={speech.start} />
+                      <SpeechControl
+                        isRecognizing={speech.result.isRecognizing}
+                        handleClick={speech.start} />
                   </SpeechBroker>
                   )}
                 </SpeechContext.Consumer>
