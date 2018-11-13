@@ -29,8 +29,6 @@ export default class MyDocument extends Document {
       <html lang="en-US">
         <Head>
           <meta charSet="utf-8"/>
-          <title>Along - Spotify playlists with the Web Speech Recognition API</title>
-          <meta name="description" content="Universal React app using NextJS, RxJs and the Web Speech Recognition API. Listen to your Spotify playlists" />
           <meta name="viewport" content="width=device-width, user-scalable=no" />
           <link
             rel="preload"

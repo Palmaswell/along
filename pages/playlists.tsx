@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Head from 'next/head';
 import fetch, { Headers }  from 'node-fetch';
 import { TransitionGroup } from 'react-transition-group';
 
@@ -6,7 +7,6 @@ import { getCookie } from '../utils/cookies';
 
 import { SpeechContext, SpeechProvider } from '../providers/speech/provider';
 import { WSContext, WSProvider } from '../providers/websocket/provider';
-import SpeechBroker from '../providers/speech/broker';
 
 import { registerIntent } from '../intents/register';
 import { playlistsIntent } from '../intents/intents';
@@ -46,15 +46,25 @@ export default class PlayLists extends React.Component<PlayListsProps> {
       playlist: data
     }
   }
+
   public state = {
     isTransitioning: false
   }
+
   public componentDidMount(): void {
     this.setState({...this.state, isTransitioning: true });
+    registerIntent(playlistsIntent, this.props.playlist.items)
+    .forEach(intent => {
+      // @ts-ignore: Block-scoped variable is used before declaration
+      intent.callableIntent.unregister(registeredCallback);
+      const registeredCallback = intent.callableIntent.register(intent.action);
+    });
   }
+
   public componentWillUnmount(): void {
     this.setState({...this.state, isTransitioning: false });
   }
+
   public render(): JSX.Element {
     return (
       <main>
@@ -69,9 +79,11 @@ export default class PlayLists extends React.Component<PlayListsProps> {
                 wsBroker={wsBroker}>
                 <SpeechContext.Consumer>
                   {speech => (
-                    <SpeechBroker
-                      registrationList={registerIntent(playlistsIntent, this.props.playlist.items)}
-                      wsBroker={wsBroker}>
+                    <>
+                      <Head>
+                        <title>Along - My Spotify playlists</title>
+                        <meta name="description" content="Use this web app voice interface to visit a playlist" />
+                      </Head>
                       <Nav type="secondary">
                         <ActiveLink href={`/`}><ArrowLeft /></ActiveLink>
                       </Nav>
@@ -107,7 +119,7 @@ export default class PlayLists extends React.Component<PlayListsProps> {
                       <SpeechControl
                         isRecognizing={speech.result.isRecognizing}
                         handleClick={speech.start}/>
-                    </SpeechBroker>
+                    </>
                   )}
                 </SpeechContext.Consumer>
               </SpeechProvider>

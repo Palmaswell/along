@@ -1,11 +1,11 @@
 import * as React from 'react';
+import Head from 'next/head';
 import fetch, { Headers }  from 'node-fetch';
 
 import { getCookie } from '../utils/cookies';
 
 import { SpeechContext, SpeechProvider } from '../providers/speech/provider';
 import { WSContext, WSProvider } from '../providers/websocket/provider';
-import SpeechBroker from '../providers/speech/broker';
 
 import { registerIntent } from '../intents/register';
 import { navigateIntent } from '../intents/intents';
@@ -44,16 +44,26 @@ export default class Index extends React.Component<IndexProps, {}> {
 
   public static async getInitialProps(ctx): Promise<SpotifyProps> {
     const res = await fetch(`https://api.spotify.com/v1/me`, {
-    method: 'GET',
-    headers: new Headers({
-      'Authorization': `Bearer ${getCookie('access', ctx)}`,
-      'Content-Type': 'application/json',
-    })
-  });
-
-  const data = await res.json();
+      method: 'GET',
+      headers: new Headers({
+        'Authorization': `Bearer ${getCookie('access', ctx)}`,
+        'Content-Type': 'application/json',
+      })
+    });
+    const data = await res.json();
     return {
       spotify: data ? data : null
+    }
+  }
+
+  public componentDidMount(): void {
+    if (this.props.spotify.id) {
+      registerIntent(navigateIntent, this.props.spotify.id)
+      .forEach(intent => {
+        // @ts-ignore: Block-scoped variable is used before declaration
+        intent.callableIntent.unregister(registeredCallback);
+        const registeredCallback = intent.callableIntent.register(intent.action);
+      });
     }
   }
 
@@ -68,9 +78,11 @@ export default class Index extends React.Component<IndexProps, {}> {
             wsBroker={wsBroker}>
             <SpeechContext.Consumer>
               {speech => (
-                <SpeechBroker
-                  registrationList={registerIntent(navigateIntent, this.props.spotify.id)}
-                  wsBroker={wsBroker}>
+                <>
+                  <Head>
+                    <title>Along - Accessibility and The Web Speech API</title>
+                    <meta name="description" content="React universal app using the Web Speech API with accessibility as a baseline" />
+                  </Head>
                   <Nav type="primary">
                     <ActiveLink
                       href={`/playlists/${this.props.spotify.id}`}>
@@ -93,7 +105,7 @@ export default class Index extends React.Component<IndexProps, {}> {
                   <SpeechControl
                     isRecognizing={speech.result.isRecognizing}
                     handleClick={speech.start} />
-              </SpeechBroker>
+              </>
               )}
             </SpeechContext.Consumer>
           </SpeechProvider>

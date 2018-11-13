@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Head from 'next/head';
 import fetch, { Headers }  from 'node-fetch';
 import { TransitionGroup } from 'react-transition-group';
 
@@ -7,7 +8,6 @@ import { formatMilliseconds } from '../utils/readable-time';
 
 import { SpeechContext, SpeechProvider } from '../providers/speech/provider';
 import { WSContext, WSProvider } from '../providers/websocket/provider';
-import SpeechBroker from '../providers/speech/broker';
 
 import { registerIntent } from '../intents/register';
 import { tracksIntent } from '../intents/intents';
@@ -48,11 +48,24 @@ export default class Tracks extends React.Component<TracksProps> {
       userId: getCookie('user_id', ctx)
     }
   }
+
   public state = {
     isTransitioning: false
   }
 
   componentDidMount() {
+    registerIntent(
+      tracksIntent,
+      this.props.tracks,
+      this.playTrack,
+      this.pauseTrack,
+      this.resumeTrack,
+      this.props.userId)
+      .forEach(intent => {
+        // @ts-ignore: Block-scoped variable is used before declaration
+        intent.callableIntent.unregister(registeredCallback);
+        const registeredCallback = intent.callableIntent.register(intent.action);
+      });
     this.setState({...this.state, isTransitioning: true });
   }
 
@@ -139,15 +152,11 @@ export default class Tracks extends React.Component<TracksProps> {
                 wsBroker={wsBroker}>
                 <SpeechContext.Consumer>
                   {speech => (
-                    <SpeechBroker
-                      registrationList={registerIntent(
-                        tracksIntent,
-                        this.props.tracks,
-                        this.playTrack,
-                        this.pauseTrack,
-                        this.resumeTrack,
-                        this.props.userId)}
-                      wsBroker={wsBroker}>
+                    <>
+                      <Head>
+                        <title>Along - Some awesome tracks from my playlist</title>
+                        <meta name="description" content="Use this web app voice interface to play, pause and resume any song" />
+                      </Head>
                       <Nav type="secondary">
                         <ActiveLink
                         href={`/playlists/${this.props.userId}`}>
@@ -195,7 +204,7 @@ export default class Tracks extends React.Component<TracksProps> {
                       <SpeechControl
                         isRecognizing={speech.result.isRecognizing}
                         handleClick={speech.start} />
-                  </SpeechBroker>
+                  </>
                   )}
                 </SpeechContext.Consumer>
               </SpeechProvider>

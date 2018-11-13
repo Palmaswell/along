@@ -3,7 +3,7 @@ import { sanatizedIntent } from '../../utils/sanatized-intent';
 import { IntentProps } from '../../intents/intents';
 
 
-function CallBackableIntent(intent: IntentProps) {
+export function CallBackableIntent(intent: IntentProps) {
   return {
     intent,
     callbacks: [],
