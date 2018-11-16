@@ -23,9 +23,9 @@ export const createRecognition = (init: SpeechInit) => {
     recognition.maxAlternatives = init.maxAlternatives;
     recognition.interimResults = init.interimResults;
     recognition.lang = init.lang || 'en-US';
-    //Todo: shorten without const binding
-    const grammarStream = abstractCommandFactory.getGrammarStream();
-    grammarStream.subscribe((grammars: string) => {
+
+    abstractCommandFactory.getGrammarStream()
+    .subscribe((grammars: string) => {
         console.log(`
         > ⚡️ This is our currently registered grammar stream:
         >    It uses the JSpeech Grammar Format (JSGF.)
