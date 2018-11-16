@@ -3,13 +3,11 @@ import Head from 'next/head';
 import fetch, { Headers }  from 'node-fetch';
 import { TransitionGroup } from 'react-transition-group';
 
-import * as Utils from '../utils';
-
 import { SpeechContext, SpeechProvider } from '../speech/provider';
 import { WSContext, WSProvider } from '../websocket/provider';
 
-import { registerIntent } from '../intents/register';
-import { tracksIntent } from '../intents/intents';
+import * as Utils from '../utils';
+import * as Intent from '../intents';
 
 import ActiveLink from '../components/active-link';
 import { ArrowLeft } from '../components/icons';
@@ -53,8 +51,8 @@ export default class Tracks extends React.Component<TracksProps> {
   }
 
   componentDidMount() {
-    registerIntent(
-      tracksIntent,
+    Intent.registerIntent(
+      Intent.tracksIntent,
       this.props.tracks,
       this.playTrack,
       this.pauseTrack,

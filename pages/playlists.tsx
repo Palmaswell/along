@@ -6,9 +6,7 @@ import { SpeechContext, SpeechProvider } from '../speech/provider';
 import { WSContext, WSProvider } from '../websocket/provider';
 
 import * as Utils from '../utils';
-
-import { registerIntent } from '../intents/register';
-import { playlistsIntent } from '../intents/intents';
+import * as Intent from '../intents';
 
 import { ArrowLeft } from '../components/icons';
 import ActiveLink from '../components/active-link';
@@ -52,7 +50,7 @@ export default class PlayLists extends React.Component<PlayListsProps> {
 
   public componentDidMount(): void {
     this.setState({...this.state, isTransitioning: true });
-    registerIntent(playlistsIntent, this.props.playlist.items);
+    Intent.registerIntent(Intent.playlistsIntent, this.props.playlist.items);
   }
 
   public componentWillUnmount(): void {

@@ -6,9 +6,7 @@ import { SpeechContext, SpeechProvider } from '../speech/provider';
 import { WSContext, WSProvider } from '../websocket/provider';
 
 import * as Utils from '../utils';
-
-import { registerIntent } from '../intents/register';
-import { navigateIntent } from '../intents/intents';
+import * as Intent from '../intents';
 
 import ActiveLink from '../components/active-link';
 import Link from '../components/link';
@@ -54,7 +52,7 @@ export default class Index extends React.Component<IndexProps> {
 
   public componentDidMount(): void {
     if (this.props.spotify.id) {
-      registerIntent(navigateIntent, this.props.spotify.id);
+      Intent.registerIntent(Intent.navigateIntent, this.props.spotify.id);
     }
   }
 
