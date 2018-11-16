@@ -2,10 +2,10 @@ import * as React from 'react';
 import Head from 'next/head';
 import fetch, { Headers }  from 'node-fetch';
 
-import { getCookie } from '../utils/cookies';
-
 import { SpeechContext, SpeechProvider } from '../speech/provider';
 import { WSContext, WSProvider } from '../websocket/provider';
+
+import * as Utils from '../utils';
 
 import { registerIntent } from '../intents/register';
 import { navigateIntent } from '../intents/intents';
@@ -42,7 +42,7 @@ export default class Index extends React.Component<IndexProps> {
     const res = await fetch(`https://api.spotify.com/v1/me`, {
       method: 'GET',
       headers: new Headers({
-        'Authorization': `Bearer ${getCookie('access', ctx)}`,
+        'Authorization': `Bearer ${Utils.getCookie('access', ctx)}`,
         'Content-Type': 'application/json',
       })
     });

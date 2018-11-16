@@ -3,8 +3,7 @@ import Head from 'next/head';
 import fetch, { Headers }  from 'node-fetch';
 import { TransitionGroup } from 'react-transition-group';
 
-import { getCookie } from '../utils/cookies';
-import { formatMilliseconds } from '../utils/readable-time';
+import * as Utils from '../utils';
 
 import { SpeechContext, SpeechProvider } from '../speech/provider';
 import { WSContext, WSProvider } from '../websocket/provider';
@@ -35,17 +34,17 @@ export default class Tracks extends React.Component<TracksProps> {
   public devices: string;
   public static async getInitialProps(ctx) {
     const { play_id } = ctx.query;
-    const res = await fetch(`https://api.spotify.com/v1/users/${getCookie('user_id', ctx)}/playlists/${play_id}/tracks`, {
+    const res = await fetch(`https://api.spotify.com/v1/users/${Utils.getCookie('user_id', ctx)}/playlists/${play_id}/tracks`, {
       method: 'GET',
       headers: new Headers({
-        'Authorization': `Bearer ${getCookie('access', ctx)}`,
+        'Authorization': `Bearer ${Utils.getCookie('access', ctx)}`,
         'Content-Type': 'application/json',
       })
     });
     const tracks = await res.json();
     return {
       tracks: tracks.items || [],
-      userId: getCookie('user_id', ctx)
+      userId: Utils.getCookie('user_id', ctx)
     }
   }
 
@@ -73,7 +72,7 @@ export default class Tracks extends React.Component<TracksProps> {
     const res = await fetch('https://api.spotify.com/v1/me/player/devices', {
       method: 'GET',
       headers: new Headers({
-        'Authorization': `Bearer ${getCookie('access')}`,
+        'Authorization': `Bearer ${Utils.getCookie('access')}`,
         'Content-Type': 'application/json',
       })
     });
@@ -85,7 +84,7 @@ export default class Tracks extends React.Component<TracksProps> {
     const res = await fetch(`https://api.spotify.com/v1/me/player/pause`, {
       method: 'PUT',
       headers: new Headers({
-        'Authorization': `Bearer ${getCookie('access')}`,
+        'Authorization': `Bearer ${Utils.getCookie('access')}`,
         'Content-Type': 'application/json',
       }),
     });
@@ -103,7 +102,7 @@ export default class Tracks extends React.Component<TracksProps> {
     const res = await fetch(`https://api.spotify.com/v1/me/player/play${devices}`, {
       method: 'PUT',
       headers: new Headers({
-        'Authorization': `Bearer ${getCookie('access')}`,
+        'Authorization': `Bearer ${Utils.getCookie('access')}`,
         'Content-Type': 'application/json',
       }),
       body: JSON.stringify({'context_uri': `${uri}`})
@@ -121,7 +120,7 @@ export default class Tracks extends React.Component<TracksProps> {
     const res = await fetch(`https://api.spotify.com/v1/me/player/play`, {
       method: 'PUT',
       headers: new Headers({
-        'Authorization': `Bearer ${getCookie('access')}`,
+        'Authorization': `Bearer ${Utils.getCookie('access')}`,
         'Content-Type': 'application/json',
       }),
     });
@@ -184,7 +183,7 @@ export default class Tracks extends React.Component<TracksProps> {
                                 </Copy>
                               </GridItem>
                               <GridItem justify="end">
-                                <Copy tag="div">{formatMilliseconds(playlist.track.duration_ms)}</Copy>
+                                <Copy tag="div">{Utils.formatMilliseconds(playlist.track.duration_ms)}</Copy>
                                 {playlist.track.explicit &&
                                   <Copy tag="div" size={CopySize.S}>{playlist.track.explicit}</Copy>
                                 }

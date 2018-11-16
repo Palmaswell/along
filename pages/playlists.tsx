@@ -2,11 +2,10 @@ import * as React from 'react';
 import Head from 'next/head';
 import fetch, { Headers }  from 'node-fetch';
 import { TransitionGroup } from 'react-transition-group';
-
-import { getCookie } from '../utils/cookies';
-
 import { SpeechContext, SpeechProvider } from '../speech/provider';
 import { WSContext, WSProvider } from '../websocket/provider';
+
+import * as Utils from '../utils';
 
 import { registerIntent } from '../intents/register';
 import { playlistsIntent } from '../intents/intents';
@@ -36,7 +35,7 @@ export default class PlayLists extends React.Component<PlayListsProps> {
     const res = await fetch(`https://api.spotify.com/v1/users/${id}/playlists`, {
       method: 'GET',
       headers: new Headers({
-        'Authorization': `Bearer ${getCookie('access', ctx)}`,
+        'Authorization': `Bearer ${Utils.getCookie('access', ctx)}`,
         'Content-Type': 'application/json',
       })
     });
