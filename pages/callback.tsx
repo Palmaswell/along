@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as Component from '../components';
+import ActiveLink from '../components/active-link';
 import { size } from '../components/sizes';
 
 interface StatelessPage<P = {}> extends React.SFC<P> {
@@ -9,10 +10,10 @@ interface StatelessPage<P = {}> extends React.SFC<P> {
 const CallBack: StatelessPage<{}> = () => (
   <Component.Background>
      <Component.Nav type="secondary">
-      <Component.ActiveLink
+      <ActiveLink
       href={'/'}>
         <Component.ArrowLeft />
-      </Component.ActiveLink>
+      </ActiveLink>
     </Component.Nav>
     <Component.Space size={size.xs}>
     <Component.Headline order="h1">

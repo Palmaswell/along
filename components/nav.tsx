@@ -1,6 +1,4 @@
 import styled from 'react-emotion';
-
-import { Breakpoint } from './breakpoint';
 import { size } from './sizes'
 
 export type NavType = 'primary' | 'secondary';
@@ -24,7 +22,7 @@ const StyledNav = styled.div`
       case 'secondary':
         return 'flex-start';
       default:
-        return 'flex-end';
+        return 'space-between';
     }
   }};
   align-items: center;
@@ -40,11 +38,6 @@ const StyledNav = styled.div`
         return '16px';
     }
   }};
-
-  @media (min-width: ${ Breakpoint.M }) {
-    position: fixed;
-    padding: ${size.xxs}px;
-  }
 `
 export const Nav: React.SFC<NavProps> = ({ children, type }): JSX.Element => (
   <StyledNav type={type}>

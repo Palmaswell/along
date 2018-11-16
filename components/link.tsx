@@ -11,9 +11,10 @@ export interface LinkProps {
 
 export const StyledLink = styled.a`
   color: ${color.SmokyBlack()};
+  letter-spacing: .5px;
   text-decoration: none;
-  transition: color .33s ease-in-out;
   ${getFontHind()};
+  transition: color .33s ease-in-out;
 
   :hover {
     color: ${color.UnitedNationsBlue()};
