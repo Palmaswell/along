@@ -2,47 +2,43 @@ import * as React from 'react';
 import handleSpeechError from './error';
 import createRecognition from './recognition'
 import { abstractCommandFactory } from './commands';
-import { WSSingletonProps } from '../websocket/singleton';
+import { WSBroker } from '../websocket/singleton';
 
-
-export interface SpeechProviderProps {
+interface SpeechProviderProps {
   channel: string;
-  wsBroker: {
-    wsSingleton: WSSingletonProps;
-  };
+  wsBroker: WSBroker;
 }
 
-export interface SpeechResult {
+interface SpeechProviderResult {
     transcript: string | null;
     confidence: number;
     isRecognizing: boolean;
 }
 
-export interface SpeechContextProps {
-  result: SpeechResult;
+interface SpeechContextProps {
+  result: SpeechProviderResult;
   start: React.MouseEventHandler<HTMLElement>;
 }
 
 export const SpeechContext = React.createContext({
   result: {
     confidence: 0,
-    transcript: null,
+    transcript: '',
   }
 } as SpeechContextProps);
 
-export class SpeechProvider extends React.Component<SpeechProviderProps, SpeechResult> {
+export class SpeechProvider extends React.Component<SpeechProviderProps, SpeechProviderResult> {
   private recognition;
   private ws;
 
+  state = {
+    transcript: '',
+    confidence: 0,
+    isRecognizing: false
+  }
 
   public constructor(props) {
     super(props);
-
-    this.state = {
-      transcript: null,
-      confidence: 0,
-      isRecognizing: false
-    }
     this.ws = this.props.wsBroker;
   }
 
@@ -59,7 +55,7 @@ export class SpeechProvider extends React.Component<SpeechProviderProps, SpeechR
     recognition.onstart = (): void => {
       this.setState({...this.state, isRecognizing: true});
       console.log(`
-        > Speech Recognition has begun listening ...
+        >  🏁 Speech recognition is listening...
       `);
     };
 
@@ -75,7 +71,7 @@ export class SpeechProvider extends React.Component<SpeechProviderProps, SpeechR
       return filteredIntents;
     }
 
-    recognition.onend = () => {
+    recognition.onend = (): void => {
       this.ws.subject.next({
         action: 'PUBLISH',
         channels:[this.props.channel],
@@ -87,7 +83,7 @@ export class SpeechProvider extends React.Component<SpeechProviderProps, SpeechR
     recognition.onspeechend = () => recognition.stop();
   }
 
-  private start = e => {
+  private start = (e): void => {
     e.persist();
     if (this.state.isRecognizing) {
       this.recognition.stop();
