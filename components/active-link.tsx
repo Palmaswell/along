@@ -9,7 +9,6 @@ export interface ActiveLinkProps {
 }
 
 const ActiveLink: React.SFC<ActiveLinkProps> = ({ children, router, href }): JSX.Element => {
-
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault()
     router.push(href)

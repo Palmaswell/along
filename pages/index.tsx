@@ -5,17 +5,11 @@ import fetch, { Headers }  from 'node-fetch';
 import { SpeechContext, SpeechProvider } from '../speech/provider';
 import { WSContext, WSProvider } from '../websocket/provider';
 
+import * as Component from '../components';
+import ActiveLink from '../components/active-link';
 import * as Utils from '../utils';
 import * as Intent from '../intents';
 
-import ActiveLink from '../components/active-link';
-import Link from '../components/link';
-import Thumbnail from '../components/thumbnail';
-import Panel from '../components/panel';
-import SpeechControl from '../components/speech-controls';
-import Space from '../components/space';
-import Nav from '../components/nav';
-import { size } from '../components/sizes';
 
 export interface IndexProps {
   userName: string;
@@ -72,26 +66,26 @@ export default class Index extends React.Component<IndexProps> {
                     <title>Along - Accessibility and The Web Speech API</title>
                     <meta name="description" content="React universal app using the Web Speech API with accessibility as a baseline" />
                   </Head>
-                  <Nav type="primary">
+                  <Component.Nav type="primary">
                     <ActiveLink
                       href={`/playlists/${this.props.spotify.id}`}>
                       Playlists
                     </ActiveLink>
-                    <Space size={[0, 0, 0, size.xs]}>
-                      <Link
+                    <Component.Space size={[0, 0, 0, Component.size.xs]}>
+                      <Component.Link
                         href={this.props.spotify.external_urls.spotify}
                         target="_blank">
-                        <Thumbnail
+                        <Component.Thumbnail
                           alt={`Spotify profile image from ${this.props.spotify.display_name}`}
                           caption={this.userName}
                           src={this.props.spotify.images[0].url}/>
-                      </Link>
-                    </Space>
-                  </Nav>
-                  <Panel
+                      </Component.Link>
+                    </Component.Space>
+                  </Component.Nav>
+                  <Component.Panel
                     isRecognizing={speech.result.isRecognizing}
                     transcript={speech.result.transcript} />
-                  <SpeechControl
+                  <Component.SpeechControl
                     isRecognizing={speech.result.isRecognizing}
                     handleClick={speech.start} />
                 </>

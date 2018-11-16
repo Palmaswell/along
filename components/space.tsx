@@ -68,7 +68,7 @@ const StyledSpace = styled.div`
   };
 `;
 
-const Space: React.SFC<SpaceProps> = (props): JSX.Element => {
+export const Space: React.SFC<SpaceProps> = (props): JSX.Element => {
 	const size = merge(
 		props.size || 0,
 		props.sizeTop,

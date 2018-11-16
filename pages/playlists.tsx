@@ -5,21 +5,10 @@ import { TransitionGroup } from 'react-transition-group';
 import { SpeechContext, SpeechProvider } from '../speech/provider';
 import { WSContext, WSProvider } from '../websocket/provider';
 
+import * as Component from '../components';
+import ActiveLink from '../components/active-link';
 import * as Utils from '../utils';
 import * as Intent from '../intents';
-
-import { ArrowLeft } from '../components/icons';
-import ActiveLink from '../components/active-link';
-import Copy, { CopySize } from '../components/copy';
-import Panel from '../components/panel';
-import List from '../components/list';
-import ListItem from '../components/list-item';
-import Media from '../components/media';
-import Nav from '../components/nav';
-import SpeechControl from '../components/speech-controls';
-import Space from '../components/space';
-import TransitionComponent from '../components/transition';
-import { size } from '../components/sizes';
 
 export interface PlayListsProps {
   playlist: {
@@ -76,39 +65,39 @@ export default class PlayLists extends React.Component<PlayListsProps> {
                         <title>Along - My Spotify playlists</title>
                         <meta name="description" content="Use this web app voice interface to visit a playlist" />
                       </Head>
-                      <Nav type="secondary">
-                        <ActiveLink href={`/`}><ArrowLeft /></ActiveLink>
-                      </Nav>
-                      <Panel
+                      <Component.Nav type="secondary">
+                        <ActiveLink href={`/`}><Component.ArrowLeft /></ActiveLink>
+                      </Component.Nav>
+                      <Component.Panel
                         isRecognizing={speech.result.isRecognizing}
                         transcript={speech.result.transcript} />
 
-                      <TransitionComponent
+                      <Component.TransitionComponent
                           isTransitioning={this.state.isTransitioning}>
-                        <List flex>
+                        <Component.List flex>
                             {this.props.playlist.items.map((playlist, i) => (
-                              <ListItem key={playlist.id} flex>
+                              <Component.ListItem key={playlist.id} flex>
                                 <ActiveLink
                                   href={`/tracks/${playlist.id}`}
                                   index={i}
                                   key={playlist.id}>
-                                  <Media
+                                  <Component.Media
                                     alt={`Playlist: ${playlist.name} cover`}
                                     src={playlist.images[0].url}
                                     large />
-                                  <Space size={[size.xxxs, 0, 0]}>
-                                    <Copy tag="div">{playlist.name}</Copy>
-                                  </Space>
-                                  <Copy tag="div" size={CopySize.S}>
+                                  <Component.Space size={[Component.size.xxxs, 0, 0]}>
+                                    <Component.Copy tag="div">{playlist.name}</Component.Copy>
+                                  </Component.Space>
+                                  <Component.Copy tag="div" size={Component.CopySize.S}>
                                     {playlist.tracks.total} tracks
-                                  </Copy>
+                                  </Component.Copy>
                                 </ActiveLink>
-                              </ListItem>
+                              </Component.ListItem>
                             ))}
-                        </List>
-                      </TransitionComponent>
+                        </Component.List>
+                      </Component.TransitionComponent>
 
-                      <SpeechControl
+                      <Component.SpeechControl
                         isRecognizing={speech.result.isRecognizing}
                         handleClick={speech.start}/>
                     </>

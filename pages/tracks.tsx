@@ -9,18 +9,8 @@ import { WSContext, WSProvider } from '../websocket/provider';
 import * as Utils from '../utils';
 import * as Intent from '../intents';
 
+import * as Component from '../components';
 import ActiveLink from '../components/active-link';
-import { ArrowLeft } from '../components/icons';
-import Copy, { CopySize } from '../components/copy';
-import Color from '../components/color';
-import List from '../components/list';
-import GridContainer from '../components/grid-container';
-import Media from '../components/media';
-import GridItem from '../components/grid-item';
-import Panel from '../components/panel';
-import SpeechControl from '../components/speech-controls';
-import TransitionComponent from '../components/transition';
-import Nav from '../components/nav';
 
 export interface TracksProps {
   devices: any;
@@ -150,51 +140,48 @@ export default class Tracks extends React.Component<TracksProps> {
                         <title>Along - Some awesome tracks from my playlist</title>
                         <meta name="description" content="Use this web app voice interface to play, pause and resume any song" />
                       </Head>
-                      <Nav type="secondary">
+                      <Component.Nav type="secondary">
                         <ActiveLink
                         href={`/playlists/${this.props.userId}`}>
-                          <ArrowLeft />
+                          <Component.ArrowLeft />
                         </ActiveLink>
-                      </Nav>
-                      <Panel
+                      </Component.Nav>
+                      <Component.Panel
                         isRecognizing={speech.result.isRecognizing}
                         transcript={speech.result.transcript} />
-                      <TransitionComponent
+                      <Component.TransitionComponent
                           isTransitioning={this.state.isTransitioning}>
-                        <List>
+                        <Component.List>
                           {this.props.tracks.map((playlist, i) => (
-                            <GridContainer
+                            <Component.GridContainer
                               handleClick={() => this.playTrack(playlist.track.album.uri)}
                               key={playlist.track.id}>
-                              <GridItem align="center">
-                                <Copy color={Color.UnitedNationsBlue()} tag="div">{i + 1}</Copy>
-                              </GridItem>
-                              <GridItem>
-                                <Media
+                              <Component.GridItem align="center">
+                                <Component.Copy color={Component.Color.UnitedNationsBlue()} tag="div">{i + 1}</Component.Copy>
+                              </Component.GridItem>
+                              <Component.GridItem>
+                                <Component.Media
                                   alt={`${playlist.track.album.name} track name`}
                                   src={playlist.track.album.images[0].url} />
-                              </GridItem>
-                              <GridItem>
-                                <Copy tag="div" weight={'bold'}>{playlist.track.name}</Copy>
-                                <Copy size={CopySize.S} tag="div">
+                              </Component.GridItem>
+                              <Component.GridItem>
+                                <Component.Copy tag="div" weight={'bold'}>{playlist.track.name}</Component.Copy>
+                                <Component.Copy size={Component.CopySize.S} tag="div">
                                   {playlist.track.artists[0].name}
-                                </Copy>
-                              </GridItem>
-                              <GridItem justify="end">
-                                <Copy tag="div">{Utils.formatMilliseconds(playlist.track.duration_ms)}</Copy>
+                                </Component.Copy>
+                              </Component.GridItem>
+                              <Component.GridItem justify="end">
+                                <Component.Copy tag="div">{Utils.formatMilliseconds(playlist.track.duration_ms)}</Component.Copy>
                                 {playlist.track.explicit &&
-                                  <Copy tag="div" size={CopySize.S}>{playlist.track.explicit}</Copy>
+                                  <Component.Copy tag="div" size={Component.CopySize.S}>{playlist.track.explicit}</Component.Copy>
                                 }
-                              </GridItem>
+                              </Component.GridItem>
 
-                              {/* <button onClick={this.pauseTrack}>pause</button>
-                              <button onClick={this.resumeTrack}>resume</button> */}
-
-                            </GridContainer>
+                            </Component.GridContainer>
                           ))}
-                        </List>
-                      </TransitionComponent>
-                      <SpeechControl
+                        </Component.List>
+                      </Component.TransitionComponent>
+                      <Component.SpeechControl
                         isRecognizing={speech.result.isRecognizing}
                         handleClick={speech.start} />
                   </>
