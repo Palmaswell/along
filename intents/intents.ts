@@ -1,23 +1,26 @@
 import { handleRouter } from '../utils/handle-router';
 
-export type IntentTypes = 'NavigateIntent' | 'PlaylistsIntent' | 'TracksIntent' | 'HomeIntent';
+export enum Intent {
+  navigate = 'NavigateIntent',
+  playlists = 'PlaylistsIntent',
+  tracks = 'TracksIntent',
+  home = 'HomeIntent',
+}
 
 export interface IntentProps {
-  type: IntentTypes;
+  type: Intent;
   samples: string[];
   action(param: string | undefined): string | void;
 }
 
-export function IntentFactory({ type, samples, action }): IntentProps {
-  return {
-    type,
-    samples,
-    action
-  }
-};
+export const IntentFactory = ({ type, samples, action }): IntentProps => ({
+  type,
+  samples,
+  action
+});
 
 export const navigateIntent: IntentProps =  IntentFactory({
-  type: 'NavigateIntent',
+  type: Intent.navigate,
   samples: [
     'good playlist',
     'go to playlist',
@@ -35,7 +38,7 @@ export const navigateIntent: IntentProps =  IntentFactory({
 });
 
 export const playlistsIntent: IntentProps =  IntentFactory({
-  type: 'PlaylistsIntent',
+  type: Intent.playlists,
   samples: [
     'go to',
     'show me',
@@ -50,7 +53,7 @@ export const playlistsIntent: IntentProps =  IntentFactory({
 });
 
 export const tracksIntent: IntentProps =  IntentFactory({
-  type: 'TracksIntent',
+  type: Intent.tracks,
   samples: [
     'play',
     '',
@@ -62,7 +65,7 @@ export const tracksIntent: IntentProps =  IntentFactory({
 });
 
 export const homeIntent: IntentProps = IntentFactory({
-  type: 'HomeIntent',
+  type: Intent.home,
   samples: [
     'go home',
     'go back',

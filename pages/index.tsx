@@ -35,14 +35,10 @@ export interface IndexProps {
   }
 }
 
-interface SpotifyProps {
-  spotify: any;
-}
-
-export default class Index extends React.Component<IndexProps, {}> {
+export default class Index extends React.Component<IndexProps> {
   private userName = this.props.spotify.display_name.replace(/\s(.*)/g, '');
 
-  public static async getInitialProps(ctx): Promise<SpotifyProps> {
+  public static async getInitialProps(ctx): Promise<any> {
     const res = await fetch(`https://api.spotify.com/v1/me`, {
       method: 'GET',
       headers: new Headers({
@@ -58,12 +54,7 @@ export default class Index extends React.Component<IndexProps, {}> {
 
   public componentDidMount(): void {
     if (this.props.spotify.id) {
-      registerIntent(navigateIntent, this.props.spotify.id)
-      .forEach(intent => {
-        // @ts-ignore: Block-scoped variable is used before declaration
-        intent.callableIntent.unregister(registeredCallback);
-        const registeredCallback = intent.callableIntent.register(intent.action);
-      });
+      registerIntent(navigateIntent, this.props.spotify.id);
     }
   }
 
@@ -105,7 +96,7 @@ export default class Index extends React.Component<IndexProps, {}> {
                   <SpeechControl
                     isRecognizing={speech.result.isRecognizing}
                     handleClick={speech.start} />
-              </>
+                </>
               )}
             </SpeechContext.Consumer>
           </SpeechProvider>

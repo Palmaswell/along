@@ -60,12 +60,8 @@ export default class Tracks extends React.Component<TracksProps> {
       this.playTrack,
       this.pauseTrack,
       this.resumeTrack,
-      this.props.userId)
-      .forEach(intent => {
-        // @ts-ignore: Block-scoped variable is used before declaration
-        intent.callableIntent.unregister(registeredCallback);
-        const registeredCallback = intent.callableIntent.register(intent.action);
-      });
+      this.props.userId
+    );
     this.setState({...this.state, isTransitioning: true });
   }
 

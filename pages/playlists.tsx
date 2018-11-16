@@ -53,12 +53,7 @@ export default class PlayLists extends React.Component<PlayListsProps> {
 
   public componentDidMount(): void {
     this.setState({...this.state, isTransitioning: true });
-    registerIntent(playlistsIntent, this.props.playlist.items)
-    .forEach(intent => {
-      // @ts-ignore: Block-scoped variable is used before declaration
-      intent.callableIntent.unregister(registeredCallback);
-      const registeredCallback = intent.callableIntent.register(intent.action);
-    });
+    registerIntent(playlistsIntent, this.props.playlist.items);
   }
 
   public componentWillUnmount(): void {

@@ -31,7 +31,7 @@ export class SpeechProvider extends React.Component<SpeechProviderProps, SpeechP
   private recognition;
   private ws;
 
-  state = {
+  public state = {
     transcript: '',
     confidence: 0,
     isRecognizing: false
