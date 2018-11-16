@@ -1,7 +1,9 @@
 import * as React from 'react';
-import { abstractCommandFactory } from './commands';
 import handleSpeechError from './error';
+import createRecognition from './recognition'
+import { abstractCommandFactory } from './commands';
 import { WSSingletonProps } from '../websocket/singleton';
+
 
 export interface SpeechProviderProps {
   channel: string;
@@ -29,8 +31,7 @@ export const SpeechContext = React.createContext({
 } as SpeechContextProps);
 
 export class SpeechProvider extends React.Component<SpeechProviderProps, SpeechResult> {
-
-  private speechRecognition;
+  private recognition;
   private ws;
 
 
@@ -46,32 +47,11 @@ export class SpeechProvider extends React.Component<SpeechProviderProps, SpeechR
   }
 
   public componentDidMount() {
-    this.initSpeechRecognition();
-  }
-
-  private initSpeechRecognition = (): void => {
-    const  SpeechRecognition  = (window as any).SpeechRecognition
-      || (window as any).webkitSpeechRecognition;
-    const SpeechGrammarList = (window as any).SpeechGrammarList
-      || (window as any).webkitSpeechGrammarList;
-
-    this.speechRecognition = new SpeechRecognition();
-    this.speechRecognition.maxAlternatives = 1; // which is actually default
-    this.speechRecognition.interimResults = false;
-    this.speechRecognition.lang = 'en-US';
-
-    const recognitionList = new SpeechGrammarList();
-
-    const grammarStream = abstractCommandFactory.getGrammarStream();
-    grammarStream.subscribe(grammars => {
-      console.log(`
-      > ⚡️ This is our currently registered grammar stream:
-      >    It uses the JSpeech Grammar Format (JSGF.)
-      > 📚 ${grammars}
-      `)
-      return recognitionList.addFromString(grammars, 1);
+    this.recognition = createRecognition({
+      maxAlternatives: 1,
+      interimResults: false,
+      lang: 'en-US'
     })
-    this.speechRecognition.grammar = recognitionList;
   }
 
   private handleRecognition = (recognition): void => {
@@ -104,18 +84,16 @@ export class SpeechProvider extends React.Component<SpeechProviderProps, SpeechR
       this.setState({...this.state, isRecognizing: false});
     }
 
-    recognition.onspeechend = () => {
-      recognition.stop();
-    }
+    recognition.onspeechend = () => recognition.stop();
   }
 
   private start = e => {
     e.persist();
     if (this.state.isRecognizing) {
-      this.speechRecognition.stop();
+      this.recognition.stop();
     }
-    this.speechRecognition.start();
-    this.handleRecognition(this.speechRecognition);
+    this.recognition.start();
+    this.handleRecognition(this.recognition);
   }
 
   public render(): JSX.Element {
