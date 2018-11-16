@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { abstractCommandFactory } from './commands';
+import handleSpeechError from './error';
 import { WSSingletonProps } from '../websocket/singleton';
 
 export interface SpeechProviderProps {
@@ -18,7 +19,6 @@ export interface SpeechResult {
 export interface SpeechContextProps {
   result: SpeechResult;
   start: React.MouseEventHandler<HTMLElement>;
-
 }
 
 export const SpeechContext = React.createContext({
@@ -75,34 +75,7 @@ export class SpeechProvider extends React.Component<SpeechProviderProps, SpeechR
   }
 
   private handleRecognition = (recognition): void => {
-    recognition.onerror = e => {
-      switch (e.error) {
-        case 'no-speech':
-          console.warn(`> 💥 No speech was detected: ${e.error}`);
-          break;
-        case 'aborted':
-          console.warn(`> 💥 Speech input was aborted: ${e.error}`);
-          break;
-        case 'audio-capture':
-          console.warn(`> 💥 Audio capture failed: ${e.error}`);
-          break;
-        case 'network':
-          console.warn(`> 💥 Network communication required: ${e.error}`);
-          break;
-        case 'not-allowed':
-          console.warn(`> 💥 User agent disallowed speech input: ${e.error}`);
-          break;
-        case 'service-not-allowed':
-          console.warn(`> 💥 User agent disallowed the requested speech recognition service: ${e.error}`);
-          break;
-        case 'bad-grammar':
-          console.warn(`> 💥 Error in the speech recognition grammar: ${e.error}`);
-          break;
-        default:
-          console.warn(`> 💥 The language was not supported: ${e.error}`);
-      }
-    }
-
+    recognition.onerror = e => handleSpeechError(e.error);
     recognition.onstart = (): void => {
       this.setState({...this.state, isRecognizing: true});
       console.log(`
