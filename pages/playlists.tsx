@@ -5,8 +5,8 @@ import { TransitionGroup } from 'react-transition-group';
 
 import { getCookie } from '../utils/cookies';
 
-import { SpeechContext, SpeechProvider } from '../providers/speech/provider';
-import { WSContext, WSProvider } from '../providers/websocket/provider';
+import { SpeechContext, SpeechProvider } from '../speech/provider';
+import { WSContext, WSProvider } from '../websocket/provider';
 
 import { registerIntent } from '../intents/register';
 import { playlistsIntent } from '../intents/intents';

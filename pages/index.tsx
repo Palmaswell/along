@@ -4,8 +4,8 @@ import fetch, { Headers }  from 'node-fetch';
 
 import { getCookie } from '../utils/cookies';
 
-import { SpeechContext, SpeechProvider } from '../providers/speech/provider';
-import { WSContext, WSProvider } from '../providers/websocket/provider';
+import { SpeechContext, SpeechProvider } from '../speech/provider';
+import { WSContext, WSProvider } from '../websocket/provider';
 
 import { registerIntent } from '../intents/register';
 import { navigateIntent } from '../intents/intents';

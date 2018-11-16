@@ -1,6 +1,6 @@
 import React from 'react';
 import { WSProviderSingleton, WSSingletonProps } from './singleton';
-import { Loading } from '../../components/loading';
+import { Loading } from '../components/loading';
 
 type MessageAction = 'WSOPEN' | 'WSCLOSE' | 'PUBLISH';
 interface MessageProps {

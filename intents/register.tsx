@@ -1,4 +1,4 @@
-import { abstractCommandFactory } from '../providers/speech/commands';
+import { abstractCommandFactory } from '../speech/commands';
 import { handleRouter } from '../utils/handle-router';
 import { IntentProps} from './intents';
 
