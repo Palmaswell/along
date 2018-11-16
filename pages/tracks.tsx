@@ -1,29 +1,16 @@
 import * as React from 'react';
+import Head from 'next/head';
 import fetch, { Headers }  from 'node-fetch';
 import { TransitionGroup } from 'react-transition-group';
 
-import { getCookie } from '../utils/cookies';
-import { formatMilliseconds } from '../utils/readable-time';
+import { SpeechContext, SpeechProvider } from '../speech/provider';
+import { WSContext, WSProvider } from '../websocket/provider';
 
-import { SpeechContext, SpeechProvider } from '../providers/speech/provider';
-import { WSContext, WSProvider } from '../providers/websocket/provider';
-import SpeechBroker from '../providers/speech/broker';
+import * as Utils from '../utils';
+import * as Intent from '../intents';
 
-import { registerIntent } from '../intents/register';
-import { tracksIntent } from '../intents/intents';
-
+import * as Component from '../components';
 import ActiveLink from '../components/active-link';
-import { ArrowLeft } from '../components/icons';
-import Copy, { CopySize } from '../components/copy';
-import Color from '../components/color';
-import List from '../components/list';
-import GridContainer from '../components/grid-container';
-import Media from '../components/media';
-import GridItem from '../components/grid-item';
-import Panel from '../components/panel';
-import SpeechControl from '../components/speech-controls';
-import TransitionComponent from '../components/transition';
-import Nav from '../components/nav';
 
 export interface TracksProps {
   devices: any;
@@ -35,24 +22,33 @@ export default class Tracks extends React.Component<TracksProps> {
   public devices: string;
   public static async getInitialProps(ctx) {
     const { play_id } = ctx.query;
-    const res = await fetch(`https://api.spotify.com/v1/users/${getCookie('user_id', ctx)}/playlists/${play_id}/tracks`, {
+    const res = await fetch(`https://api.spotify.com/v1/users/${Utils.getCookie('user_id', ctx)}/playlists/${play_id}/tracks`, {
       method: 'GET',
       headers: new Headers({
-        'Authorization': `Bearer ${getCookie('access', ctx)}`,
+        'Authorization': `Bearer ${Utils.getCookie('access', ctx)}`,
         'Content-Type': 'application/json',
       })
     });
     const tracks = await res.json();
     return {
       tracks: tracks.items || [],
-      userId: getCookie('user_id', ctx)
+      userId: Utils.getCookie('user_id', ctx)
     }
   }
+
   public state = {
     isTransitioning: false
   }
 
   componentDidMount() {
+    Intent.registerIntent(
+      Intent.tracksIntent,
+      this.props.tracks,
+      this.playTrack,
+      this.pauseTrack,
+      this.resumeTrack,
+      this.props.userId
+    );
     this.setState({...this.state, isTransitioning: true });
   }
 
@@ -64,7 +60,7 @@ export default class Tracks extends React.Component<TracksProps> {
     const res = await fetch('https://api.spotify.com/v1/me/player/devices', {
       method: 'GET',
       headers: new Headers({
-        'Authorization': `Bearer ${getCookie('access')}`,
+        'Authorization': `Bearer ${Utils.getCookie('access')}`,
         'Content-Type': 'application/json',
       })
     });
@@ -76,7 +72,7 @@ export default class Tracks extends React.Component<TracksProps> {
     const res = await fetch(`https://api.spotify.com/v1/me/player/pause`, {
       method: 'PUT',
       headers: new Headers({
-        'Authorization': `Bearer ${getCookie('access')}`,
+        'Authorization': `Bearer ${Utils.getCookie('access')}`,
         'Content-Type': 'application/json',
       }),
     });
@@ -94,7 +90,7 @@ export default class Tracks extends React.Component<TracksProps> {
     const res = await fetch(`https://api.spotify.com/v1/me/player/play${devices}`, {
       method: 'PUT',
       headers: new Headers({
-        'Authorization': `Bearer ${getCookie('access')}`,
+        'Authorization': `Bearer ${Utils.getCookie('access')}`,
         'Content-Type': 'application/json',
       }),
       body: JSON.stringify({'context_uri': `${uri}`})
@@ -112,7 +108,7 @@ export default class Tracks extends React.Component<TracksProps> {
     const res = await fetch(`https://api.spotify.com/v1/me/player/play`, {
       method: 'PUT',
       headers: new Headers({
-        'Authorization': `Bearer ${getCookie('access')}`,
+        'Authorization': `Bearer ${Utils.getCookie('access')}`,
         'Content-Type': 'application/json',
       }),
     });
@@ -139,63 +135,56 @@ export default class Tracks extends React.Component<TracksProps> {
                 wsBroker={wsBroker}>
                 <SpeechContext.Consumer>
                   {speech => (
-                    <SpeechBroker
-                      registrationList={registerIntent(
-                        tracksIntent,
-                        this.props.tracks,
-                        this.playTrack,
-                        this.pauseTrack,
-                        this.resumeTrack,
-                        this.props.userId)}
-                      wsBroker={wsBroker}>
-                      <Nav type="secondary">
+                    <>
+                      <Head>
+                        <title>Along - Some awesome tracks from my playlist</title>
+                        <meta name="description" content="Use this web app voice interface to play, pause and resume any song" />
+                      </Head>
+                      <Component.Nav type="secondary">
                         <ActiveLink
                         href={`/playlists/${this.props.userId}`}>
-                          <ArrowLeft />
+                          <Component.ArrowLeft />
                         </ActiveLink>
-                      </Nav>
-                      <Panel
+                      </Component.Nav>
+                      <Component.Panel
                         isRecognizing={speech.result.isRecognizing}
                         transcript={speech.result.transcript} />
-                      <TransitionComponent
+                      <Component.TransitionComponent
                           isTransitioning={this.state.isTransitioning}>
-                        <List>
+                        <Component.List>
                           {this.props.tracks.map((playlist, i) => (
-                            <GridContainer
+                            <Component.GridContainer
                               handleClick={() => this.playTrack(playlist.track.album.uri)}
                               key={playlist.track.id}>
-                              <GridItem align="center">
-                                <Copy color={Color.UnitedNationsBlue()} tag="div">{i + 1}</Copy>
-                              </GridItem>
-                              <GridItem>
-                                <Media
+                              <Component.GridItem align="center">
+                                <Component.Copy color={Component.Color.UnitedNationsBlue()} tag="div">{i + 1}</Component.Copy>
+                              </Component.GridItem>
+                              <Component.GridItem>
+                                <Component.Media
                                   alt={`${playlist.track.album.name} track name`}
                                   src={playlist.track.album.images[0].url} />
-                              </GridItem>
-                              <GridItem>
-                                <Copy tag="div" weight={'bold'}>{playlist.track.name}</Copy>
-                                <Copy size={CopySize.S} tag="div">
+                              </Component.GridItem>
+                              <Component.GridItem>
+                                <Component.Copy tag="div" weight={'bold'}>{playlist.track.name}</Component.Copy>
+                                <Component.Copy size={Component.CopySize.S} tag="div">
                                   {playlist.track.artists[0].name}
-                                </Copy>
-                              </GridItem>
-                              <GridItem justify="end">
-                                <Copy tag="div">{formatMilliseconds(playlist.track.duration_ms)}</Copy>
+                                </Component.Copy>
+                              </Component.GridItem>
+                              <Component.GridItem justify="end">
+                                <Component.Copy tag="div">{Utils.formatMilliseconds(playlist.track.duration_ms)}</Component.Copy>
                                 {playlist.track.explicit &&
-                                  <Copy tag="div" size={CopySize.S}>{playlist.track.explicit}</Copy>
+                                  <Component.Copy tag="div" size={Component.CopySize.S}>{playlist.track.explicit}</Component.Copy>
                                 }
-                              </GridItem>
+                              </Component.GridItem>
 
-                              {/* <button onClick={this.pauseTrack}>pause</button>
-                              <button onClick={this.resumeTrack}>resume</button> */}
-
-                            </GridContainer>
+                            </Component.GridContainer>
                           ))}
-                        </List>
-                      </TransitionComponent>
-                      <SpeechControl
+                        </Component.List>
+                      </Component.TransitionComponent>
+                      <Component.SpeechControl
                         isRecognizing={speech.result.isRecognizing}
                         handleClick={speech.start} />
-                  </SpeechBroker>
+                  </>
                   )}
                 </SpeechContext.Consumer>
               </SpeechProvider>

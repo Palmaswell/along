@@ -1,9 +1,9 @@
 import { Observable } from 'rxjs';
-import { sanatizedIntent } from '../../utils/sanatized-intent';
-import { IntentProps } from '../../intents/intents';
+import { sanatizedIntent } from '../utils/sanatized-intent';
+import { IntentProps } from '../intents/intents';
 
 
-function CallBackableIntent(intent: IntentProps) {
+export function CallBackableIntent(intent: IntentProps) {
   return {
     intent,
     callbacks: [],

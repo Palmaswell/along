@@ -1,28 +1,14 @@
 import * as React from 'react';
+import Head from 'next/head';
 import fetch, { Headers }  from 'node-fetch';
 import { TransitionGroup } from 'react-transition-group';
+import { SpeechContext, SpeechProvider } from '../speech/provider';
+import { WSContext, WSProvider } from '../websocket/provider';
 
-import { getCookie } from '../utils/cookies';
-
-import { SpeechContext, SpeechProvider } from '../providers/speech/provider';
-import { WSContext, WSProvider } from '../providers/websocket/provider';
-import SpeechBroker from '../providers/speech/broker';
-
-import { registerIntent } from '../intents/register';
-import { playlistsIntent } from '../intents/intents';
-
-import { ArrowLeft } from '../components/icons';
+import * as Component from '../components';
 import ActiveLink from '../components/active-link';
-import Copy, { CopySize } from '../components/copy';
-import Panel from '../components/panel';
-import List from '../components/list';
-import ListItem from '../components/list-item';
-import Media from '../components/media';
-import Nav from '../components/nav';
-import SpeechControl from '../components/speech-controls';
-import Space from '../components/space';
-import TransitionComponent from '../components/transition';
-import { size } from '../components/sizes';
+import * as Utils from '../utils';
+import * as Intent from '../intents';
 
 export interface PlayListsProps {
   playlist: {
@@ -36,7 +22,7 @@ export default class PlayLists extends React.Component<PlayListsProps> {
     const res = await fetch(`https://api.spotify.com/v1/users/${id}/playlists`, {
       method: 'GET',
       headers: new Headers({
-        'Authorization': `Bearer ${getCookie('access', ctx)}`,
+        'Authorization': `Bearer ${Utils.getCookie('access', ctx)}`,
         'Content-Type': 'application/json',
       })
     });
@@ -46,15 +32,20 @@ export default class PlayLists extends React.Component<PlayListsProps> {
       playlist: data
     }
   }
+
   public state = {
     isTransitioning: false
   }
+
   public componentDidMount(): void {
     this.setState({...this.state, isTransitioning: true });
+    Intent.registerIntent(Intent.playlistsIntent, this.props.playlist.items);
   }
+
   public componentWillUnmount(): void {
     this.setState({...this.state, isTransitioning: false });
   }
+
   public render(): JSX.Element {
     return (
       <main>
@@ -69,45 +60,47 @@ export default class PlayLists extends React.Component<PlayListsProps> {
                 wsBroker={wsBroker}>
                 <SpeechContext.Consumer>
                   {speech => (
-                    <SpeechBroker
-                      registrationList={registerIntent(playlistsIntent, this.props.playlist.items)}
-                      wsBroker={wsBroker}>
-                      <Nav type="secondary">
-                        <ActiveLink href={`/`}><ArrowLeft /></ActiveLink>
-                      </Nav>
-                      <Panel
+                    <>
+                      <Head>
+                        <title>Along - My Spotify playlists</title>
+                        <meta name="description" content="Use this web app voice interface to visit a playlist" />
+                      </Head>
+                      <Component.Nav type="secondary">
+                        <ActiveLink href={`/`}><Component.ArrowLeft /></ActiveLink>
+                      </Component.Nav>
+                      <Component.Panel
                         isRecognizing={speech.result.isRecognizing}
                         transcript={speech.result.transcript} />
 
-                      <TransitionComponent
+                      <Component.TransitionComponent
                           isTransitioning={this.state.isTransitioning}>
-                        <List flex>
+                        <Component.List flex>
                             {this.props.playlist.items.map((playlist, i) => (
-                              <ListItem key={playlist.id} flex>
+                              <Component.ListItem key={playlist.id} flex>
                                 <ActiveLink
                                   href={`/tracks/${playlist.id}`}
                                   index={i}
                                   key={playlist.id}>
-                                  <Media
+                                  <Component.Media
                                     alt={`Playlist: ${playlist.name} cover`}
                                     src={playlist.images[0].url}
                                     large />
-                                  <Space size={[size.xxxs, 0, 0]}>
-                                    <Copy tag="div">{playlist.name}</Copy>
-                                  </Space>
-                                  <Copy tag="div" size={CopySize.S}>
+                                  <Component.Space size={[Component.size.xxxs, 0, 0]}>
+                                    <Component.Copy tag="div">{playlist.name}</Component.Copy>
+                                  </Component.Space>
+                                  <Component.Copy tag="div" size={Component.CopySize.S}>
                                     {playlist.tracks.total} tracks
-                                  </Copy>
+                                  </Component.Copy>
                                 </ActiveLink>
-                              </ListItem>
+                              </Component.ListItem>
                             ))}
-                        </List>
-                      </TransitionComponent>
+                        </Component.List>
+                      </Component.TransitionComponent>
 
-                      <SpeechControl
+                      <Component.SpeechControl
                         isRecognizing={speech.result.isRecognizing}
                         handleClick={speech.start}/>
-                    </SpeechBroker>
+                    </>
                   )}
                 </SpeechContext.Consumer>
               </SpeechProvider>

@@ -1,5 +1,9 @@
 import { Subject } from 'rxjs';
 
+export interface WSBroker {
+  wsSingleton: WSSingletonProps;
+}
+
 export interface  WSSingletonProps {
   ws: WebSocket;
   subject: Subject<{}>;
