@@ -5,4 +5,4 @@ const StyledLayout = styled.div`
   flex-direction: row;
   align-items: baseline;
 `;
-export const Layout = ({ children }) => <StyledLayout>{ children }</StyledLayout>;
+export const Layout: React.SFC<{}> = ({ children }) => <StyledLayout>{ children }</StyledLayout>;

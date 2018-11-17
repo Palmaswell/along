@@ -30,8 +30,8 @@ const StyledTextOverlay = styled(Text)`
     margin: auto;
     background-color: ${Color.VividRasberry};
     transform: ${(props: StyledTextProps) => props.active
-    ? `translate3d(-100%, 0, 0)`
-    : `translate3d(0, 0, 0)`
+    ? `translate3d(0, 0, 0)`
+    : `translate3d(-100%, 0, 0)`
     };
     transition: 500ms cubic-bezier(1.000, 0.000, 0.000, 1.000);
   }

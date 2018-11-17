@@ -33,7 +33,7 @@ const StyledSVG = styled.svg`
     : Color.UnitedNationsBlue()
   };
 
-  filter ${(props: StyledSVGProps) => props.isRecognizing
+  filter: ${(props: StyledSVGProps) => props.isRecognizing
     ? 'unset'
     : `drop-shadow(1px 1px 6px ${Color.LavenderGray()})`
   };
@@ -54,6 +54,7 @@ export const SpeechControl: React.SFC<SpeechControlProps> = ({ handleClick, isRe
     <StyledControls onClick={handleClick}>
       <StyledSVG
         isRecognizing={isRecognizing}
+        tabIndex={0}
         viewBox="0 0 50 50">
         <title>Voice control button</title>
         <desc>Press the button and speak out your command</desc>

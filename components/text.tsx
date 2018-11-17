@@ -5,7 +5,6 @@ import getFontHind from './fonts';
 
 interface TextProps {
   active: boolean;
-  children: JSX.Element | string;
   className?: string;
   onClick?: React.MouseEventHandler<HTMLElement>;
 }
@@ -25,7 +24,7 @@ const StyledText = styled.strong`
   ${(props: StyledTextProps) => props.active};
 `;
 
-export const Text = ({active, className, children, onClick }: TextProps) => (
+export const Text: React.SFC<TextProps> = ({active, className, children, onClick }) => (
   <StyledText active={active} className={className} onClick={ onClick } tabIndex={0}>
     { children }
   </StyledText>

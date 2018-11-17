@@ -3,6 +3,7 @@ import Head from 'next/head';
 import fetch, { Headers }  from 'node-fetch';
 
 import { SpeechContext, SpeechProvider } from '../speech/provider';
+// import { Language } from '../speech/languages';
 import { WSContext, WSProvider } from '../websocket/provider';
 
 import * as Component from '../components';
@@ -30,6 +31,10 @@ export interface IndexProps {
 export default class Index extends React.Component<IndexProps> {
   private userName = this.props.spotify.display_name.replace(/\s(.*)/g, '');
 
+  public state = {
+    isOverlayOpen: false,
+  }
+
   public static async getInitialProps(ctx): Promise<any> {
     const res = await fetch(`https://api.spotify.com/v1/me`, {
       method: 'GET',
@@ -50,6 +55,10 @@ export default class Index extends React.Component<IndexProps> {
     }
   }
 
+  private handleOverlay = (): void => {
+    this.setState({...this.state, isOverlayOpen: !this.state.isOverlayOpen})
+  }
+
   render() {
     return (
     <WSProvider
@@ -68,8 +77,8 @@ export default class Index extends React.Component<IndexProps> {
                   </Head>
                   <Component.Nav type="primary">
                     <Component.TextOverlay
-                      active={false}
-                      onClick={(e) => console.log('haendler', e)}
+                      active={!this.state.isOverlayOpen}
+                      onClick={() => this.handleOverlay()}
                       >
                       Language
                     </Component.TextOverlay>
@@ -96,6 +105,13 @@ export default class Index extends React.Component<IndexProps> {
                   <Component.SpeechControl
                     isRecognizing={speech.result.isRecognizing}
                     handleClick={speech.start} />
+                  <Component.Overlay isOpen={this.state.isOverlayOpen}>
+                    <Component.SelectList>
+                      <Component.SelectItem active={true}>English</Component.SelectItem>
+                      <Component.SelectItem active={false}>Spanish</Component.SelectItem>
+                      <Component.SelectItem active={false}>Japanese</Component.SelectItem>
+                    </Component.SelectList>
+                  </Component.Overlay>
                 </>
               )}
             </SpeechContext.Consumer>
