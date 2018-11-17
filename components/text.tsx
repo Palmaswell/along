@@ -4,11 +4,15 @@ import { Color } from './color';
 import getFontHind from './fonts';
 
 interface TextProps {
+  active: boolean;
   children: JSX.Element | string;
   className?: string;
   onClick?: React.MouseEventHandler<HTMLElement>;
 }
 
+interface StyledTextProps {
+  active: boolean;
+}
 
 const StyledText = styled.strong`
   cursor: pointer;
@@ -18,10 +22,11 @@ const StyledText = styled.strong`
   text-transform: uppercase;
   letter-spacing: 1px;
   ${getFontHind()}
+  ${(props: StyledTextProps) => props.active};
 `;
 
-export const Text = ({className, children, onClick }: TextProps) => (
-  <StyledText className={className} onClick={ onClick } tabIndex={0}>
+export const Text = ({active, className, children, onClick }: TextProps) => (
+  <StyledText active={active} className={className} onClick={ onClick } tabIndex={0}>
     { children }
   </StyledText>
 );
