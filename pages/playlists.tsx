@@ -34,16 +34,22 @@ export default class PlayLists extends React.Component<PlayListsProps> {
   }
 
   public state = {
-    isTransitioning: false
+    isTransitioning: false,
+    isOverlayOpen: false,
   }
 
   public componentDidMount(): void {
     this.setState({...this.state, isTransitioning: true });
     Intent.registerIntent(Intent.playlistsIntent, this.props.playlist.items);
+    Intent.registerIntent(Intent.overlayIntent, this.handleOverlay);
   }
 
   public componentWillUnmount(): void {
     this.setState({...this.state, isTransitioning: false });
+  }
+
+  private handleOverlay = (): void => {
+    this.setState({...this.state, isOverlayOpen: !this.state.isOverlayOpen})
   }
 
   public render(): JSX.Element {
@@ -66,6 +72,11 @@ export default class PlayLists extends React.Component<PlayListsProps> {
                         <meta name="description" content="Use this web app voice interface to visit a playlist" />
                       </Head>
                       <Component.Nav type="secondary">
+                        <Component.TextOverlay
+                          active={!this.state.isOverlayOpen}
+                          onClick={() => this.handleOverlay()}>
+                          Language
+                        </Component.TextOverlay>
                         <ActiveLink href={`/`}><Component.ArrowLeft /></ActiveLink>
                       </Component.Nav>
                       <Component.Panel
@@ -100,6 +111,13 @@ export default class PlayLists extends React.Component<PlayListsProps> {
                       <Component.SpeechControl
                         isRecognizing={speech.result.isRecognizing}
                         handleClick={speech.start}/>
+                      <Component.Overlay isOpen={this.state.isOverlayOpen}>
+                      <Component.SelectList>
+                        <Component.SelectItem active={true}>English</Component.SelectItem>
+                        <Component.SelectItem active={false}>Spanish</Component.SelectItem>
+                        <Component.SelectItem active={false}>Japanese</Component.SelectItem>
+                      </Component.SelectList>
+                    </Component.Overlay>
                     </>
                   )}
                 </SpeechContext.Consumer>

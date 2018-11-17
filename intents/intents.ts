@@ -5,6 +5,7 @@ export enum Intent {
   playlists = 'PlaylistsIntent',
   tracks = 'TracksIntent',
   home = 'HomeIntent',
+  overlay = 'Overlay',
 }
 
 export interface IntentProps {
@@ -74,5 +75,27 @@ export const homeIntent: IntentProps = IntentFactory({
   ],
   action() {
     return handleRouter(`/`)
+  }
+});
+
+export const overlayIntent: IntentProps =  IntentFactory({
+  type: Intent.overlay,
+  samples: [
+    'language',
+    'show language',
+    'open language',
+    'show languages',
+    'open languages',
+    'close languages',
+    'close language',
+    'lenguajes',
+    'lenguaje',
+    'idiomas',
+    'enseñame idiomas',
+    'enseñame lenguajes',
+    'cierra lenguajes',
+  ],
+  action(func) {
+    return func();
   }
 });

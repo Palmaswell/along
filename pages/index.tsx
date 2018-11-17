@@ -11,7 +11,6 @@ import ActiveLink from '../components/active-link';
 import * as Utils from '../utils';
 import * as Intent from '../intents';
 
-
 export interface IndexProps {
   userName: string;
   spotify: {
@@ -53,6 +52,7 @@ export default class Index extends React.Component<IndexProps> {
     if (this.props.spotify.id) {
       Intent.registerIntent(Intent.navigateIntent, this.props.spotify.id);
     }
+    Intent.registerIntent(Intent.overlayIntent, this.handleOverlay);
   }
 
   private handleOverlay = (): void => {
