@@ -1,11 +1,13 @@
 import * as React from 'react';
 import handleSpeechError from './error';
-import createRecognition from './recognition'
+import createRecognition from './recognition';
+import { Language } from './languages';
 import { abstractCommandFactory } from './commands';
 import { WSBroker } from '../websocket/singleton';
 
 interface SpeechProviderProps {
   channel: string;
+  language: Language;
   wsBroker: WSBroker;
 }
 

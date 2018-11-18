@@ -3,7 +3,7 @@ import Head from 'next/head';
 import fetch, { Headers }  from 'node-fetch';
 
 import { SpeechContext, SpeechProvider } from '../speech/provider';
-// import { Language } from '../speech/languages';
+import { Language, languages, setLanguage } from '../speech/languages';
 import { WSContext, WSProvider } from '../websocket/provider';
 
 import * as Component from '../components';
@@ -29,9 +29,11 @@ export interface IndexProps {
 
 export default class Index extends React.Component<IndexProps> {
   private userName = this.props.spotify.display_name.replace(/\s(.*)/g, '');
+  private lang: Language;
 
   public state = {
     isOverlayOpen: false,
+    lang: Language.english
   }
 
   public static async getInitialProps(ctx): Promise<any> {
@@ -59,7 +61,12 @@ export default class Index extends React.Component<IndexProps> {
     this.setState({...this.state, isOverlayOpen: !this.state.isOverlayOpen})
   }
 
+  private handleLanguage = (lang): void => {
+    this.setState({...this.state, lang: setLanguage(lang)})
+  }
+
   render() {
+    console.log(this.state.lang, 'show me the lang state')
     return (
     <WSProvider
       channel="Home">
@@ -67,6 +74,7 @@ export default class Index extends React.Component<IndexProps> {
         {wsBroker => (
           <SpeechProvider
             channel="Home"
+            language={this.lang}
             wsBroker={wsBroker}>
             <SpeechContext.Consumer>
               {speech => (
@@ -107,9 +115,14 @@ export default class Index extends React.Component<IndexProps> {
                     handleClick={speech.start} />
                   <Component.Overlay isOpen={this.state.isOverlayOpen}>
                     <Component.SelectList>
-                      <Component.SelectItem active={true}>English</Component.SelectItem>
-                      <Component.SelectItem active={false}>Spanish</Component.SelectItem>
-                      <Component.SelectItem active={false}>Japanese</Component.SelectItem>
+                      {languages.map((language: Language, i: number) => (
+                        <Component.SelectItem
+                          active={this.state.lang === Language[language]}
+                          key={`${language}-${i}`}
+                          onClick={() => this.handleLanguage(Language[language])}>
+                          { language }
+                        </Component.SelectItem>
+                      ))}
                     </Component.SelectList>
                   </Component.Overlay>
                 </>

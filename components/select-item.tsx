@@ -7,6 +7,7 @@ import { Breakpoint } from './breakpoint';
 
 interface SelectItem {
   active: boolean;
+  onClick?: React.MouseEventHandler<HTMLElement>;
 }
 
 interface StyledSelectItem {
@@ -14,7 +15,7 @@ interface StyledSelectItem {
 }
 
 const StyledListItem = styled.li`
-  display: flex;
+  display: inline-flex;
   align-items: center;
   margin-bottom: ${size.xxs}px;
   transition: color 333ms ease;
@@ -24,6 +25,7 @@ const StyledListItem = styled.li`
   ? Color.WhiteSmoke
   : Color.PaleAqua
   };
+  text-transform: capitalize;
   cursor: pointer;
   ${getFontHind()}
 
@@ -40,10 +42,13 @@ const HintCopy = styled.small`
   font-size: ${CopySize.M}px;
 `;
 
-export const SelectItem: React.SFC<SelectItem> = ({ active, children }) => (
-  <StyledListItem active={active} tabIndex={0}>
+export const SelectItem: React.SFC<SelectItem> = ({ active, children, onClick }) => (
+  <StyledListItem
+    active={active}
+    onClick={onClick}
+    tabIndex={0}>
     { children }
-    { active && <HintCopy> (active)</HintCopy>}
+    { active && <HintCopy>  (active)</HintCopy>}
   </StyledListItem>
 );
 

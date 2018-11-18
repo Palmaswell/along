@@ -5,7 +5,7 @@ interface SpeechInit {
     interimResults: boolean;
     lang: string;
 }
-  
+
 export interface SpeechResultProps {
     confidence: number;
     transcript: string | string[];
@@ -22,7 +22,7 @@ export const createRecognition = (init: SpeechInit) => {
 
     recognition.maxAlternatives = init.maxAlternatives;
     recognition.interimResults = init.interimResults;
-    recognition.lang = init.lang || 'en-US';
+    recognition.lang = init.lang;
 
     abstractCommandFactory.getGrammarStream()
     .subscribe((grammars: string) => {
