@@ -4,6 +4,8 @@
     "@zeit/next-typescript/babel"
   ],
   "plugins": [
-    ["emotion", { "inline": true }]
+    ["emotion", { "inline": true }],
+    ["@babel/plugin-proposal-decorators", { "legacy": true }],
+    ["@babel/plugin-proposal-class-properties", { "loose": true }]
   ]
 }

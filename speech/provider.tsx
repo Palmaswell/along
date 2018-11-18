@@ -7,7 +7,7 @@ import { WSBroker } from '../websocket/singleton';
 
 interface SpeechProviderProps {
   channel: string;
-  language: Language;
+  lang: Language;
   wsBroker: WSBroker;
 }
 
@@ -45,10 +45,11 @@ export class SpeechProvider extends React.Component<SpeechProviderProps, SpeechP
   }
 
   public componentDidMount() {
+    const { lang } = this.props;
     this.recognition = createRecognition({
       maxAlternatives: 1,
       interimResults: false,
-      lang: 'en-US'
+      lang: lang
     })
   }
 

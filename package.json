@@ -20,6 +20,8 @@
     "form-data": "^2.3.2",
     "http": "^0.0.0",
     "js-cookie": "^2.2.0",
+    "mobx": "^5.6.0",
+    "mobx-react": "^5.3.6",
     "next": "^7.0.2",
     "node-fetch": "^2.1.2",
     "now": "^10.2.1",
@@ -37,6 +39,8 @@
     "ws": "^5.0.0"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.1.0",
+    "@babel/plugin-proposal-decorators": "^7.1.6",
     "@types/cookie-parser": "^1.4.1",
     "@types/js-cookie": "^2.1.0",
     "@types/next": "^6.0.4",

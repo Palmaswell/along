@@ -1,10 +1,13 @@
 import * as React from 'react';
+import * as MobxReact from 'mobx-react';
 import Head from 'next/head';
 import fetch, { Headers }  from 'node-fetch';
 
 import { SpeechContext, SpeechProvider } from '../speech/provider';
 import { Language, languages, setLanguage } from '../speech/languages';
 import { WSContext, WSProvider } from '../websocket/provider';
+
+// import * as Store from '../store';
 
 import * as Component from '../components';
 import ActiveLink from '../components/active-link';
@@ -27,6 +30,8 @@ export interface IndexProps {
   }
 }
 
+@MobxReact.inject('store')
+@MobxReact.observer
 export default class Index extends React.Component<IndexProps> {
   private userName = this.props.spotify.display_name.replace(/\s(.*)/g, '');
   private lang: Language;
@@ -55,6 +60,8 @@ export default class Index extends React.Component<IndexProps> {
       Intent.registerIntent(Intent.navigateIntent, this.props.spotify.id);
     }
     Intent.registerIntent(Intent.overlayIntent, this.handleOverlay);
+    const { store } = this.props as any;
+    console.log(store.lastUpdate, '*******fdff***');
   }
 
   private handleOverlay = (): void => {
@@ -74,7 +81,7 @@ export default class Index extends React.Component<IndexProps> {
         {wsBroker => (
           <SpeechProvider
             channel="Home"
-            language={this.lang}
+            lang={this.lang}
             wsBroker={wsBroker}>
             <SpeechContext.Consumer>
               {speech => (
