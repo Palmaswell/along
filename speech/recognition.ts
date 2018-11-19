@@ -11,7 +11,7 @@ export interface SpeechResultProps {
     transcript: string | string[];
 }
 
-export const createRecognition = (init: SpeechInit) => {
+export const createRecognition = (init: SpeechInit): SpeechRecognition => {
     const SpeechRecognition = (window as any).SpeechRecognition
       || (window as any).webkitSpeechRecognition;
     const SpeechGrammarList = (window as any).SpeechGrammarList

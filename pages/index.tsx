@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as MobxReact from 'mobx-react';
+import {inject, observer} from 'mobx-react';
 import Head from 'next/head';
 import fetch, { Headers }  from 'node-fetch';
 
@@ -30,8 +30,8 @@ export interface IndexProps {
   }
 }
 
-@MobxReact.inject('store')
-@MobxReact.observer
+@inject('store')
+@observer
 export default class Index extends React.Component<IndexProps> {
   private userName = this.props.spotify.display_name.replace(/\s(.*)/g, '');
   private lang: Language;
@@ -60,8 +60,7 @@ export default class Index extends React.Component<IndexProps> {
       Intent.registerIntent(Intent.navigateIntent, this.props.spotify.id);
     }
     Intent.registerIntent(Intent.overlayIntent, this.handleOverlay);
-    const { store } = this.props as any;
-    console.log(store.lastUpdate, '*******fdff***');
+    console.log(this.props.store.langStore, '*******fdff***');
   }
 
   private handleOverlay = (): void => {
@@ -73,7 +72,7 @@ export default class Index extends React.Component<IndexProps> {
   }
 
   render() {
-    console.log(this.state.lang, 'show me the lang state')
+    const { langStore } = this.props.store;
     return (
     <WSProvider
       channel="Home">
@@ -122,7 +121,7 @@ export default class Index extends React.Component<IndexProps> {
                     handleClick={speech.start} />
                   <Component.Overlay isOpen={this.state.isOverlayOpen}>
                     <Component.SelectList>
-                      {languages.map((language: Language, i: number) => (
+                      {langStore.availableLang.map((language: Language, i: number) => (
                         <Component.SelectItem
                           active={this.state.lang === Language[language]}
                           key={`${language}-${i}`}

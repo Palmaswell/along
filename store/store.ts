@@ -9,11 +9,11 @@ export class Store {
   @observable lastUpdate = 0;
   @observable light = false;
 
-  constructor (_isServer: boolean, initialData: StoreProps) {
-    this.lastUpdate = initialData.lastUpdate != null
-    ? initialData.lastUpdate
+  constructor (init: StoreProps, _isServer: boolean) {
+    this.lastUpdate = init.lastUpdate != null
+    ? init.lastUpdate
     : Date.now();
-    this.light = !!initialData.light;
+    this.light = !!init.light;
   }
 
   @action start = () => {
@@ -26,16 +26,5 @@ export class Store {
 
 export default Store;
 
-let store = null;
-const isServer: boolean = typeof window === 'undefined';
 
-export function initializeStore (initialData) {
-  if (isServer) {
-    return new Store(isServer, initialData)
-  }
-  if (store === null) {
-    store = new Store(isServer, initialData)
-  }
-  return store
-}
 

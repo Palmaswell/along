@@ -31,7 +31,9 @@ export const navigateIntent: IntentProps =  IntentFactory({
     'ok list',
     'so playlist',
     'musica',
-    'mi musica'
+    'mi musica',
+    'enseñame los playlists',
+    'zeig meine playlists'
   ],
   action(id: string) {
     return handleRouter(`/playlists/${id}`, id);
@@ -46,7 +48,8 @@ export const playlistsIntent: IntentProps =  IntentFactory({
     'show me',
     'so',
     've',
-    've a'
+    've a',
+    'zeigt'
   ],
   action(id: string) {
     return handleRouter(`/tracks/${id}`, id)
@@ -58,7 +61,8 @@ export const tracksIntent: IntentProps =  IntentFactory({
   samples: [
     'play',
     '',
-    'toca'
+    'toca',
+    'spiel'
   ],
   action(func, uri: string) {
     return func(uri)
@@ -71,7 +75,8 @@ export const homeIntent: IntentProps = IntentFactory({
     'go home',
     'go back',
     'call back',
-    'regresa'
+    'regresa',
+    'zurück'
   ],
   action() {
     return handleRouter(`/`)
@@ -94,6 +99,7 @@ export const overlayIntent: IntentProps =  IntentFactory({
     'enseñame idiomas',
     'enseñame lenguajes',
     'cierra lenguajes',
+    'zeig mir die sprachen'
   ],
   action(func) {
     return func();

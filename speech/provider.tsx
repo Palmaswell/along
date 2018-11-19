@@ -44,7 +44,7 @@ export class SpeechProvider extends React.Component<SpeechProviderProps, SpeechP
     this.ws = this.props.wsBroker;
   }
 
-  public componentDidMount() {
+  public componentDidMount(): void {
     const { lang } = this.props;
     this.recognition = createRecognition({
       maxAlternatives: 1,

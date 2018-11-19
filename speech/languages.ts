@@ -5,7 +5,7 @@ export enum Language {
   japanese = 'ja'
 }
 
-export const languages = ['german', 'english', 'spanish', 'japanese']
+export const languages = ['german', 'english', 'spanish', 'japanese'];
 
 export const setLanguage = (lang: Language): Language =>  {
   switch(lang) {
