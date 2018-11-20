@@ -6,6 +6,7 @@ export enum Intent {
   tracks = 'TracksIntent',
   home = 'HomeIntent',
   overlay = 'Overlay',
+  lang = 'LangIntent'
 }
 
 export interface IntentProps {
@@ -93,13 +94,44 @@ export const overlayIntent: IntentProps =  IntentFactory({
     'open languages',
     'close languages',
     'close language',
+    'close',
     'lenguajes',
     'lenguaje',
     'idiomas',
+    'cierra',
+    'sierra',
     'enseñame idiomas',
     'enseñame lenguajes',
     'cierra lenguajes',
-    'zeig mir die sprachen'
+    'zeig mir die sprachen',
+    'sprachen'
+  ],
+  action(func) {
+    return func();
+  }
+});
+
+export const langIntent: IntentProps =  IntentFactory({
+  type: Intent.lang,
+  samples: [
+    'German',
+    'german',
+    'English',
+    'english',
+    'Spanish',
+    'Japanese',
+    'Deutsch',
+    'Englisch',
+    'Spanish',
+    'Japanisch',
+    'Alemán',
+    'Inglés',
+    'Español',
+    'Japonés',
+    'Doitsunin',
+    'Eigo',
+    'Supeingo',
+    'Nihonjin'
   ],
   action(func) {
     return func();

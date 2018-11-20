@@ -1,13 +1,12 @@
 import * as React from 'react';
-import {inject, observer} from 'mobx-react';
+import { inject, observer } from 'mobx-react';
 import Head from 'next/head';
 import fetch, { Headers }  from 'node-fetch';
 
 import { SpeechContext, SpeechProvider } from '../speech/provider';
-import { Language, languages, setLanguage } from '../speech/languages';
 import { WSContext, WSProvider } from '../websocket/provider';
 
-// import * as Store from '../store';
+import * as Store from '../store';
 
 import * as Component from '../components';
 import ActiveLink from '../components/active-link';
@@ -27,18 +26,17 @@ export interface IndexProps {
         url: string;
       }
     ]
-  }
+  };
+  store: Store.StoreProps;
 }
 
 @inject('store')
 @observer
 export default class Index extends React.Component<IndexProps> {
   private userName = this.props.spotify.display_name.replace(/\s(.*)/g, '');
-  private lang: Language;
-
   public state = {
     isOverlayOpen: false,
-    lang: Language.english
+    lang: this.props.store.lang
   }
 
   public static async getInitialProps(ctx): Promise<any> {
@@ -60,19 +58,23 @@ export default class Index extends React.Component<IndexProps> {
       Intent.registerIntent(Intent.navigateIntent, this.props.spotify.id);
     }
     Intent.registerIntent(Intent.overlayIntent, this.handleOverlay);
-    console.log(this.props.store.langStore, '*******fdff***');
+    Intent.registerIntent(Intent.langIntent, this.handleLanguage);
   }
 
   private handleOverlay = (): void => {
-    this.setState({...this.state, isOverlayOpen: !this.state.isOverlayOpen})
+    this.setState({...this.state, isOverlayOpen: !this.state.isOverlayOpen});
   }
 
-  private handleLanguage = (lang): void => {
-    this.setState({...this.state, lang: setLanguage(lang)})
+  private handleLanguage = (speech, language, store = this.props.store): void => {
+    console.log('it goes here &&&&&');
+    speech.setLanguage(Store.Language[language]);
+    store.getTranslatedLabels();
   }
+
 
   render() {
-    const { langStore } = this.props.store;
+    const { store } = this.props;
+    store.getLanguage();
     return (
     <WSProvider
       channel="Home">
@@ -80,10 +82,10 @@ export default class Index extends React.Component<IndexProps> {
         {wsBroker => (
           <SpeechProvider
             channel="Home"
-            lang={this.lang}
             wsBroker={wsBroker}>
             <SpeechContext.Consumer>
-              {speech => (
+              {speech => {
+                return (
                 <>
                   <Head>
                     <title>Along - Accessibility and The Web Speech API</title>
@@ -121,18 +123,19 @@ export default class Index extends React.Component<IndexProps> {
                     handleClick={speech.start} />
                   <Component.Overlay isOpen={this.state.isOverlayOpen}>
                     <Component.SelectList>
-                      {langStore.availableLang.map((language: Language, i: number) => (
+                      {store.languages.map((language: Store.Language, i: number) => (
                         <Component.SelectItem
-                          active={this.state.lang === Language[language]}
+                          active={store.getLanguage() === Store.Language[language]}
                           key={`${language}-${i}`}
-                          onClick={() => this.handleLanguage(Language[language])}>
-                          { language }
+                          onClick={() => this.handleLanguage(speech, language)}>
+                          { store.intLabels[i] }
                         </Component.SelectItem>
                       ))}
                     </Component.SelectList>
                   </Component.Overlay>
                 </>
-              )}
+                )
+              }}
             </SpeechContext.Consumer>
           </SpeechProvider>
         )}

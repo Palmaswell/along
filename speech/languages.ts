@@ -20,7 +20,3 @@ export const setLanguage = (lang: Language): Language =>  {
       return Language.english;
   }
 }
-
-// export const translateLangCaption = (lang: langugae): string => {
-
-// };

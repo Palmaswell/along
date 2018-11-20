@@ -1,14 +1,15 @@
 import * as React from 'react';
+import { inject, observer } from 'mobx-react';
 import handleSpeechError from './error';
 import createRecognition from './recognition';
-import { Language } from './languages';
+import * as Store from '../store'
 import { abstractCommandFactory } from './commands';
 import { WSBroker } from '../websocket/singleton';
 
 interface SpeechProviderProps {
   channel: string;
-  lang: Language;
   wsBroker: WSBroker;
+  store?: Store.StoreProps;
 }
 
 interface SpeechProviderResult {
@@ -20,6 +21,7 @@ interface SpeechProviderResult {
 interface SpeechContextProps {
   result: SpeechProviderResult;
   start: React.MouseEventHandler<HTMLElement>;
+  setLanguage: (lang: Store.Language) => void;
 }
 
 export const SpeechContext = React.createContext({
@@ -29,9 +31,12 @@ export const SpeechContext = React.createContext({
   }
 } as SpeechContextProps);
 
+@inject('store')
+@observer
 export class SpeechProvider extends React.Component<SpeechProviderProps, SpeechProviderResult> {
   private recognition;
   private ws;
+
 
   public state = {
     transcript: '',
@@ -45,12 +50,13 @@ export class SpeechProvider extends React.Component<SpeechProviderProps, SpeechP
   }
 
   public componentDidMount(): void {
-    const { lang } = this.props;
+    const { store } = this.props;
+    store.setLanguage(store.lang);
     this.recognition = createRecognition({
       maxAlternatives: 1,
       interimResults: false,
-      lang: lang
-    })
+      lang: store.lang
+    });
   }
 
   private handleRecognition = (recognition): void => {
@@ -95,12 +101,23 @@ export class SpeechProvider extends React.Component<SpeechProviderProps, SpeechP
     this.handleRecognition(this.recognition);
   }
 
+  private setLanguage = (lang: Store.Language): void => {
+    const { store } = this.props;
+    store.setLanguage(lang);
+    this.recognition = createRecognition({
+      maxAlternatives: 1,
+      interimResults: false,
+      lang: store.lang,
+    });
+  }
+
   public render(): JSX.Element {
     return (
       <SpeechContext.Provider
         value={{
           result: this.state,
-          start: e => this.start(e)
+          start: e => this.start(e),
+          setLanguage: (lang: Store.Language) => this.setLanguage(lang),
         }}>
         {this.props.children}
       </SpeechContext.Provider>
