@@ -5,6 +5,8 @@ export enum Intent {
   playlists = 'PlaylistsIntent',
   tracks = 'TracksIntent',
   home = 'HomeIntent',
+  overlay = 'Overlay',
+  lang = 'LangIntent'
 }
 
 export interface IntentProps {
@@ -30,7 +32,9 @@ export const navigateIntent: IntentProps =  IntentFactory({
     'ok list',
     'so playlist',
     'musica',
-    'mi musica'
+    'mi musica',
+    'enseñame los playlists',
+    'zeig meine playlists'
   ],
   action(id: string) {
     return handleRouter(`/playlists/${id}`, id);
@@ -45,7 +49,8 @@ export const playlistsIntent: IntentProps =  IntentFactory({
     'show me',
     'so',
     've',
-    've a'
+    've a',
+    'zeigt'
   ],
   action(id: string) {
     return handleRouter(`/tracks/${id}`, id)
@@ -57,7 +62,8 @@ export const tracksIntent: IntentProps =  IntentFactory({
   samples: [
     'play',
     '',
-    'toca'
+    'toca',
+    'spiel'
   ],
   action(func, uri: string) {
     return func(uri)
@@ -70,9 +76,64 @@ export const homeIntent: IntentProps = IntentFactory({
     'go home',
     'go back',
     'call back',
-    'regresa'
+    'regresa',
+    'zurück'
   ],
   action() {
     return handleRouter(`/`)
+  }
+});
+
+export const overlayIntent: IntentProps =  IntentFactory({
+  type: Intent.overlay,
+  samples: [
+    'language',
+    'show language',
+    'open language',
+    'show languages',
+    'open languages',
+    'close languages',
+    'close language',
+    'close',
+    'lenguajes',
+    'lenguaje',
+    'idiomas',
+    'cierra',
+    'sierra',
+    'enseñame idiomas',
+    'enseñame lenguajes',
+    'cierra lenguajes',
+    'zeig mir die sprachen',
+    'sprachen'
+  ],
+  action(func) {
+    return func();
+  }
+});
+
+export const langIntent: IntentProps =  IntentFactory({
+  type: Intent.lang,
+  samples: [
+    'German',
+    'german',
+    'English',
+    'english',
+    'Spanish',
+    'Japanese',
+    'Deutsch',
+    'Englisch',
+    'Spanish',
+    'Japanisch',
+    'Alemán',
+    'Inglés',
+    'Español',
+    'Japonés',
+    'Doitsunin',
+    'Eigo',
+    'Supeingo',
+    'Nihonjin'
+  ],
+  action(func) {
+    return func();
   }
 });

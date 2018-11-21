@@ -4,6 +4,18 @@ import { Intent, IntentProps} from './intents';
 
 export function registerIntent(intent: IntentProps, ...args) {
   switch(intent.type) {
+    case Intent.lang:
+        const [setLang] = [...args];
+        return intent.samples
+          .map(sample => ({
+            callableIntent: abstractCommandFactory.register(sample),
+            action: () => intent.action(setLang)
+          }))
+          .forEach(intent => {
+            // @ts-ignore: Block-scoped variable is used before declaration
+            intent.callableIntent.unregister(registeredCallback);
+            const registeredCallback = intent.callableIntent.register(intent.action);
+          });
     case Intent.navigate:
       const [id] = [...args];
       return intent.samples
@@ -88,5 +100,17 @@ export function registerIntent(intent: IntentProps, ...args) {
         const registeredCallback = intent.callableIntent.register(intent.action);
       });
       return tracks;
+    case Intent.overlay:
+      const [setState] = [...args];
+      return intent.samples
+        .map(sample => ({
+          callableIntent: abstractCommandFactory.register(sample),
+          action: () => intent.action(setState)
+        }))
+        .forEach(intent => {
+          // @ts-ignore: Block-scoped variable is used before declaration
+          intent.callableIntent.unregister(registeredCallback);
+          const registeredCallback = intent.callableIntent.register(intent.action);
+        });
   }
 };

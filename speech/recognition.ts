@@ -5,13 +5,13 @@ interface SpeechInit {
     interimResults: boolean;
     lang: string;
 }
-  
+
 export interface SpeechResultProps {
     confidence: number;
     transcript: string | string[];
 }
 
-export const createRecognition = (init: SpeechInit) => {
+export const createRecognition = (init: SpeechInit): SpeechRecognition => {
     const SpeechRecognition = (window as any).SpeechRecognition
       || (window as any).webkitSpeechRecognition;
     const SpeechGrammarList = (window as any).SpeechGrammarList
@@ -22,7 +22,8 @@ export const createRecognition = (init: SpeechInit) => {
 
     recognition.maxAlternatives = init.maxAlternatives;
     recognition.interimResults = init.interimResults;
-    recognition.lang = init.lang || 'en-US';
+    recognition.lang = init.lang;
+    console.log(init.lang, 'language it is being reinitiated on action, 8888')
 
     abstractCommandFactory.getGrammarStream()
     .subscribe((grammars: string) => {

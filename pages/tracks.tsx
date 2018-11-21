@@ -1,23 +1,28 @@
 import * as React from 'react';
 import Head from 'next/head';
+import { inject, observer } from 'mobx-react';
 import fetch, { Headers }  from 'node-fetch';
 import { TransitionGroup } from 'react-transition-group';
 
 import { SpeechContext, SpeechProvider } from '../speech/provider';
 import { WSContext, WSProvider } from '../websocket/provider';
 
+import * as Component from '../components';
+import ActiveLink from '../components/active-link';
 import * as Utils from '../utils';
 import * as Intent from '../intents';
 
-import * as Component from '../components';
-import ActiveLink from '../components/active-link';
+import * as Store from '../store';
 
 export interface TracksProps {
   devices: any;
   tracks: any[];
   userId: number;
+  store: Store.StoreProps;
 }
 
+@inject('store')
+@observer
 export default class Tracks extends React.Component<TracksProps> {
   public devices: string;
   public static async getInitialProps(ctx) {
@@ -37,7 +42,9 @@ export default class Tracks extends React.Component<TracksProps> {
   }
 
   public state = {
-    isTransitioning: false
+    isTransitioning: false,
+    isOverlayOpen: false,
+    lang: this.props.store.lang
   }
 
   componentDidMount() {
@@ -49,6 +56,7 @@ export default class Tracks extends React.Component<TracksProps> {
       this.resumeTrack,
       this.props.userId
     );
+    Intent.registerIntent(Intent.overlayIntent, this.handleOverlay);
     this.setState({...this.state, isTransitioning: true });
   }
 
@@ -121,7 +129,19 @@ export default class Tracks extends React.Component<TracksProps> {
     }
   }
 
-  render() {
+  private handleOverlay = (): void => {
+    this.setState({...this.state, isOverlayOpen: !this.state.isOverlayOpen})
+  }
+
+  private handleLanguage = (speech, language, store = this.props.store): void => {
+    console.log('it goes here &&&&&');
+    speech.setLanguage(Store.Language[language]);
+    store.getTranslatedLabels();
+  }
+
+  public render(): JSX.Element {
+    const { store } = this.props;
+    store.getLanguage()
     return (
       <main>
         <TransitionGroup
@@ -140,11 +160,20 @@ export default class Tracks extends React.Component<TracksProps> {
                         <title>Along - Some awesome tracks from my playlist</title>
                         <meta name="description" content="Use this web app voice interface to play, pause and resume any song" />
                       </Head>
-                      <Component.Nav type="secondary">
-                        <ActiveLink
-                        href={`/playlists/${this.props.userId}`}>
-                          <Component.ArrowLeft />
-                        </ActiveLink>
+                      <Component.Nav type="primary">
+                        <Component.Space size={[Component.size.xs, 0, 0]}>
+                          <ActiveLink
+                          href={`/playlists/${this.props.userId}`}>
+                            <Component.ArrowLeft />
+                          </ActiveLink>
+                        </Component.Space>
+                        <Component.Space size={[Component.size.xs, 0, 0]}>
+                          <Component.TextOverlay
+                            active={!this.state.isOverlayOpen}
+                            onClick={() => this.handleOverlay()}>
+                            Language
+                          </Component.TextOverlay>
+                        </Component.Space>
                       </Component.Nav>
                       <Component.Panel
                         isRecognizing={speech.result.isRecognizing}
@@ -184,6 +213,18 @@ export default class Tracks extends React.Component<TracksProps> {
                       <Component.SpeechControl
                         isRecognizing={speech.result.isRecognizing}
                         handleClick={speech.start} />
+                      <Component.Overlay isOpen={this.state.isOverlayOpen}>
+                      <Component.SelectList>
+                        {store.languages.map((language: Store.Language, i: number) => (
+                          <Component.SelectItem
+                            active={store.getLanguage() === Store.Language[language]}
+                            key={`${language}-${i}`}
+                            onClick={() => this.handleLanguage(speech, language)}>
+                            { store.intLabels[i] }
+                          </Component.SelectItem>
+                        ))}
+                    </Component.SelectList>
+                    </Component.Overlay>
                   </>
                   )}
                 </SpeechContext.Consumer>

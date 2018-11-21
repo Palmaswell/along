@@ -1,15 +1,17 @@
 import * as React from 'react';
+import { inject, observer } from 'mobx-react';
 import Head from 'next/head';
 import fetch, { Headers }  from 'node-fetch';
 
 import { SpeechContext, SpeechProvider } from '../speech/provider';
 import { WSContext, WSProvider } from '../websocket/provider';
 
+import * as Store from '../store';
+
 import * as Component from '../components';
 import ActiveLink from '../components/active-link';
 import * as Utils from '../utils';
 import * as Intent from '../intents';
-
 
 export interface IndexProps {
   userName: string;
@@ -24,11 +26,17 @@ export interface IndexProps {
         url: string;
       }
     ]
-  }
+  };
+  store: Store.StoreProps;
 }
 
+@inject('store')
+@observer
 export default class Index extends React.Component<IndexProps> {
-  private userName = this.props.spotify.display_name.replace(/\s(.*)/g, '');
+  public state = {
+    isOverlayOpen: false,
+    lang: this.props.store.lang
+  }
 
   public static async getInitialProps(ctx): Promise<any> {
     const res = await fetch(`https://api.spotify.com/v1/me`, {
@@ -48,9 +56,23 @@ export default class Index extends React.Component<IndexProps> {
     if (this.props.spotify.id) {
       Intent.registerIntent(Intent.navigateIntent, this.props.spotify.id);
     }
+    Intent.registerIntent(Intent.overlayIntent, this.handleOverlay);
+    Intent.registerIntent(Intent.langIntent, this.handleLanguage);
   }
 
-  render() {
+  private handleOverlay = (): void => {
+    this.setState({...this.state, isOverlayOpen: !this.state.isOverlayOpen});
+  }
+
+  private handleLanguage = (speech, language, store = this.props.store): void => {
+    console.log('it goes here &&&&&');
+    speech.setLanguage(Store.Language[language]);
+    store.getTranslatedLabels();
+  }
+
+  public render(): JSX.Element {
+    const { store } = this.props;
+    store.getLanguage();
     return (
     <WSProvider
       channel="Home">
@@ -60,27 +82,33 @@ export default class Index extends React.Component<IndexProps> {
             channel="Home"
             wsBroker={wsBroker}>
             <SpeechContext.Consumer>
-              {speech => (
+              {speech => {
+                return (
                 <>
                   <Head>
                     <title>Along - Accessibility and The Web Speech API</title>
                     <meta name="description" content="React universal app using the Web Speech API with accessibility as a baseline" />
                   </Head>
                   <Component.Nav type="primary">
-                    <ActiveLink
-                      href={`/playlists/${this.props.spotify.id}`}>
-                      Playlists
-                    </ActiveLink>
-                    <Component.Space size={[0, 0, 0, Component.size.xs]}>
-                      <Component.Link
-                        href={this.props.spotify.external_urls.spotify}
-                        target="_blank">
-                        <Component.Thumbnail
-                          alt={`Spotify profile image from ${this.props.spotify.display_name}`}
-                          caption={this.userName}
-                          src={this.props.spotify.images[0].url}/>
-                      </Component.Link>
-                    </Component.Space>
+                    <Component.Layout>
+                        <Component.Link
+                          href={this.props.spotify.external_urls.spotify}
+                          target="_blank">
+                          <Component.Thumbnail
+                            alt={`Spotify profile image from ${this.props.spotify.display_name}`}
+                            src={this.props.spotify.images[0].url}/>
+                        </Component.Link>
+                        <ActiveLink
+                          href={`/playlists/${this.props.spotify.id}`}>
+                          Playlists
+                        </ActiveLink>
+                    </Component.Layout>
+                    <Component.TextOverlay
+                      active={!this.state.isOverlayOpen}
+                      onClick={() => this.handleOverlay()}
+                      >
+                      Language
+                    </Component.TextOverlay>
                   </Component.Nav>
                   <Component.Panel
                     isRecognizing={speech.result.isRecognizing}
@@ -88,8 +116,21 @@ export default class Index extends React.Component<IndexProps> {
                   <Component.SpeechControl
                     isRecognizing={speech.result.isRecognizing}
                     handleClick={speech.start} />
+                  <Component.Overlay isOpen={this.state.isOverlayOpen}>
+                    <Component.SelectList>
+                      {store.languages.map((language: Store.Language, i: number) => (
+                        <Component.SelectItem
+                          active={store.getLanguage() === Store.Language[language]}
+                          key={`${language}-${i}`}
+                          onClick={() => this.handleLanguage(speech, language)}>
+                          { store.intLabels[i] }
+                        </Component.SelectItem>
+                      ))}
+                    </Component.SelectList>
+                  </Component.Overlay>
                 </>
-              )}
+                )
+              }}
             </SpeechContext.Consumer>
           </SpeechProvider>
         )}

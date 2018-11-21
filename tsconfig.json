@@ -4,6 +4,9 @@
     "module": "esnext",
     "jsx": "preserve",
     "allowJs": true,
+    "experimentalDecorators": true,
+    "downlevelIteration": true,
+		"emitDecoratorMetadata": true,
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "noUnusedLocals": true,
@@ -14,8 +17,7 @@
     "skipLibCheck": true,
     "lib": [
       "dom",
-      "es2015",
-      "es2016"
+      "es2017",
     ]
   }
 }
