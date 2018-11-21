@@ -71,8 +71,7 @@ export default class Index extends React.Component<IndexProps> {
     store.getTranslatedLabels();
   }
 
-
-  render() {
+  public render(): JSX.Element {
     const { store } = this.props;
     store.getLanguage();
     return (

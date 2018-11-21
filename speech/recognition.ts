@@ -23,6 +23,7 @@ export const createRecognition = (init: SpeechInit): SpeechRecognition => {
     recognition.maxAlternatives = init.maxAlternatives;
     recognition.interimResults = init.interimResults;
     recognition.lang = init.lang;
+    console.log(init.lang, 'language it is being reinitiated on action, 8888')
 
     abstractCommandFactory.getGrammarStream()
     .subscribe((grammars: string) => {

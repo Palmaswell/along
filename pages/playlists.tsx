@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Head from 'next/head';
+import { inject, observer } from 'mobx-react';
 import fetch, { Headers }  from 'node-fetch';
 import { TransitionGroup } from 'react-transition-group';
 import { SpeechContext, SpeechProvider } from '../speech/provider';
@@ -10,12 +11,17 @@ import ActiveLink from '../components/active-link';
 import * as Utils from '../utils';
 import * as Intent from '../intents';
 
+import * as Store from '../store';
+
 export interface PlayListsProps {
   playlist: {
     items: any[]
   };
+  store: Store.StoreProps;
 }
 
+@inject('store')
+@observer
 export default class PlayLists extends React.Component<PlayListsProps> {
   public static async getInitialProps(ctx) {
     const { id } = ctx.query;
@@ -36,6 +42,7 @@ export default class PlayLists extends React.Component<PlayListsProps> {
   public state = {
     isTransitioning: false,
     isOverlayOpen: false,
+    lang: this.props.store.lang
   }
 
   public componentDidMount(): void {
@@ -52,7 +59,15 @@ export default class PlayLists extends React.Component<PlayListsProps> {
     this.setState({...this.state, isOverlayOpen: !this.state.isOverlayOpen})
   }
 
+  private handleLanguage = (speech, language, store = this.props.store): void => {
+    console.log('it goes here &&&&&');
+    speech.setLanguage(Store.Language[language]);
+    store.getTranslatedLabels();
+  }
+
   public render(): JSX.Element {
+    const { store } = this.props;
+    store.getLanguage();
     return (
       <main>
         <TransitionGroup
@@ -113,10 +128,15 @@ export default class PlayLists extends React.Component<PlayListsProps> {
                         handleClick={speech.start}/>
                       <Component.Overlay isOpen={this.state.isOverlayOpen}>
                       <Component.SelectList>
-                        <Component.SelectItem active={true}>English</Component.SelectItem>
-                        <Component.SelectItem active={false}>Spanish</Component.SelectItem>
-                        <Component.SelectItem active={false}>Japanese</Component.SelectItem>
-                      </Component.SelectList>
+                      {store.languages.map((language: Store.Language, i: number) => (
+                        <Component.SelectItem
+                          active={store.getLanguage() === Store.Language[language]}
+                          key={`${language}-${i}`}
+                          onClick={() => this.handleLanguage(speech, language)}>
+                          { store.intLabels[i] }
+                        </Component.SelectItem>
+                      ))}
+                    </Component.SelectList>
                     </Component.Overlay>
                     </>
                   )}
