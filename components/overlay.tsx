@@ -24,16 +24,19 @@ const createOverlayTransition = (status: OverlayTransition) => {
     case OverlayTransition.entering:
     case OverlayTransition.exited:
     return css`
-        transform: translate3d(0, 0, 0);
+        transform: translate3d(-202vw, 0, 0);
+        clip-path: polygon(0 0, 0 98%, 100% 0);
       `;
     case OverlayTransition.entered:
     return css`
         transform: translate3d(-100vw, 0, 0);
+        clip-path: polygon(0 0, 0 198%, 210% 0);
       `;
 
     case OverlayTransition.exiting:
       return css`
-        transform: translate3d(-200vw, 0, 0);
+        transform: translate3d(0, 0, 0);
+        clip-path: polygon(0 0, 0 198%, 210% 0);
       `;
 
   }
@@ -50,7 +53,7 @@ const StyledOverlay = styled.section`
   background-color: ${Color.UnitedNationsBlue};
   border-bottom: ${size.xxxs}px solid ${Color.PaleChestNut()};
   transform: translate3d(0, 0, 0);
-  transition: 500ms cubic-bezier(1.000, 0.000, 0.000, 1.000);
+  transition: transform 500ms cubic-bezier(1.000, 0.000, 0.000, 1.000), clip-path 250ms 100ms cubic-bezier(1.000, 0.000, 0.000, 1.000);
   ${(props: StyledOverlayProps) => createOverlayTransition(props.transitionStatus)};
 `;
 

@@ -6,7 +6,7 @@ import Space from './space';
 
 export interface ThumbnailProps {
   alt: string;
-  caption: string;
+  caption?: string;
   src: string;
 }
 
@@ -28,16 +28,16 @@ const StyledImg = styled.img`
 
 export const Thumbnail: React.SFC<ThumbnailProps> = ({ alt, caption, src }): JSX.Element => (
   <StyledFigure>
+    <Space size={[0, size.xs, 0, 0]}>
+      <StyledImg
+        alt={alt}
+        src={src} />
+    </Space>
     {caption &&
-      <Space size={[0, size.xs, 0, 0]}>
-        <figcaption>
-          {caption}
-        </figcaption>
-      </Space>
+      <figcaption>
+        {caption}
+      </figcaption>
     }
-    <StyledImg
-      alt={alt}
-      src={src} />
   </StyledFigure>
 );
 

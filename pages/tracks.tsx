@@ -160,16 +160,20 @@ export default class Tracks extends React.Component<TracksProps> {
                         <title>Along - Some awesome tracks from my playlist</title>
                         <meta name="description" content="Use this web app voice interface to play, pause and resume any song" />
                       </Head>
-                      <Component.Nav type="secondary">
-                        <Component.TextOverlay
-                          active={!this.state.isOverlayOpen}
-                          onClick={() => this.handleOverlay()}>
-                          Language
-                        </Component.TextOverlay>
-                        <ActiveLink
-                        href={`/playlists/${this.props.userId}`}>
-                          <Component.ArrowLeft />
-                        </ActiveLink>
+                      <Component.Nav type="primary">
+                        <Component.Space size={[Component.size.xs, 0, 0]}>
+                          <ActiveLink
+                          href={`/playlists/${this.props.userId}`}>
+                            <Component.ArrowLeft />
+                          </ActiveLink>
+                        </Component.Space>
+                        <Component.Space size={[Component.size.xs, 0, 0]}>
+                          <Component.TextOverlay
+                            active={!this.state.isOverlayOpen}
+                            onClick={() => this.handleOverlay()}>
+                            Language
+                          </Component.TextOverlay>
+                        </Component.Space>
                       </Component.Nav>
                       <Component.Panel
                         isRecognizing={speech.result.isRecognizing}

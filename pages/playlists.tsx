@@ -86,13 +86,17 @@ export default class PlayLists extends React.Component<PlayListsProps> {
                         <title>Along - My Spotify playlists</title>
                         <meta name="description" content="Use this web app voice interface to visit a playlist" />
                       </Head>
-                      <Component.Nav type="secondary">
+                      <Component.Nav type="primary">
+                        <Component.Space size={[Component.size.xs, 0, 0]}>
+                        <ActiveLink href={`/`}><Component.ArrowLeft /></ActiveLink>
+                        </Component.Space>
+                        <Component.Space size={[Component.size.xs, 0, 0]}>
                         <Component.TextOverlay
                           active={!this.state.isOverlayOpen}
                           onClick={() => this.handleOverlay()}>
                           Language
                         </Component.TextOverlay>
-                        <ActiveLink href={`/`}><Component.ArrowLeft /></ActiveLink>
+                        </Component.Space>
                       </Component.Nav>
                       <Component.Panel
                         isRecognizing={speech.result.isRecognizing}

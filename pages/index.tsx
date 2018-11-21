@@ -33,7 +33,6 @@ export interface IndexProps {
 @inject('store')
 @observer
 export default class Index extends React.Component<IndexProps> {
-  private userName = this.props.spotify.display_name.replace(/\s(.*)/g, '');
   public state = {
     isOverlayOpen: false,
     lang: this.props.store.lang
@@ -91,28 +90,25 @@ export default class Index extends React.Component<IndexProps> {
                     <meta name="description" content="React universal app using the Web Speech API with accessibility as a baseline" />
                   </Head>
                   <Component.Nav type="primary">
+                    <Component.Layout>
+                        <Component.Link
+                          href={this.props.spotify.external_urls.spotify}
+                          target="_blank">
+                          <Component.Thumbnail
+                            alt={`Spotify profile image from ${this.props.spotify.display_name}`}
+                            src={this.props.spotify.images[0].url}/>
+                        </Component.Link>
+                        <ActiveLink
+                          href={`/playlists/${this.props.spotify.id}`}>
+                          Playlists
+                        </ActiveLink>
+                    </Component.Layout>
                     <Component.TextOverlay
                       active={!this.state.isOverlayOpen}
                       onClick={() => this.handleOverlay()}
                       >
                       Language
                     </Component.TextOverlay>
-                    <Component.Layout>
-                      <ActiveLink
-                        href={`/playlists/${this.props.spotify.id}`}>
-                        Playlists
-                      </ActiveLink>
-                      <Component.Space size={[0, 0, 0, Component.size.xs]}>
-                        <Component.Link
-                          href={this.props.spotify.external_urls.spotify}
-                          target="_blank">
-                          <Component.Thumbnail
-                            alt={`Spotify profile image from ${this.props.spotify.display_name}`}
-                            caption={this.userName}
-                            src={this.props.spotify.images[0].url}/>
-                        </Component.Link>
-                      </Component.Space>
-                    </Component.Layout>
                   </Component.Nav>
                   <Component.Panel
                     isRecognizing={speech.result.isRecognizing}
