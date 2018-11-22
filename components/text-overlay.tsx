@@ -25,8 +25,8 @@ const StyledTextOverlay = styled(Text)`
     z-index: -1;
     width: 200%;
     min-width: 100px;
-    max-width: 350px;
-    height: ${size.l}px;
+    max-width: 300px;
+    height: ${size.m}px;
     margin: auto;
     background-color: ${Color.VividRasberry};
     transform: ${(props: StyledTextProps) => props.active

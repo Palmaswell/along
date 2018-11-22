@@ -29,7 +29,7 @@ const StyledNav = styled.div`
   box-sizing: border-box;
   width: 100%;
   min-height: ${size.m}px;
-  padding: ${size.xxs}px ${size.xxs}px 0;
+  padding: ${size.xxxs}px ${size.xxs}px 0;
   font-size: ${(props: StyledNavProps) => {
     switch(props.type) {
       case 'secondary':

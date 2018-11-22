@@ -46,8 +46,8 @@ const StyledMediaWrapper = styled.div`
       ? 'calc(33vw - 25px)'
       : `${size.xxl}px`
     };
-    max-width: 350px;
-    max-height: 350px;
+    max-width: 260px;
+    max-height: 260px;
   }
 `;
 
