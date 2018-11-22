@@ -61,7 +61,8 @@ export class SpeechProvider extends React.Component<SpeechProviderProps, SpeechP
 
   private handleRecognition = (recognition): void => {
     recognition.onerror = e => handleSpeechError(e.error);
-    recognition.onstart = (): void => {
+
+    this.recognition.onstart = (): void => {
       this.setState({...this.state, isRecognizing: true});
       console.log(`
         >  🏁 Speech recognition is listening...
@@ -81,12 +82,12 @@ export class SpeechProvider extends React.Component<SpeechProviderProps, SpeechP
     }
 
     recognition.onend = (): void => {
+      this.setState({...this.state, isRecognizing: false});
       this.ws.subject.next({
         action: 'PUBLISH',
         channels:[this.props.channel],
         message: this.state.transcript
       });
-      this.setState({...this.state, isRecognizing: false});
     }
 
     recognition.onspeechend = () => recognition.stop();
@@ -96,9 +97,10 @@ export class SpeechProvider extends React.Component<SpeechProviderProps, SpeechP
     e.persist();
     if (this.state.isRecognizing) {
       this.recognition.stop();
+    } else {
+      this.recognition.start();
+      this.handleRecognition(this.recognition);
     }
-    this.recognition.start();
-    this.handleRecognition(this.recognition);
   }
 
   private setLanguage = (lang: Store.Language): void => {

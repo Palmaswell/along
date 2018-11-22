@@ -54,6 +54,33 @@ export type IntLabelType =
   'Nihonjin'
 ];
 
+export const IntLabels = [
+  [
+    'german',
+    'english',
+    'spanish',
+    'japanese'
+  ],
+  [
+    'deutsch',
+    'englisch',
+    'spanish',
+    'japanisch'
+  ],
+  [
+    'alemán',
+    'inglés',
+    'español',
+    'japonés'
+  ],
+  [
+    'Doitsunin',
+    'Eigo',
+    'Supeingo',
+    'Nihonjin'
+  ]
+];
+
 export class Store {
   public languages: string[] = ['german', 'english', 'spanish', 'japanese'];
   @observable public lang: Language;

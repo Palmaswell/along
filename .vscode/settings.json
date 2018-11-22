@@ -1,3 +1,4 @@
 {
-    "editor.fontSize": 13
+    "editor.fontSize": 13,
+    "html.format.wrapLineLength": 80
 }

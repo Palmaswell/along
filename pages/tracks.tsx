@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Head from 'next/head';
+import Cookie from 'js-cookie';
 import { inject, observer } from 'mobx-react';
 import fetch, { Headers }  from 'node-fetch';
 import { TransitionGroup } from 'react-transition-group';
@@ -133,9 +134,10 @@ export default class Tracks extends React.Component<TracksProps> {
     this.setState({...this.state, isOverlayOpen: !this.state.isOverlayOpen})
   }
 
-  private handleLanguage = (speech, language, store = this.props.store): void => {
-    console.log('it goes here &&&&&');
+  private handleLanguage = (speech, language): void => {
+    const { store } = this.props;
     speech.setLanguage(Store.Language[language]);
+    Cookie.set('lang', store.lang);
     store.getTranslatedLabels();
   }
 

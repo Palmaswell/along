@@ -63,7 +63,7 @@ export const tracksIntent: IntentProps =  IntentFactory({
     'play',
     '',
     'toca',
-    'spiel'
+    'spiel',
   ],
   action(func, uri: string) {
     return func(uri)
