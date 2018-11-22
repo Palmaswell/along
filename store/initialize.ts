@@ -1,5 +1,5 @@
 import Cookie from 'js-cookie';
-import Store, { Language } from './store';
+import Store, { Language, IntLabels } from './store';
 
 const isServer: boolean = typeof window === 'undefined';
 let store = null;
@@ -23,4 +23,18 @@ export const initializeLang = (langCookie: Language, isServer: boolean): Languag
     lang = Language.english;
   }
   return lang;
+}
+
+
+export const initializeLabels = (lang: Language): string[] => {
+  switch(lang) {
+    case Language.german:
+      return IntLabels[1];
+    case Language.spanish:
+      return IntLabels[2];
+    case Language.japanese:
+      return IntLabels[3];
+    case Language.english:
+      return IntLabels[1];
+  }
 }

@@ -15,12 +15,7 @@ export default class MyApp extends App  {
     const { lang } =  app.ctx.req.cookies;
     const initStore = {
       lang: Store.initializeLang(lang, isServer),
-      intLabels: [
-        'german',
-        'english',
-        'spanish',
-        'japanese'
-      ]
+      intLabels: Store.initializeLabels(lang)
     }
     const props = await App.getInitialProps(app);
     const mobxStore = Store.initializeStore(initStore);
