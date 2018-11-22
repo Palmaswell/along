@@ -2,6 +2,7 @@ import * as React from 'react';
 import { inject, observer } from 'mobx-react';
 import Head from 'next/head';
 import fetch, { Headers }  from 'node-fetch';
+import Cookie from 'js-cookie';
 
 import { SpeechContext, SpeechProvider } from '../speech/provider';
 import { WSContext, WSProvider } from '../websocket/provider';
@@ -64,10 +65,12 @@ export default class Index extends React.Component<IndexProps> {
     this.setState({...this.state, isOverlayOpen: !this.state.isOverlayOpen});
   }
 
-  private handleLanguage = (speech, language, store = this.props.store): void => {
-    console.log('it goes here &&&&&');
+  private handleLanguage = (speech, language): void => {
+    const { store } = this.props;
     speech.setLanguage(Store.Language[language]);
+    Cookie.set('lang', store.lang);
     store.getTranslatedLabels();
+    console.log(Utils.getCookie('lang'), 'this is the lang cookie');
   }
 
   public render(): JSX.Element {

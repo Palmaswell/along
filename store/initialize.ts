@@ -1,17 +1,26 @@
-import Store from './store';
+import Cookie from 'js-cookie';
+import Store, { Language } from './store';
 
-let stores = null;
 const isServer: boolean = typeof window === 'undefined';
+let store = null;
 
-
-export const initializeStore =  (init) => {
+export const initializeStore = (init): Store => {
   if (isServer) {
     return new Store(init, isServer);
   }
-  if (stores === null) {
-    stores = new Store(init, isServer);
+  if (store === null) {
+    store = new Store(init, isServer);
   }
-  return stores
+  return store
 };
 
-export default initializeStore;
+export const initializeLang = (langCookie: Language, isServer: boolean): Language => {
+  let lang;
+  if (isServer) {
+    lang = langCookie;
+  }
+  if (lang === Cookie.get('lang')) {
+    lang = Language.english;
+  }
+  return lang;
+}

@@ -114,16 +114,19 @@ nextApp.prepare().then(() => {
   })
 
   app.get('/playlists/:id', (req, res) => {
-    const queryParams = { id: req.params.id }
+    const queryParams = {
+      id: req.params.id,
+      lang: req.cookies.lang
+    }
     res.cookie('user_id', req.params.id);
     nextApp.render(req, res, '/playlists', queryParams);
   });
 
   app.get('/tracks/:play_id', (req, res) => {
     const queryParams = {
+      lang: req.cookies.lang,
       play_id: req.params.play_id
     };
-
     nextApp.render(req, res, '/tracks', queryParams);
   });
 
@@ -131,7 +134,10 @@ nextApp.prepare().then(() => {
     if (!req.cookies.access) {
       res.redirect('/login')
     }
-    nextApp.render(req, res, '/', req.params);
+    const queryParams = {
+      lang: req.cookies.lang
+    }
+    nextApp.render(req, res, '/', queryParams);
   });
 
   app.get('*', (req, res) => {
