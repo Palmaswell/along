@@ -1,4 +1,5 @@
 import App, { Container } from 'next/app';
+import Cookie from 'js-cookie';
 import React from 'react';
 import { Provider, useStaticRendering } from 'mobx-react';
 
@@ -12,7 +13,13 @@ export default class MyApp extends App  {
   private mobxStore;
 
   public static async getInitialProps(app) {
-    const { lang } =  app.ctx.req.cookies;
+    let lang;
+    if (isServer) {
+      lang = app.ctx.req.cookies;
+    }
+    if (lang === Cookie.get('lang')) {
+      lang = Store.Language.english;
+    }
     const initStore = {
       lang: Store.initializeLang(lang, isServer),
       intLabels: Store.initializeLabels(lang)
@@ -20,7 +27,6 @@ export default class MyApp extends App  {
     const props = await App.getInitialProps(app);
     const mobxStore = Store.initializeStore(initStore);
     app.ctx.mobxStore = mobxStore;
-    console.log(mobxStore, 'store in _app server');
     return {
       ...props,
       initialMobxState: mobxStore
