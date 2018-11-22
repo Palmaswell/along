@@ -70,7 +70,6 @@ export default class Index extends React.Component<IndexProps> {
     speech.setLanguage(Store.Language[language]);
     Cookie.set('lang', store.lang);
     store.getTranslatedLabels();
-    console.log(Utils.getCookie('lang'), 'this is the lang cookie');
   }
 
   public render(): JSX.Element {
