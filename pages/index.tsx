@@ -125,7 +125,7 @@ export default class Index extends React.Component<IndexProps> {
                           active={store.getLanguage() === Store.Language[language]}
                           key={`${language}-${i}`}
                           onClick={() => this.handleLanguage(speech, language)}>
-                          { store.languages }
+                          { store.intLabels[i] }
                         </Component.SelectItem>
                       ))}
                     </Component.SelectList>

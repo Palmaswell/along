@@ -82,7 +82,36 @@ export const IntLabels = [
 ];
 
 export class Store {
-  public languages: string[] = ['german', 'english', 'spanish', 'japanese'];
+  public languages: string[] = [
+    'german',
+    'english',
+    'spanish',
+    'japanese'
+  ];
+  public english: string[] = [
+    'german',
+    'english',
+    'spanish',
+    'japanese'
+  ];
+  public german: string[] = [
+    'deutsch',
+    'englisch',
+    'spanish',
+    'japanisch'
+  ];
+  public spanish: string[] = [
+    'alemán',
+    'inglés',
+    'español',
+    'japonés'
+  ];
+  public japanese: string[] = [
+    'Doitsunin',
+    'Eigo',
+    'Supeingo',
+    'Nihonjin'
+  ];
   @observable public lang: Language;
   @observable public intLabels: IntLabelType;
   @observable public openOverlay: boolean;
@@ -90,7 +119,6 @@ export class Store {
   public constructor(init: LanguageInit, _isServer: boolean) {
     this.lang = init.lang;
     this.intLabels = init.intLabels;
-    this.openOverlay = false;
   }
 
   public getLanguage = (): Language => {
@@ -104,39 +132,38 @@ export class Store {
   @action public getTranslatedLabels = (): IntLabelType => {
     switch(this.lang) {
       case Language.german:
-        this.intLabels = [
+        return this.intLabels = [
           'deutsch',
           'englisch',
           'spanish',
           'japanisch'
         ];
-        break;
+
       case Language.spanish:
-        this.intLabels = [
+        return this.intLabels = [
           'alemán',
           'inglés',
           'español',
           'japonés'
         ];
-        break;
+
       case Language.japanese:
-        this.intLabels = [
+        return this.intLabels = [
           'Doitsunin',
           'Eigo',
           'Supeingo',
           'Nihonjin'
         ];
-        break;
+
       case Language.english:
-        this.intLabels = [
+        return this.intLabels = [
           'german',
           'english',
           'spanish',
           'japanese'
         ];
-        break;
+
     }
-    return this.intLabels;
   }
 }
 

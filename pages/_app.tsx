@@ -15,7 +15,7 @@ export default class MyApp extends App  {
   public static async getInitialProps(app) {
     let lang;
     if (isServer) {
-      lang = app.ctx.req.cookies;
+      lang = app.ctx.req.cookies.lang;
     }
     if (lang === Cookie.get('lang')) {
       lang = Store.Language.english;
